@@ -167,28 +167,17 @@
   </div>
 
 <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxfZ_yeXMm81XejoMVYXxQvv2axQtLlgGDOLQQAtjhgWRY_wr48TZIGxBXESbBBl_ycIw/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxfZ_yeXMm81XejoMVYXxQvv2axQtLlgGDOLQQAtjhgWRY_wr48TZIGxBXESbBBl_ycIw/exec"; // GANTI DI SINI
   const kodePiMap = {};
 
-  const nipInput = document.getElementById("nip");
-  const asm = document.getElementById("asm");
-  const kodePiSelect = document.getElementById("kodePi");
-  const namaOutlet = document.getElementById("namaOutlet");
-  const jumlahHadiah = document.getElementById("jumlahHadiah");
-  const jenisProgram = document.getElementById("jenisProgram");
-
   document.getElementById("searchBtn").addEventListener("click", () => {
-    const nip = nipInput.value.trim();
+    const nip = document.getElementById("nip").value.trim();
     if (!nip) {
       Swal.fire("Oops!", "Silakan isi NIP terlebih dahulu.", "warning");
       return;
     }
 
-    Swal.fire({
-      title: "Mencari data...",
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading()
-    });
+    Swal.fire({ title: "Mencari data...", didOpen: () => Swal.showLoading() });
 
     fetch(`${scriptURL}?nip=${nip}`)
       .then(res => res.json())
@@ -199,6 +188,7 @@
           return;
         }
 
+        const kodePiSelect = document.getElementById("kodePi");
         kodePiSelect.innerHTML = `<option value="">Pilih Kode PI</option>`;
         data.forEach(item => {
           kodePiMap[item.kodePi] = item;
@@ -207,7 +197,8 @@
           opt.textContent = item.kodePi;
           kodePiSelect.appendChild(opt);
         });
-        asm.value = data[0].asm || "";
+
+        document.getElementById("asm").value = data[0].asm || "";
       })
       .catch(() => {
         Swal.close();
@@ -215,13 +206,13 @@
       });
   });
 
-  kodePiSelect.addEventListener("change", () => {
-    const kode = kodePiSelect.value;
+  document.getElementById("kodePi").addEventListener("change", () => {
+    const kode = document.getElementById("kodePi").value;
     const data = kodePiMap[kode];
     if (data) {
-      namaOutlet.value = data.namaOutlet || "";
-      jumlahHadiah.value = data.jumlahHadiah || "";
-      jenisProgram.value = data.jenisProgram || "";
+      document.getElementById("namaOutlet").value = data.namaOutlet || "";
+      document.getElementById("jumlahHadiah").value = data.jumlahHadiah || "";
+      document.getElementById("jenisProgram").value = data.jenisProgram || "";
     }
   });
 
@@ -229,29 +220,32 @@
     e.preventDefault();
 
     const formData = {
-      nip: nipInput.value,
-      asm: asm.value,
-      kodePi: kodePiSelect.value,
-      namaOutlet: namaOutlet.value,
-      jumlahHadiah: jumlahHadiah.value,
-      jenisProgram: jenisProgram.value,
+      nip: document.getElementById("nip").value,
+      asm: document.getElementById("asm").value,
+      kodePi: document.getElementById("kodePi").value,
+      namaOutlet: document.getElementById("namaOutlet").value,
+      jumlahHadiah: document.getElementById("jumlahHadiah").value,
+      jenisProgram: document.getElementById("jenisProgram").value,
       jenisHadiah: document.getElementById("jenisHadiah").value,
       telp: document.getElementById("telp").value,
-      alamat: document.getElementById("alamat").value,
+      alamat: document.getElementById("alamat").value
     };
 
     Swal.fire({ title: "Menyimpan data...", didOpen: () => Swal.showLoading() });
 
     fetch(scriptURL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      redirect: "follow",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8" // FIX CORS tanpa preflight
+      },
       body: JSON.stringify(formData)
     })
       .then(res => res.json())
       .then(() => {
         Swal.fire("Sukses", "Data berhasil dikirim", "success");
         document.getElementById("rewardForm").reset();
-        kodePiSelect.innerHTML = `<option value="">Pilih Kode PI</option>`;
+        document.getElementById("kodePi").innerHTML = `<option value="">Pilih Kode PI</option>`;
       })
       .catch(() => {
         Swal.fire("Gagal", "Terjadi kesalahan saat mengirim data", "error");
