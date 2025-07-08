@@ -213,7 +213,6 @@
   </div>
 
 <script>
-// URL Google Script
 const scriptURL = "https://script.google.com/macros/s/AKfycbxg3iAMMDjHJLu_3tFcxWAUuKie05IUMs39CKFDf4M10hy34xlJp9AttywmN3NceclX7A/exec";
 const kodePiMap = {};
 
@@ -226,13 +225,15 @@ const validatePhone = inputId => {
   const input = document.getElementById(inputId);
   const val = input.value.trim();
   const isValid = /^[0-9]{10,15}$/.test(val);
-  if (!isValid) {
-    input.classList.add("is-invalid");
-    input.focus();
-  } else {
-    input.classList.remove("is-invalid");
-  }
+  input.classList.toggle("is-invalid", !isValid);
   return isValid;
+};
+
+const validateField = inputId => {
+  const input = document.getElementById(inputId);
+  const isEmpty = input.value.trim() === "";
+  input.classList.toggle("is-invalid", isEmpty);
+  return !isEmpty;
 };
 
 document.getElementById("searchBtn").addEventListener("click", () => {
@@ -284,17 +285,16 @@ document.getElementById("jenisHadiah").addEventListener("change", () => {
 
 document.getElementById("rewardForm").addEventListener("submit", async e => {
   e.preventDefault();
-  Swal.fire({
-    title: "Mengecek data...",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    allowEnterKey: false,
-    didOpen: () => {Swal.showLoading(); document.body.style.overflow = "auto";}
-  });
+  Swal.fire({ title: "Mengecek data...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-  const kodePi = document.getElementById("kodePi").value;
   const nip = document.getElementById("nip").value;
-  if (!kodePi) return Swal.fire("Peringatan", "Pilih Kode PI terlebih dahulu.", "warning");
+  const kodePi = document.getElementById("kodePi").value;
+  const jenis = document.getElementById("jenisHadiah").value;
+
+  if (!nip || !kodePi || !jenis) {
+    Swal.close();
+    return Swal.fire("Peringatan", "Harap isi semua field utama sebelum submit.", "warning");
+  }
 
   const checkRes = await fetch(`${scriptURL}?checkKodePi=${encodeURIComponent(kodePi)}`);
   const checkData = await checkRes.json();
@@ -302,10 +302,31 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
     return Swal.fire({ icon: "error", title: "Kode PI sudah diisi", html: `Kode PI <strong>${kodePi}</strong> telah diisi oleh <strong>${checkData.asm}</strong><br>pada <strong>${checkData.timestamp}</strong>.` });
   }
 
-  const jenis = document.getElementById("jenisHadiah").value;
-  if (jenis.includes("Voucher") && !validatePhone("telpVoucher")) return;
-  if (jenis === "Barang" && !validatePhone("telpBarang")) return;
-  if (jenis === "E-Wallet" && !validatePhone("noEwallet")) return;
+  let isValid = true;
+
+  if (jenis.includes("Voucher")) {
+    if (!validatePhone("telpVoucher")) isValid = false;
+    if (!validateField("namaPenerimaVoucher")) isValid = false;
+    if (!validateField("alamatVoucher")) isValid = false;
+  }
+
+  if (jenis === "E-Wallet") {
+    if (!validateField("jenisEwallet")) isValid = false;
+    if (!validatePhone("noEwallet")) isValid = false;
+    if (!validateField("namaEwallet")) isValid = false;
+  }
+
+  if (jenis === "Barang") {
+    if (!validateField("namaBarang")) isValid = false;
+    if (!validatePhone("telpBarang")) isValid = false;
+    if (!validateField("namaPenerimaBarang")) isValid = false;
+    if (!validateField("alamatBarang")) isValid = false;
+  }
+
+  if (!isValid) {
+    Swal.close();
+    return Swal.fire("Peringatan", "Mohon lengkapi semua kolom yang diperlukan dengan benar.", "warning");
+  }
 
   const formData = {
     nip,
@@ -332,26 +353,24 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
     formData.alamat = document.getElementById("alamatBarang").value;
   }
 
-  Swal.fire({
-    title: "Menyimpan data...",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    allowEnterKey: false,
-    didOpen: () => {Swal.showLoading(); document.body.style.overflow = "auto";}
+  Swal.fire({ title: "Menyimpan data...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  const res = await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify(formData),
+    headers: { "Content-Type": "text/plain;charset=utf-8" }
   });
 
-  fetch(scriptURL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(formData)
-  })
-  .then(res => res.json())
-  .then(() => {
-    Swal.fire("Sukses", "Data berhasil dikirim", "success");
+  if (res.ok) {
+    Swal.fire("Berhasil!", "Data berhasil disimpan.", "success");
     document.getElementById("rewardForm").reset();
+    document.getElementById("voucherFields").classList.add("d-none");
+    document.getElementById("ewalletFields").classList.add("d-none");
+    document.getElementById("barangFields").classList.add("d-none");
     document.getElementById("kodePi").innerHTML = `<option value="">Pilih Kode PI</option>`;
-    ["voucherFields", "ewalletFields", "barangFields"].forEach(id => document.getElementById(id).classList.add("d-none"));
-  });
+  } else {
+    Swal.fire("Gagal", "Terjadi kesalahan saat mengirim data.", "error");
+  }
 });
 </script>
 </body>
