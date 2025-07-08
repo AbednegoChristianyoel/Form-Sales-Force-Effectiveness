@@ -94,7 +94,7 @@
 
               <div class="col-12">
                 <div class="form-text text-start">
-                  <span style="font-style: italic; font-weight: bold; color: #000;">Khusus ACCG: Masukkan Nama SM di kolom NIP ASM</span>
+                  <span style="font-style: italic; font-weight: bold; color: #000;">Untuk ASM Vacant, Masukkan NIP SM. (Khusus MSA & VBR Masukkan NIP NSM)</span>
                 </div>
               </div>
 
@@ -104,9 +104,9 @@
               </div>
 
               <div class="col-md-6">
-                <label for="kodePi" class="form-label">Kode PI</label>
+                <label for="kodePi" class="form-label">Kode Outlet</label>
                 <select class="form-select" id="kodePi" required>
-                  <option value="">Pilih Kode PI</option>
+                  <option value="">Pilih Kode Outlet</option>
                 </select>
               </div>
               <div class="col-md-6">
@@ -120,7 +120,7 @@
               </div>
               <div class="col-md-6">
                 <label for="jumlahHadiah" class="form-label">Nominal Hadiah</label>
-                <input type="number" class="form-control" id="jumlahHadiah" disabled>
+                <input type="text" class="form-control" id="jumlahHadiah" disabled>
               </div>
 
               <div class="col-12">
@@ -135,56 +135,63 @@
                 </select>
               </div>
 
-              <!-- Voucher -->
-              <div id="voucherFields" class="row g-3 d-none">
-                <div class="col-md-6">
-                  <label class="form-label">No. Telepon</label>
-                  <input type="text" class="form-control" id="telpVoucher">
-                  <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
+              <div class="col-12">
+                <div id="voucherFields" class="row g-3 d-none">
+                  <div class="col-md-6">
+                    <label class="form-label">No. Telepon</label>
+                    <input type="text" class="form-control" id="telpVoucher">
+                    <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nama Penerima</label>
+                    <input type="text" class="form-control" id="namaPenerimaVoucher">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Alamat Pengiriman</label>
+                    <input type="text" class="form-control" id="alamatVoucher">
+                  </div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Alamat Pengiriman</label>
-                  <input type="text" class="form-control" id="alamatVoucher">
-                </div>
-              </div>
 
-              <!-- E-Wallet -->
-              <div id="ewalletFields" class="row g-3 d-none">
-                <div class="col-md-4">
-                  <label class="form-label">Jenis E-Wallet</label>
-                  <select class="form-select" id="jenisEwallet">
-                    <option value="">Pilih Jenis</option>
-                    <option value="DANA">DANA</option>
-                    <option value="GOPAY">GOPAY</option>
-                    <option value="OVO">OVO</option>
-                    <option value="SHOPEEPAY">SHOPEEPAY</option>
-                  </select>
+                <div id="ewalletFields" class="row g-3 d-none">
+                  <div class="col-md-4">
+                    <label class="form-label">Jenis E-Wallet</label>
+                    <select class="form-select" id="jenisEwallet">
+                      <option value="">Pilih Jenis</option>
+                      <option value="DANA">DANA</option>
+                      <option value="GOPAY">GOPAY</option>
+                      <option value="OVO">OVO</option>
+                      <option value="SHOPEEPAY">SHOPEEPAY</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">No. E-Wallet</label>
+                    <input type="text" class="form-control" id="noEwallet">
+                    <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Nama Akun</label>
+                    <input type="text" class="form-control" id="namaEwallet">
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <label class="form-label">No. E-Wallet</label>
-                  <input type="text" class="form-control" id="noEwallet">
-                  <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Nama Akun</label>
-                  <input type="text" class="form-control" id="namaEwallet">
-                </div>
-              </div>
 
-              <!-- Barang -->
-              <div id="barangFields" class="row g-3 d-none">
-                <div class="col-md-6">
-                  <label class="form-label">Nama Barang Elektronik (Sesuai Hadiah)</label>
-                  <input type="text" class="form-control" id="namaBarang">
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">No. Telepon</label>
-                  <input type="text" class="form-control" id="telpBarang">
-                  <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
-                </div>
-                <div class="col-md-12">
-                  <label class="form-label">Alamat Pengiriman</label>
-                  <input type="text" class="form-control" id="alamatBarang">
+                <div id="barangFields" class="row g-3 d-none">
+                  <div class="col-12">
+                    <label class="form-label">Nama Barang Elektronik (Sesuai Hadiah)</label>
+                    <input type="text" class="form-control" id="namaBarang">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">No. Telepon</label>
+                    <input type="text" class="form-control" id="telpBarang">
+                    <div class="invalid-feedback">Nomor tidak valid. Minimal 10 digit angka.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nama Penerima</label>
+                    <input type="text" class="form-control" id="namaPenerimaBarang">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Alamat Pengiriman</label>
+                    <input type="text" class="form-control" id="alamatBarang">
+                  </div>
                 </div>
               </div>
 
@@ -206,10 +213,16 @@
   </div>
 
 <script>
+// URL Google Script
 const scriptURL = "https://script.google.com/macros/s/AKfycbxg3iAMMDjHJLu_3tFcxWAUuKie05IUMs39CKFDf4M10hy34xlJp9AttywmN3NceclX7A/exec";
 const kodePiMap = {};
 
-const validatePhone = (inputId) => {
+const formatRupiah = angka => {
+  if (!angka) return "Rp0";
+  return "Rp" + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+const validatePhone = inputId => {
   const input = document.getElementById(inputId);
   const val = input.value.trim();
   const isValid = /^[0-9]{10,15}$/.test(val);
@@ -231,8 +244,7 @@ document.getElementById("searchBtn").addEventListener("click", () => {
     allowOutsideClick: false,
     allowEscapeKey: false,
     allowEnterKey: false,
-    didOpen: () => {Swal.showLoading();
-    document.body.style.overflow = "auto";}
+    didOpen: () => {Swal.showLoading(); document.body.style.overflow = "auto";}
   });
 
   fetch(`${scriptURL}?nip=${nip}`)
@@ -258,7 +270,7 @@ document.getElementById("kodePi").addEventListener("change", () => {
   const data = kodePiMap[kode];
   if (data) {
     document.getElementById("namaOutlet").value = data.namaOutlet || "";
-    document.getElementById("jumlahHadiah").value = data.jumlahHadiah || "";
+    document.getElementById("jumlahHadiah").value = formatRupiah(data.jumlahHadiah || 0);
     document.getElementById("jenisProgram").value = data.jenisProgram || "";
   }
 });
@@ -277,53 +289,37 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
     allowOutsideClick: false,
     allowEscapeKey: false,
     allowEnterKey: false,
-    didOpen: () => {Swal.showLoading();
-    document.body.style.overflow = "auto";}
+    didOpen: () => {Swal.showLoading(); document.body.style.overflow = "auto";}
   });
 
   const kodePi = document.getElementById("kodePi").value;
   const nip = document.getElementById("nip").value;
-  if (!kodePi) {
-    Swal.close();
-    return Swal.fire("Peringatan", "Pilih Kode PI terlebih dahulu.", "warning");
-  }
+  if (!kodePi) return Swal.fire("Peringatan", "Pilih Kode PI terlebih dahulu.", "warning");
 
   const checkRes = await fetch(`${scriptURL}?checkKodePi=${encodeURIComponent(kodePi)}`);
   const checkData = await checkRes.json();
-
   if (checkData.found) {
-    Swal.close();
-    return Swal.fire({
-      icon: "error",
-      title: "Kode PI sudah diisi",
-      html: `Kode PI <strong>${kodePi}</strong> telah diisi oleh <strong>${checkData.asm}</strong><br>pada <strong>${checkData.timestamp}</strong>.`,
-    });
+    return Swal.fire({ icon: "error", title: "Kode PI sudah diisi", html: `Kode PI <strong>${kodePi}</strong> telah diisi oleh <strong>${checkData.asm}</strong><br>pada <strong>${checkData.timestamp}</strong>.` });
   }
 
   const jenis = document.getElementById("jenisHadiah").value;
-
-  if (jenis.includes("Voucher") && !validatePhone("telpVoucher")) {
-    Swal.close(); return;
-  }
-  if (jenis === "Barang" && !validatePhone("telpBarang")) {
-    Swal.close(); return;
-  }
-  if (jenis === "E-Wallet" && !validatePhone("noEwallet")) {
-    Swal.close(); return;
-  }
+  if (jenis.includes("Voucher") && !validatePhone("telpVoucher")) return;
+  if (jenis === "Barang" && !validatePhone("telpBarang")) return;
+  if (jenis === "E-Wallet" && !validatePhone("noEwallet")) return;
 
   const formData = {
     nip,
     asm: document.getElementById("asm").value,
     kodePi,
     namaOutlet: document.getElementById("namaOutlet").value,
-    jumlahHadiah: document.getElementById("jumlahHadiah").value.replace(/\./g, ""),
+    jumlahHadiah: (document.getElementById("jumlahHadiah").value || "").replace(/[^\d]/g, ""),
     jenisProgram: document.getElementById("jenisProgram").value,
     jenisHadiah: jenis
   };
 
   if (jenis.includes("Voucher")) {
     formData.telp = document.getElementById("telpVoucher").value;
+    formData.namaPenerima = document.getElementById("namaPenerimaVoucher").value;
     formData.alamat = document.getElementById("alamatVoucher").value;
   } else if (jenis === "E-Wallet") {
     formData.jenisEwallet = document.getElementById("jenisEwallet").value;
@@ -332,6 +328,7 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
   } else if (jenis === "Barang") {
     formData.namaBarang = document.getElementById("namaBarang").value;
     formData.telp = document.getElementById("telpBarang").value;
+    formData.namaPenerima = document.getElementById("namaPenerimaBarang").value;
     formData.alamat = document.getElementById("alamatBarang").value;
   }
 
@@ -340,8 +337,7 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
     allowOutsideClick: false,
     allowEscapeKey: false,
     allowEnterKey: false,
-    didOpen: () => {Swal.showLoading();
-    document.body.style.overflow = "auto";}
+    didOpen: () => {Swal.showLoading(); document.body.style.overflow = "auto";}
   });
 
   fetch(scriptURL, {
