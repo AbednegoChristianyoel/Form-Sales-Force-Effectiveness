@@ -129,6 +129,7 @@
                 </select>
               </div>
 
+              <!-- Voucher -->
               <div id="voucherFields" class="row g-3 d-none">
                 <div class="col-md-6">
                   <label class="form-label">No. Telepon</label>
@@ -141,6 +142,7 @@
                 </div>
               </div>
 
+              <!-- E-Wallet -->
               <div id="ewalletFields" class="row g-3 d-none">
                 <div class="col-md-4">
                   <label class="form-label">Jenis E-Wallet</label>
@@ -163,6 +165,7 @@
                 </div>
               </div>
 
+              <!-- Barang -->
               <div id="barangFields" class="row g-3 d-none">
                 <div class="col-md-6">
                   <label class="form-label">Nama Barang Elektronik (Sesuai Hadiah)</label>
@@ -217,7 +220,14 @@ document.getElementById("searchBtn").addEventListener("click", () => {
   const nip = document.getElementById("nip").value.trim();
   if (!nip) return Swal.fire("Oops!", "Silakan isi NIP terlebih dahulu.", "warning");
 
-  Swal.fire({ title: "Mencari data...", didOpen: () => Swal.showLoading() });
+  Swal.fire({
+    title: "Mencari data...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    didOpen: () => {Swal.showLoading();
+    document.body.style.overflow = "auto";}
+  });
 
   fetch(`${scriptURL}?nip=${nip}`)
     .then(res => res.json())
@@ -256,7 +266,14 @@ document.getElementById("jenisHadiah").addEventListener("change", () => {
 
 document.getElementById("rewardForm").addEventListener("submit", async e => {
   e.preventDefault();
-  Swal.fire({ title: "Mengecek data...", didOpen: () => Swal.showLoading() });
+  Swal.fire({
+    title: "Mengecek data...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    didOpen: () => {Swal.showLoading();
+    document.body.style.overflow = "auto";}
+  });
 
   const kodePi = document.getElementById("kodePi").value;
   const nip = document.getElementById("nip").value;
@@ -312,7 +329,14 @@ document.getElementById("rewardForm").addEventListener("submit", async e => {
     formData.alamat = document.getElementById("alamatBarang").value;
   }
 
-  Swal.fire({ title: "Menyimpan data...", didOpen: () => Swal.showLoading() });
+  Swal.fire({
+    title: "Menyimpan data...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    didOpen: () => {Swal.showLoading();
+    document.body.style.overflow = "auto";}
+  });
 
   fetch(scriptURL, {
     method: "POST",
