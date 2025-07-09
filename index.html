@@ -21,7 +21,18 @@
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
       body {
         background: #f1f3f5;
@@ -81,8 +92,28 @@
         letter-spacing: 0.5px;
       }
       ::placeholder {
-        color: #bbb !important; /* abu terang */
-        opacity: 1; /* pastikan tidak terlalu pudar */
+        color: #bbb !important;
+        opacity: 1;
+      }
+      .select2-container--bootstrap4 .select2-selection--single {
+        white-space: normal;
+        height: auto !important;
+        min-height: 38px;
+      }
+      .select2-container--bootstrap4 {
+        width: 100% !important;
+      }
+      .select2-container--bootstrap4
+        .select2-selection--single
+        .select2-selection__rendered {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 100% !important;
+        padding-left: 1em;
+        /* sesuaikan agar tidak terlalu mepet */
       }
     </style>
   </head>
@@ -95,7 +126,6 @@
           class="navbar-brand d-flex align-items-center gap-2 mx-lg-0 mx-auto"
           href="#"
         >
-          <!-- SVG ICON - Trade/Marketing Style -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"
@@ -108,12 +138,7 @@
               d="M1 13.5a.5.5 0 0 1 .5-.5H15v1H1.5a.5.5 0 0 1-.5-.5zm6-11A.5.5 0 0 1 7.5 3v8a.5.5 0 0 1-1 0V3A.5.5 0 0 1 7 2.5zm4 3A.5.5 0 0 1 11.5 6v5a.5.5 0 0 1-1 0V6A.5.5 0 0 1 11 5.5zm-8 2A.5.5 0 0 1 3.5 8v3a.5.5 0 0 1-1 0V8A.5.5 0 0 1 3 7.5z"
             />
           </svg>
-          <span
-            class="fw-semibold fs-5 text-white"
-            style="font-family: 'Poppins', sans-serif"
-          >
-            Form Trade Marketing
-          </span>
+          <span class="fw-semibold fs-5 text-white">Form Trade Marketing</span>
         </a>
       </div>
     </nav>
@@ -367,8 +392,7 @@
     <script>
       const scriptURL =
         "https://script.google.com/macros/s/AKfycbxg3iAMMDjHJLu_3tFcxWAUuKie05IUMs39CKFDf4M10hy34xlJp9AttywmN3NceclX7A/exec";
-      const kodePiMap = {};
-
+      window.kodePiMap = {};
       const formatRupiah = (angka) => {
         if (!angka) return "Rp0";
         return "Rp" + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -413,7 +437,31 @@
         fetch(`${scriptURL}?nip=${nip}`)
           .then((res) => res.json())
           .then((data) => {
+            // Reset field program, outlet, hadiah, dan jenis hadiah
+            document.getElementById("asm").value = "";
+            document.getElementById("kodePi").innerHTML =
+              '<option value="">Pilih Kode Outlet</option>';
+            document.getElementById("jenisProgram").value = "";
+            document.getElementById("namaOutlet").value = "";
+            document.getElementById("jumlahHadiah").value = "";
+            document.getElementById("jenisHadiah").value = "";
+            document.getElementById("voucherFields").classList.add("d-none");
+            document.getElementById("ewalletFields").classList.add("d-none");
+            document.getElementById("barangFields").classList.add("d-none");
+
+            const jenisHadiahSelect = document.getElementById("jenisHadiah");
+            jenisHadiahSelect.innerHTML = `
+  <option value="">Pilih Jenis</option>
+  <option value="Voucher Alfamart">Voucher Alfamart</option>
+  <option value="Voucher Indomaret">Voucher Indomaret</option>
+  <option value="Voucher MAP">Voucher MAP</option>
+  <option value="E-Wallet">E-Wallet</option>
+  <option value="Barang">Barang</option>
+`;
+            $("#jenisHadiah").trigger("change.select2");
+
             Swal.close();
+
             if (!data.length)
               return Swal.fire(
                 "Data tidak ditemukan",
@@ -423,19 +471,28 @@
             const kodePiSelect = document.getElementById("kodePi");
             kodePiSelect.innerHTML = `<option value="">Pilih Kode PI</option>`;
             data.forEach((item) => {
+              // Log debug untuk memastikan isi kodePi dan data terkait
+              console.log("Mapping kodePi:", item.kodePi);
+              console.log("Detail data:", item);
+
+              // Simpan ke map global untuk pemetaan
               kodePiMap[item.kodePi] = item;
+
+              // Buat opsi dropdown
               const opt = document.createElement("option");
-              opt.value = item.kodePi;
-              opt.textContent = item.kodePi;
+              opt.value = item.kodePi; // hanya simpan kode
+              opt.textContent = `${item.kodePi} - ${item.namaOutlet}`; // label tampilan user
               kodePiSelect.appendChild(opt);
             });
+
+            // Isi nama ASM jika ada
             document.getElementById("asm").value = data[0].asm || "";
           });
       });
 
       document.getElementById("kodePi").addEventListener("change", () => {
         const kode = document.getElementById("kodePi").value;
-        const data = kodePiMap[kode];
+        const data = window.kodePiMap[kode];
         if (data) {
           document.getElementById("namaOutlet").value = data.namaOutlet || "";
           document.getElementById("jumlahHadiah").value = formatRupiah(
@@ -443,6 +500,58 @@
           );
           document.getElementById("jenisProgram").value =
             data.jenisProgram || "";
+
+          if ((data.jenisProgram || "").toUpperCase() === "POWER-UP Q2") {
+            console.log("Jenis Program POWER-UP Q2 terdeteksi dari Select2.");
+          }
+
+          // --- Filter Jenis Hadiah jika POWER-UP Q2 ---
+          const jenisHadiahSelect = document.getElementById("jenisHadiah");
+          const opsiBarang = [...jenisHadiahSelect.options].find(
+            (opt) => opt.value === "Barang"
+          );
+
+          if ((data.jenisProgram || "").toUpperCase() === "POWER-UP Q2") {
+            console.log(
+              "Jenis Program POWER-UP Q2 terdeteksi. Menyembunyikan opsi 'Barang'."
+            );
+
+            // Hapus opsi Barang jika ada
+            [...jenisHadiahSelect.options].forEach((opt) => {
+              if (opt.value === "Barang") {
+                console.log(
+                  "Menghapus opsi 'Barang' dari dropdown jenisHadiah."
+                );
+                opt.remove();
+              }
+            });
+
+            // Reset jika sebelumnya pilih Barang
+            if (jenisHadiahSelect.value === "Barang") {
+              console.log("Reset pilihan karena sebelumnya memilih 'Barang'");
+              jenisHadiahSelect.value = "";
+            }
+
+            document.getElementById("barangFields").classList.add("d-none");
+          } else {
+            console.log(
+              "Jenis Program bukan POWER-UP Q2. Memastikan opsi 'Barang' tersedia."
+            );
+
+            const barangSudahAda = [...jenisHadiahSelect.options].some(
+              (opt) => opt.value === "Barang"
+            );
+            if (!barangSudahAda) {
+              console.log("Menambahkan kembali opsi 'Barang'.");
+              const opt = document.createElement("option");
+              opt.value = "Barang";
+              opt.textContent = "Barang";
+              jenisHadiahSelect.appendChild(opt);
+            }
+          }
+
+          // Trigger ulang Select2 agar update tampilan
+          $("#jenisHadiah").trigger("change.select2");
         }
       });
 
@@ -538,7 +647,7 @@
           };
 
           if (jenis.includes("Voucher")) {
-            formData.telp = document.getElementById("telpVoucher").value;
+            formData.telp = "'" + document.getElementById("telpVoucher").value;
             formData.namaPenerima = document.getElementById(
               "namaPenerimaVoucher"
             ).value;
@@ -546,11 +655,12 @@
           } else if (jenis === "E-Wallet") {
             formData.jenisEwallet =
               document.getElementById("jenisEwallet").value;
-            formData.noEwallet = document.getElementById("noEwallet").value;
+            formData.noEwallet =
+              "'" + document.getElementById("noEwallet").value;
             formData.namaEwallet = document.getElementById("namaEwallet").value;
           } else if (jenis === "Barang") {
             formData.namaBarang = document.getElementById("namaBarang").value;
-            formData.telp = document.getElementById("telpBarang").value;
+            formData.telp = "'" + document.getElementById("telpBarang").value;
             formData.namaPenerima =
               document.getElementById("namaPenerimaBarang").value;
             formData.alamat = document.getElementById("alamatBarang").value;
@@ -586,6 +696,74 @@
             );
           }
         });
+
+      $("#kodePi").on("change", function () {
+        const kode = this.value;
+        console.log("Kode Outlet dipilih:", kode);
+        const data = window.kodePiMap[kode];
+        console.log("Data ditemukan:", data);
+
+        const namaOutletEl = document.getElementById("namaOutlet");
+        const jumlahHadiahEl = document.getElementById("jumlahHadiah");
+        const jenisProgramEl = document.getElementById("jenisProgram");
+        const jenisHadiahSelect = document.getElementById("jenisHadiah");
+
+        if (data) {
+          namaOutletEl.value = data.namaOutlet || "";
+          jumlahHadiahEl.value = formatRupiah(data.jumlahHadiah || 0);
+          jenisProgramEl.value = data.jenisProgram || "";
+
+          const jenisProgram = (data.jenisProgram || "").toUpperCase();
+
+          if (jenisProgram === "POWER-UP Q2") {
+            // Hapus opsi 'Barang' jika ada
+            [...jenisHadiahSelect.options].forEach((opt) => {
+              if (opt.value === "Barang") {
+                console.log("Menghapus opsi 'Barang' karena POWER-UP Q2.");
+                opt.remove();
+              }
+            });
+
+            // Sembunyikan field barang jika sebelumnya dipilih
+            if (jenisHadiahSelect.value === "Barang") {
+              console.log("Reset pilihan karena sebelumnya memilih 'Barang'.");
+              jenisHadiahSelect.value = "";
+              document.getElementById("barangFields").classList.add("d-none");
+            }
+          } else {
+            // Tambahkan kembali opsi 'Barang' jika belum ada
+            const barangSudahAda = [...jenisHadiahSelect.options].some(
+              (opt) => opt.value === "Barang"
+            );
+            if (!barangSudahAda) {
+              console.log("Menambahkan kembali opsi 'Barang'.");
+              const opt = document.createElement("option");
+              opt.value = "Barang";
+              opt.textContent = "Barang";
+              jenisHadiahSelect.appendChild(opt);
+            }
+          }
+
+          // Trigger Select2 supaya update
+          $("#jenisHadiah").trigger("change.select2");
+        } else {
+          console.warn("Tidak ada data ditemukan untuk kode:", kode);
+        }
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#kodePi").select2({
+          theme: "bootstrap4",
+          placeholder: "Pilih Kode Outlet",
+          allowClear: true,
+        });
+      });
+
+      window.formatRupiah = function (angka) {
+        if (!angka) return "Rp0";
+        return "Rp" + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      };
     </script>
   </body>
 </html>
