@@ -571,7 +571,7 @@
             const res = await fetch(scriptURL, {
               method: "POST",
               body: JSON.stringify(baseData),
-              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              headers: { "Content-Type": "application/json" },
             });
 
             Swal.close();
