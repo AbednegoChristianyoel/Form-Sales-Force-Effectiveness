@@ -466,7 +466,7 @@
 `;
 
               // Tambahkan PK to PBF hanya jika jabatan NSM atau divisi bukan OMG1, ATP1, AT2
-              const divisiTerbatas = ["OMG1", "ATP1", "AT2"];
+              const divisiTerbatas = ["OMG1", "ATP1", "CNP1", "CNP2", "GOP1"];
               if (jabatan === "NSM" || !divisiTerbatas.includes(divisi)) {
                 const optionPK = document.createElement("option");
                 optionPK.value = "Program PK to PBF";
@@ -507,15 +507,58 @@
         .getElementById("ethicalForm")
         .addEventListener("submit", async (e) => {
           e.preventDefault();
+
           const nip = document.getElementById("nipEthical").value.trim();
           const outlet = document.getElementById("outletEthical").value;
+          const program = document.getElementById("programEthical").value;
+          const kodePi = document.getElementById("kodePiEthical").value;
+          const namaOutlet = document.getElementById("namaOutletEthical").value;
+          const kota = document.getElementById("kotaOutletEthical").value;
+          const alamat = document.getElementById("alamatOutletEthical").value;
 
-          if (!nip || !outlet) {
+          if (!nip || !outlet || !program) {
             return Swal.fire(
               "Lengkapi Form",
-              "Mohon isi semua field sebelum submit.",
+              "Mohon isi semua field wajib.",
               "warning"
             );
+          }
+
+          const baseData = {
+            nip,
+            nama: document.getElementById("namaEthical").value,
+            jabatan: document.getElementById("jabatanEthical").value,
+            divisi: document.getElementById("divisiEthical").value,
+            outlet,
+            program,
+            kodePi,
+            namaOutlet,
+            kota,
+            alamat,
+          };
+
+          // Tambahan program spesifik
+          if (program === "Program Insentif SC Modafil & Rozgra") {
+            baseData.jenisHadiah = document.getElementById("jenisHadiah").value;
+
+            if (baseData.jenisHadiah === "e-wallet") {
+              baseData.jenisEwallet =
+                document.getElementById("jenisEwallet").value;
+              baseData.noTelpEwallet =
+                document.getElementById("noTelpEwallet").value;
+              baseData.namaAkunEwallet =
+                document.getElementById("namaAkunEwallet").value;
+            } else if (baseData.jenisHadiah === "bank") {
+              baseData.namaBank = document.getElementById("namaBank").value;
+              baseData.noRek = document.getElementById("noRek").value;
+              baseData.namaAkunBank =
+                document.getElementById("namaAkunBank").value;
+            }
+          } else if (program === "Program POP" || program === "Program PGD") {
+            baseData.tanggalRealisasi =
+              document.getElementById("tanggalRealisasi").value;
+            baseData.jumlahPeserta =
+              document.getElementById("jumlahPeserta").value;
           }
 
           Swal.fire({
@@ -525,32 +568,33 @@
           });
 
           try {
-            const body = {
-              nip,
-              nama: document.getElementById("namaEthical").value,
-              jabatan: document.getElementById("jabatanEthical").value,
-              divisi: document.getElementById("divisiEthical").value,
-              outlet,
-            };
-
             const res = await fetch(scriptURL, {
               method: "POST",
-              body: JSON.stringify(body),
+              body: JSON.stringify(baseData),
               headers: { "Content-Type": "text/plain;charset=utf-8" },
             });
 
-            Swal.close(); // pastikan ditutup
+            Swal.close();
 
-            if (res.ok) {
+            const result = await res.text();
+
+            if (result === "SUCCESS") {
               Swal.fire("Berhasil", "Data berhasil disimpan.", "success");
               document.getElementById("ethicalForm").reset();
               $("#outletEthical").val(null).trigger("change");
+              $("#programEthical").val(null).trigger("change");
+            } else if (result === "DUPLICATE") {
+              Swal.fire(
+                "Gagal",
+                "Data dengan Kode PI ini sudah pernah diajukan.",
+                "error"
+              );
             } else {
               Swal.fire("Gagal", "Gagal menyimpan data.", "error");
             }
           } catch (error) {
-            console.error("Submit error:", error); // log ke console
-            Swal.close(); // ✅ TUTUP loading kalau error
+            console.error("Submit error:", error);
+            Swal.close();
             Swal.fire("Gagal", "Terjadi kesalahan pada sistem.", "error");
           }
         });
