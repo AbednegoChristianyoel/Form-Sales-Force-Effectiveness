@@ -403,6 +403,18 @@
         "https://script.google.com/macros/s/AKfycbyCfQvH4DUpdzSfHbdcZLrH1xWQSK2fAUgXef2s5KjS65ywawThz7JnJ1u8b_6H_slnog/exec";
       let globalOutletData = {};
 
+      // Fungsi untuk mengatur required secara dinamis
+      function setFieldRequired(selector, required = true) {
+        const field = document.querySelector(selector);
+        if (field) {
+          if (required) {
+            field.setAttribute("required", "required");
+          } else {
+            field.removeAttribute("required");
+          }
+        }
+      }
+
       $("#outletEthical").select2({
         theme: "bootstrap4",
         placeholder: "Pilih Outlet",
@@ -437,7 +449,6 @@
             .then((res) => res.json())
             .then((data) => {
               Swal.close();
-              console.log("Data yang diterima dari Firebase:", data); // <--- Tambahkan ini
 
               if (!data || !data.nama)
                 return Swal.fire(
@@ -456,16 +467,15 @@
               const divisi = (data.divisi || "").toUpperCase();
               const programSelect = document.getElementById("programEthical");
 
-              // Reset dulu semua option program
+              // Reset program
               programSelect.innerHTML = `
-  <option value="">Pilih Program</option>
-  <option value="Program Boost Metabolic">Program Boost Metabolic</option>
-  <option value="Program Insentif SC Modafil & Rozgra">Program Insentif SC Modafil & Rozgra</option>
-  <option value="Program POP">Program POP</option>
-  <option value="Program PGD">Program PGD</option>
-`;
+            <option value="">Pilih Program</option>
+            <option value="Program Boost Metabolic">Program Boost Metabolic</option>
+            <option value="Program Insentif SC Modafil & Rozgra">Program Insentif SC Modafil & Rozgra</option>
+            <option value="Program POP">Program POP</option>
+            <option value="Program PGD">Program PGD</option>
+          `;
 
-              // Tambahkan PK to PBF hanya jika jabatan NSM atau divisi bukan OMG1, ATP1, AT2
               const divisiTerbatas = ["OMG1", "ATP1", "CNP1", "CNP2", "GOP1"];
               if (jabatan === "NSM" || !divisiTerbatas.includes(divisi)) {
                 const optionPK = document.createElement("option");
@@ -474,22 +484,22 @@
                 programSelect.appendChild(optionPK);
               }
 
-              // Refresh Select2
               $("#programEthical").val(null).trigger("change");
 
               const select = document.getElementById("outletEthical");
               select.innerHTML = `<option value="">Pilih Outlet</option>`;
-              globalOutletData = {}; // kosongkan dulu
+              globalOutletData = {};
 
               (data.outlets || []).forEach((outlet) => {
-                const kode = outlet.kode; // contoh: "GG000154"
-                globalOutletData[kode] = outlet; // simpan sebagai object key:value
+                const kode = outlet.kode;
+                globalOutletData[kode] = outlet;
                 const opt = document.createElement("option");
                 opt.value = kode;
                 opt.textContent = `${kode}`;
                 select.appendChild(opt);
               });
-              $("#outletEthical").select2("destroy"); // reset Select2
+
+              $("#outletEthical").select2("destroy");
               $("#outletEthical").select2({
                 theme: "bootstrap4",
                 placeholder: "Pilih Outlet",
@@ -497,8 +507,8 @@
               });
             })
             .catch((err) => {
-              console.error("Fetch error:", err); // ✅ optional: log ke console
-              Swal.close(); // ✅ FIXED: pastikan loading ditutup jika error
+              console.error("Fetch error:", err);
+              Swal.close();
               Swal.fire("Error", "Gagal mengambil data dari server.", "error");
             });
         });
@@ -537,7 +547,6 @@
             alamat,
           };
 
-          // Tambahan program spesifik
           if (program === "Program Insentif SC Modafil & Rozgra") {
             baseData.jenisHadiah = document.getElementById("jenisHadiah").value;
 
@@ -574,13 +583,16 @@
               headers: { "Content-Type": "text/plain;charset=utf-8" },
             });
 
+            const result = await res.text();
             Swal.close();
 
-            if (res.ok) {
+            if (result.startsWith("Success")) {
               Swal.fire("Berhasil", "Data berhasil disimpan.", "success");
               document.getElementById("ethicalForm").reset();
               $("#outletEthical").val(null).trigger("change");
               $("#programEthical").val(null).trigger("change");
+            } else if (result.startsWith("DUPLIKAT")) {
+              Swal.fire("Outlet Sudah Terdaftar", result, "error");
             } else {
               Swal.fire("Gagal", "Gagal menyimpan data.", "error");
             }
@@ -605,30 +617,54 @@
       $("#programEthical").on("change", function () {
         const selected = $(this).val();
 
-        // Reset & sembunyikan semuanya dulu
         $("#jenisHadiahWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
 
+        setFieldRequired("#jenisHadiah", false);
+        setFieldRequired("#jenisEwallet", false);
+        setFieldRequired("#noTelpEwallet", false);
+        setFieldRequired("#namaAkunEwallet", false);
+        setFieldRequired("#namaBank", false);
+        setFieldRequired("#noRek", false);
+        setFieldRequired("#namaAkunBank", false);
+        setFieldRequired("#tanggalRealisasi", false);
+        setFieldRequired("#jumlahPeserta", false);
+
         if (selected === "Program Insentif SC Modafil & Rozgra") {
           $("#jenisHadiahWrapper").removeClass("d-none");
+          setFieldRequired("#jenisHadiah", true);
         } else if (selected === "Program POP" || selected === "Program PGD") {
           $("#popPgdFields").removeClass("d-none");
+          setFieldRequired("#tanggalRealisasi", true);
+          setFieldRequired("#jumlahPeserta", true);
         }
       });
 
       $("#jenisHadiah").on("change", function () {
         const jenis = $(this).val();
 
-        // Sembunyikan dua-duanya dulu
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
 
+        setFieldRequired("#jenisEwallet", false);
+        setFieldRequired("#noTelpEwallet", false);
+        setFieldRequired("#namaAkunEwallet", false);
+        setFieldRequired("#namaBank", false);
+        setFieldRequired("#noRek", false);
+        setFieldRequired("#namaAkunBank", false);
+
         if (jenis === "e-wallet") {
           $("#ewalletFields").removeClass("d-none");
+          setFieldRequired("#jenisEwallet", true);
+          setFieldRequired("#noTelpEwallet", true);
+          setFieldRequired("#namaAkunEwallet", true);
         } else if (jenis === "bank") {
           $("#bankFields").removeClass("d-none");
+          setFieldRequired("#namaBank", true);
+          setFieldRequired("#noRek", true);
+          setFieldRequired("#namaAkunBank", true);
         }
       });
     </script>
