@@ -576,19 +576,11 @@
 
             Swal.close();
 
-            const result = await res.text();
-
-            if (result === "SUCCESS") {
+            if (res.ok) {
               Swal.fire("Berhasil", "Data berhasil disimpan.", "success");
               document.getElementById("ethicalForm").reset();
               $("#outletEthical").val(null).trigger("change");
               $("#programEthical").val(null).trigger("change");
-            } else if (result === "DUPLICATE") {
-              Swal.fire(
-                "Gagal",
-                "Data dengan Kode PI ini sudah pernah diajukan.",
-                "error"
-              );
             } else {
               Swal.fire("Gagal", "Gagal menyimpan data.", "error");
             }
