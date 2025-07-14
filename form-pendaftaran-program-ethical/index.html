@@ -452,6 +452,31 @@
               document.getElementById("divisiEthical").value =
                 data.divisi || "";
 
+              const jabatan = (data.jabatan || "").toUpperCase();
+              const divisi = (data.divisi || "").toUpperCase();
+              const programSelect = document.getElementById("programEthical");
+
+              // Reset dulu semua option program
+              programSelect.innerHTML = `
+  <option value="">Pilih Program</option>
+  <option value="Program Boost Metabolic">Program Boost Metabolic</option>
+  <option value="Program Insentif SC Modafil & Rozgra">Program Insentif SC Modafil & Rozgra</option>
+  <option value="Program POP">Program POP</option>
+  <option value="Program PGD">Program PGD</option>
+`;
+
+              // Tambahkan PK to PBF hanya jika jabatan NSM atau divisi bukan OMG1, ATP1, AT2
+              const divisiTerbatas = ["OMG1", "ATP1", "AT2"];
+              if (jabatan === "NSM" || !divisiTerbatas.includes(divisi)) {
+                const optionPK = document.createElement("option");
+                optionPK.value = "Program PK to PBF";
+                optionPK.textContent = "Program PK to PBF";
+                programSelect.appendChild(optionPK);
+              }
+
+              // Refresh Select2
+              $("#programEthical").val(null).trigger("change");
+
               const select = document.getElementById("outletEthical");
               select.innerHTML = `<option value="">Pilih Outlet</option>`;
               globalOutletData = {}; // kosongkan dulu
