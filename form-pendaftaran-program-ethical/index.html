@@ -246,15 +246,13 @@
                   >
                   <select id="programEthical" class="form-select" required>
                     <option value="">Pilih Program</option>
-                    <option value="Program Boost Metabolic">
-                      Program Boost Metabolic
+                    <option value="Boost Metabolic">Boost Metabolic</option>
+                    <option value="Insentif SC Modafil & Rozgra">
+                      Insentif SC Modafil & Rozgra
                     </option>
-                    <option value="Program Insentif SC Modafil & Rozgra">
-                      Program Insentif SC Modafil & Rozgra
-                    </option>
-                    <option value="Program POP">Program POP</option>
-                    <option value="Program PGD">Program PGD</option>
-                    <option value="Program PK to PBF">Program PK to PBF</option>
+                    <option value="POP">POP</option>
+                    <option value="PGD">PGD</option>
+                    <option value="PK to PBF">PK to PBF</option>
                   </select>
                 </div>
 
@@ -297,13 +295,23 @@
                   />
                 </div>
 
+                <div id="produkDipilihWrapper" class="col-12 d-none mt-3">
+                  <label class="form-label">Produk yang Dipilih</label>
+                  <select id="produkDipilih" class="form-select">
+                    <option value="">Pilih Produk</option>
+                    <option value="Rozgra Group">Rozgra Group</option>
+                    <option value="Modafil">Modafil</option>
+                    <option value="Modafil & Rozgra">Modafil & Rozgra</option>
+                  </select>
+                </div>
+
                 <!-- Tambahan untuk Program Insentif SC Modafil & Rozgra -->
                 <div id="jenisHadiahWrapper" class="col-12 d-none">
                   <label class="form-label">Jenis Hadiah</label>
                   <select id="jenisHadiah" class="form-select">
                     <option value="">Pilih Jenis Hadiah</option>
-                    <option value="e-wallet">E-Wallet</option>
-                    <option value="bank">Transfer Bank</option>
+                    <option value="E-Wallet">E-Wallet</option>
+                    <option value="Transfer Bank">Transfer Bank</option>
                   </select>
                 </div>
 
@@ -343,9 +351,13 @@
                     <label class="form-label">No. Rekening</label>
                     <input type="text" id="noRek" class="form-control" />
                   </div>
-                  <div class="col-12 mt-3">
+                  <div class="col-md-6 mt-3">
                     <label class="form-label">Nama Akun Bank</label>
                     <input type="text" id="namaAkunBank" class="form-control" />
+                  </div>
+                  <div class="col-md-6 mt-3">
+                    <label class="form-label">Cabang Bank</label>
+                    <input type="text" id="cabangBank" class="form-control" />
                   </div>
                 </div>
 
@@ -372,7 +384,9 @@
                   </div>
                 </div>
 
-                <div class="form-check ms-2 mt-3 d-flex align-items-center">
+                <div
+                  class="form-check ms-1 mt-3 mb-0 d-flex align-items-center"
+                >
                   <input
                     class="form-check-input me-2 big-checkbox"
                     type="checkbox"
@@ -415,6 +429,57 @@
             field.removeAttribute("required");
           }
         }
+      }
+      // Fungsi untuk reset semua field setelah biodata
+      function resetFormSetelahBiodata() {
+        const fieldsToClear = [
+          "#outletEthical",
+          "#programEthical",
+          "#kodePiEthical",
+          "#namaOutletEthical",
+          "#kotaOutletEthical",
+          "#alamatOutletEthical",
+          "#produkDipilih",
+          "#jenisHadiah",
+          "#jenisEwallet",
+          "#noTelpEwallet",
+          "#namaAkunEwallet",
+          "#namaBank",
+          "#noRek",
+          "#namaAkunBank",
+          "#cabangBank",
+          "#tanggalRealisasi",
+          "#jumlahPeserta",
+        ];
+
+        fieldsToClear.forEach((id) => {
+          const el = document.querySelector(id);
+          if (el) el.value = "";
+        });
+
+        $("#outletEthical").val(null).trigger("change");
+        $("#programEthical").val(null).trigger("change");
+        $("#confirmCheck").prop("checked", false);
+
+        $("#produkDipilihWrapper").addClass("d-none");
+        $("#jenisHadiahWrapper").addClass("d-none");
+        $("#ewalletFields").addClass("d-none");
+        $("#bankFields").addClass("d-none");
+        $("#popPgdFields").addClass("d-none");
+
+        [
+          "#produkDipilih",
+          "#jenisHadiah",
+          "#jenisEwallet",
+          "#noTelpEwallet",
+          "#namaAkunEwallet",
+          "#namaBank",
+          "#noRek",
+          "#namaAkunBank",
+          "#cabangBank",
+          "#tanggalRealisasi",
+          "#jumlahPeserta",
+        ].forEach((id) => setFieldRequired(id, false));
       }
 
       $("#outletEthical").select2({
@@ -465,6 +530,8 @@
               document.getElementById("divisiEthical").value =
                 data.divisi || "";
 
+              resetFormSetelahBiodata();
+
               const jabatan = (data.jabatan || "").toUpperCase();
               const divisi = (data.divisi || "").toUpperCase();
               const programSelect = document.getElementById("programEthical");
@@ -472,17 +539,17 @@
               // Reset program
               programSelect.innerHTML = `
             <option value="">Pilih Program</option>
-            <option value="Program Boost Metabolic">Program Boost Metabolic</option>
-            <option value="Program Insentif SC Modafil & Rozgra">Program Insentif SC Modafil & Rozgra</option>
-            <option value="Program POP">Program POP</option>
-            <option value="Program PGD">Program PGD</option>
+            <option value="Boost Metabolic">Boost Metabolic</option>
+            <option value="Insentif SC Modafil & Rozgra">Insentif SC Modafil & Rozgra</option>
+            <option value="POP">POP</option>
+            <option value="PGD">PGD</option>
           `;
 
               const divisiTerbatas = ["OMG1", "ATP1", "CNP1", "CNP2", "GOP1"];
               if (jabatan === "NSM" || !divisiTerbatas.includes(divisi)) {
                 const optionPK = document.createElement("option");
-                optionPK.value = "Program PK to PBF";
-                optionPK.textContent = "Program PK to PBF";
+                optionPK.value = "PK to PBF";
+                optionPK.textContent = "PK to PBF";
                 programSelect.appendChild(optionPK);
               }
 
@@ -549,23 +616,27 @@
             alamat,
           };
 
-          if (program === "Program Insentif SC Modafil & Rozgra") {
+          if (program === "Insentif SC Modafil & Rozgra") {
+            baseData.produkDipilih =
+              document.getElementById("produkDipilih").value || "";
             baseData.jenisHadiah = document.getElementById("jenisHadiah").value;
 
-            if (baseData.jenisHadiah === "e-wallet") {
+            if (baseData.jenisHadiah === "E-Wallet") {
               baseData.jenisEwallet =
                 document.getElementById("jenisEwallet").value;
               baseData.noTelpEwallet =
                 document.getElementById("noTelpEwallet").value;
               baseData.namaAkunEwallet =
                 document.getElementById("namaAkunEwallet").value;
-            } else if (baseData.jenisHadiah === "bank") {
+            } else if (baseData.jenisHadiah === "Transfer Bank") {
               baseData.namaBank = document.getElementById("namaBank").value;
               baseData.noRek = document.getElementById("noRek").value;
               baseData.namaAkunBank =
                 document.getElementById("namaAkunBank").value;
+              baseData.cabangBank =
+                document.getElementById("cabangBank").value || "";
             }
-          } else if (program === "Program POP" || program === "Program PGD") {
+          } else if (program === "POP" || program === "PGD") {
             baseData.tanggalRealisasi =
               document.getElementById("tanggalRealisasi").value;
             baseData.jumlahPeserta =
@@ -590,13 +661,64 @@
 
             if (result.startsWith("Success")) {
               Swal.fire("Berhasil", "Data berhasil disimpan.", "success");
-              document.getElementById("ethicalForm").reset();
+
+              // Reset hanya field setelah biodata
+              $("#outletEthical").val(null).trigger("change");
+              $("#programEthical").val(null).trigger("change");
+              $("#kodePiEthical").val("");
+              $("#namaOutletEthical").val("");
+              $("#kotaOutletEthical").val("");
+              $("#alamatOutletEthical").val("");
+              $("#produkDipilih").val("");
+              $("#jenisHadiah").val("");
+              $("#jenisEwallet").val("");
+              $("#noTelpEwallet").val("");
+              $("#namaAkunEwallet").val("");
+              $("#namaBank").val("");
+              $("#noRek").val("");
+              $("#namaAkunBank").val("");
+              $("#cabangBank").val("");
+              $("#tanggalRealisasi").val("");
+              $("#jumlahPeserta").val("");
+              $("#confirmCheck").prop("checked", false);
+
+              // Sembunyikan field dinamis kembali
+              $("#produkDipilihWrapper").addClass("d-none");
+              $("#jenisHadiahWrapper").addClass("d-none");
+              $("#ewalletFields").addClass("d-none");
+              $("#bankFields").addClass("d-none");
+              $("#popPgdFields").addClass("d-none");
+
+              // Hapus required dynamic
+              setFieldRequired("#produkDipilih", false);
+              setFieldRequired("#jenisHadiah", false);
+              setFieldRequired("#jenisEwallet", false);
+              setFieldRequired("#noTelpEwallet", false);
+              setFieldRequired("#namaAkunEwallet", false);
+              setFieldRequired("#namaBank", false);
+              setFieldRequired("#noRek", false);
+              setFieldRequired("#namaAkunBank", false);
+              setFieldRequired("#cabangBank", false);
+              setFieldRequired("#tanggalRealisasi", false);
+              setFieldRequired("#jumlahPeserta", false);
+
               $("#outletEthical").val(null).trigger("change");
               $("#programEthical").val(null).trigger("change");
             } else if (result.startsWith("DUPLIKAT")) {
-              Swal.fire("Outlet Sudah Terdaftar", result, "error");
+              const parts = result.split(" - ");
+              const olehNama = parts[1] || "N/A";
+              const tanggal = result.match(/pada (.+)/)?.[1] || "-";
+              Swal.fire({
+                icon: "error",
+                title: "Kode PI sudah diisi",
+                html: `Kode PI <strong>${kodePi}</strong> telah diisi oleh <strong>${olehNama}</strong><br>pada <strong>${tanggal}</strong>.`,
+              });
             } else {
-              Swal.fire("Gagal", "Gagal menyimpan data.", "error");
+              Swal.fire({
+                icon: "error",
+                title: "Gagal Simpan Data",
+                html: result || "Terjadi kesalahan yang tidak diketahui.",
+              });
             }
           } catch (error) {
             console.error("Submit error:", error);
@@ -634,13 +756,18 @@
         setFieldRequired("#tanggalRealisasi", false);
         setFieldRequired("#jumlahPeserta", false);
 
-        if (selected === "Program Insentif SC Modafil & Rozgra") {
+        if (selected === "Insentif SC Modafil & Rozgra") {
+          $("#produkDipilihWrapper").removeClass("d-none");
           $("#jenisHadiahWrapper").removeClass("d-none");
+          setFieldRequired("#produkDipilih", true);
           setFieldRequired("#jenisHadiah", true);
-        } else if (selected === "Program POP" || selected === "Program PGD") {
+        } else if (selected === "POP" || selected === "PGD") {
           $("#popPgdFields").removeClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
           setFieldRequired("#jumlahPeserta", true);
+        } else {
+          $("#produkDipilihWrapper").addClass("d-none");
+          setFieldRequired("#produkDipilih", false);
         }
       });
 
@@ -656,17 +783,19 @@
         setFieldRequired("#namaBank", false);
         setFieldRequired("#noRek", false);
         setFieldRequired("#namaAkunBank", false);
+        setFieldRequired("#cabangBank", false);
 
-        if (jenis === "e-wallet") {
+        if (jenis === "E-Wallet") {
           $("#ewalletFields").removeClass("d-none");
           setFieldRequired("#jenisEwallet", true);
           setFieldRequired("#noTelpEwallet", true);
           setFieldRequired("#namaAkunEwallet", true);
-        } else if (jenis === "bank") {
+        } else if (jenis === "Transfer Bank") {
           $("#bankFields").removeClass("d-none");
           setFieldRequired("#namaBank", true);
           setFieldRequired("#noRek", true);
           setFieldRequired("#namaAkunBank", true);
+          setFieldRequired("#cabangBank", true);
         }
       });
     </script>
