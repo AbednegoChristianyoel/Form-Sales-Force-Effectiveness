@@ -578,7 +578,13 @@
             .catch((err) => {
               console.error("Fetch error:", err);
               Swal.close();
-              Swal.fire("Error", "Gagal mengambil data dari server.", "error");
+              Swal.fire({
+                icon: "error",
+                title: "Gagal Mengambil Data",
+                html: `Terjadi kesalahan saat mengambil data dari server.<br><small>${
+                  err.message || err
+                }</small>`,
+              });
             });
         });
 
@@ -723,7 +729,13 @@
           } catch (error) {
             console.error("Submit error:", error);
             Swal.close();
-            Swal.fire("Gagal", "Terjadi kesalahan pada sistem.", "error");
+            Swal.fire({
+              icon: "error",
+              title: "Gagal Submit",
+              html: `Terjadi kesalahan pada sistem.<br><small>${
+                error.message || error
+              }</small>`,
+            });
           }
         });
 
