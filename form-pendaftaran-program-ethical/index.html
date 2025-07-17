@@ -458,6 +458,13 @@
                   </div>
                 </div>
 
+                <div id="tanggalPelaksanaanPK" class="mb-12 d-none">
+                  <label for="tanggalPK" class="form-label"
+                    >Tanggal Pelaksanaan</label
+                  >
+                  <input type="date" class="form-control" id="tanggalPK" />
+                </div>
+
                 <div
                   class="form-check ms-1 mt-3 mb-0 d-flex align-items-center"
                 >
@@ -541,6 +548,7 @@
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
+        $("#tanggalPelaksanaanPK").addClass("d-none");
 
         [
           "#produkDipilih",
@@ -620,8 +628,10 @@
             <option value="PGD">PGD</option>
           `;
 
-              const divisiTerbatas = ["OMG1", "ATP1", "CNP1", "CNP2", "GOP1"];
-              if (jabatan === "NSM" || !divisiTerbatas.includes(divisi)) {
+              if (
+                jabatan === "NSM" &&
+                (divisi === "VBR" || divisi === "MSA1")
+              ) {
                 const optionPK = document.createElement("option");
                 optionPK.value = "PK to PBF";
                 optionPK.textContent = "PK to PBF";
@@ -729,7 +739,12 @@
               document.getElementById("telpApoteker").value || "";
             baseData.emailApoteker =
               document.getElementById("emailApoteker").value || "";
+          } else if (program === "PK to PBF") {
+            baseData.tanggalPelaksanaan =
+              document.getElementById("tanggalPK").value || "";
           }
+
+          console.log("Data yang dikirim:", baseData);
 
           Swal.fire({
             title: "Menyimpan...",
@@ -772,6 +787,7 @@
               $("#namaApoteker").val("");
               $("#telpApoteker").val("");
               $("#emailApoteker").val("");
+              $("#tanggalPK").val("");
 
               // Sembunyikan field dinamis kembali
               $("#produkDipilihWrapper").addClass("d-none");
@@ -780,6 +796,7 @@
               $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
               $("#boostMetabolicFields").addClass("d-none");
+              $("#tanggalPelaksanaanPK").addClass("d-none");
 
               // Hapus required dynamic
               setFieldRequired("#produkDipilih", false);
@@ -796,6 +813,7 @@
               setFieldRequired("#namaApoteker", false);
               setFieldRequired("#telpApoteker", false);
               setFieldRequired("#emailApoteker", false);
+              setFieldRequired("#tanggalPK", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
@@ -878,6 +896,9 @@
           setFieldRequired("#namaApoteker", true);
           setFieldRequired("#telpApoteker", true);
           setFieldRequired("#emailApoteker", true);
+        } else if (selected === "PK to PBF") {
+          $("#tanggalPelaksanaanPK").removeClass("d-none");
+          setFieldRequired("#tanggalPK", true);
         } else {
           $("#produkDipilihWrapper").addClass("d-none");
           setFieldRequired("#produkDipilih", false);
