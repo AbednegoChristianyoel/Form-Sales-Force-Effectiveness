@@ -769,6 +769,9 @@
               $("#tanggalRealisasi").val("");
               $("#jumlahPeserta").val("");
               $("#confirmCheck").prop("checked", false);
+              $("#namaApoteker").val("");
+              $("#telpApoteker").val("");
+              $("#emailApoteker").val("");
 
               // Sembunyikan field dinamis kembali
               $("#produkDipilihWrapper").addClass("d-none");
@@ -790,6 +793,9 @@
               setFieldRequired("#cabangBank", false);
               setFieldRequired("#tanggalRealisasi", false);
               setFieldRequired("#jumlahPeserta", false);
+              setFieldRequired("#namaApoteker", false);
+              setFieldRequired("#telpApoteker", false);
+              setFieldRequired("#emailApoteker", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
@@ -836,12 +842,14 @@
       $("#programEthical").on("change", function () {
         const selected = $(this).val();
 
+        $("#produkDipilihWrapper").addClass("d-none");
         $("#jenisHadiahWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
 
+        setFieldRequired("#produkDipilih", false);
         setFieldRequired("#jenisHadiah", false);
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
@@ -849,8 +857,12 @@
         setFieldRequired("#namaBank", false);
         setFieldRequired("#noRek", false);
         setFieldRequired("#namaAkunBank", false);
+        setFieldRequired("#cabangBank", false);
         setFieldRequired("#tanggalRealisasi", false);
         setFieldRequired("#jumlahPeserta", false);
+        setFieldRequired("#namaApoteker", false);
+        setFieldRequired("#telpApoteker", false);
+        setFieldRequired("#emailApoteker", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#produkDipilihWrapper").removeClass("d-none");
