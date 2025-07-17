@@ -314,6 +314,9 @@
                         class="form-control"
                         id="telpVoucher"
                         placeholder="Masukkan No. Telp Penerima"
+                        pattern="[0-9]{10,15}"
+                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
                         Nomor yang Anda masukkan belum sesuai. Silakan periksa
@@ -394,6 +397,9 @@
                         class="form-control"
                         id="telpBarang"
                         placeholder="Masukkan No. Telp Penerima"
+                        pattern="[0-9]{10,15}"
+                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
                         Nomor yang Anda masukkan belum sesuai. Silakan periksa
@@ -458,14 +464,6 @@
       const formatRupiah = (angka) => {
         if (!angka) return "Rp0";
         return "Rp" + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      };
-
-      const validatePhone = (inputId) => {
-        const input = document.getElementById(inputId);
-        const val = input.value.trim();
-        const isValid = /^08[0-9]{7,11}$/.test(val); // dimulai dengan 08, total panjang 9–13 digit
-        input.classList.toggle("is-invalid", !isValid);
-        return isValid;
       };
 
       const validateField = (inputId) => {

@@ -359,7 +359,14 @@
                   </div>
                   <div class="col-md-6 mt-3">
                     <label class="form-label">No. Telp Akun</label>
-                    <input type="tel" id="noTelpEwallet" class="form-control" />
+                    <input
+                      type="tel"
+                      id="noTelpEwallet"
+                      class="form-control"
+                      pattern="[0-9]{10,15}"
+                      oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                      oninput="this.setCustomValidity('')"
+                    />
                   </div>
                   <div class="col-12 mt-3">
                     <label class="form-label">Nama Akun</label>
@@ -410,6 +417,43 @@
                       id="jumlahPeserta"
                       class="form-control"
                       min="1"
+                    />
+                  </div>
+                </div>
+
+                <div id="boostMetabolicFields" class="row g-3 d-none mt-2">
+                  <div class="col-md-12">
+                    <label for="namaApoteker" class="form-label"
+                      >Nama Apoteker / Owner</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="namaApoteker"
+                      name="namaApoteker"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="telpApoteker" class="form-label"
+                      >No. Telp / WA</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telpApoteker"
+                      name="telpApoteker"
+                      pattern="[0-9]{10,15}"
+                      oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                      oninput="this.setCustomValidity('')"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="emailApoteker" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="emailApoteker"
+                      name="emailApoteker"
                     />
                   </div>
                 </div>
@@ -496,6 +540,7 @@
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
+        $("#boostMetabolicFields").addClass("d-none");
 
         [
           "#produkDipilih",
@@ -677,6 +722,13 @@
               document.getElementById("tanggalRealisasi").value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPeserta").value;
+          } else if (program === "Boost Metabolic") {
+            baseData.namaApoteker =
+              document.getElementById("namaApoteker").value || "";
+            baseData.telpApoteker =
+              document.getElementById("telpApoteker").value || "";
+            baseData.emailApoteker =
+              document.getElementById("emailApoteker").value || "";
           }
 
           Swal.fire({
@@ -692,10 +744,10 @@
               headers: { "Content-Type": "text/plain;charset=utf-8" },
             });
 
-            const result = await res.text();
+            const result = await res.json(); // <--- penting! Ubah dari res.text() ke res.json()
             Swal.close();
 
-            if (result.startsWith("Success")) {
+            if (result.status === "Success") {
               Swal.fire("Berhasil", "Data berhasil disimpan.", "success");
 
               // Reset hanya field setelah biodata
@@ -724,6 +776,7 @@
               $("#ewalletFields").addClass("d-none");
               $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
+              $("#boostMetabolicFields").addClass("d-none");
 
               // Hapus required dynamic
               setFieldRequired("#produkDipilih", false);
@@ -737,23 +790,23 @@
               setFieldRequired("#cabangBank", false);
               setFieldRequired("#tanggalRealisasi", false);
               setFieldRequired("#jumlahPeserta", false);
-
-              $("#outletEthical").val(null).trigger("change");
-              $("#programEthical").val(null).trigger("change");
-            } else if (result.startsWith("DUPLIKAT")) {
-              const parts = result.split(" - ");
-              const olehNama = parts[1] || "N/A";
-              const tanggal = result.match(/pada (.+)/)?.[1] || "-";
+            } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
                 title: "Kode PI sudah diisi",
-                html: `Kode PI <strong>${kodePi}</strong> telah diisi oleh <strong>${olehNama}</strong><br>pada <strong>${tanggal}</strong>.`,
+                html: `
+                  Pendaftaran program: <strong>${result.program}</strong><br>
+                  Kode PI: <strong>${result.kodePi}</strong><br>
+                  Telah diisi oleh: <strong>${result.oleh}</strong><br>
+                  Pada: <strong>${result.tanggal}</strong>.
+                `,
               });
             } else {
               Swal.fire({
                 icon: "error",
                 title: "Gagal Simpan Data",
-                html: result || "Terjadi kesalahan yang tidak diketahui.",
+                html:
+                  result.message || "Terjadi kesalahan yang tidak diketahui.",
               });
             }
           } catch (error) {
@@ -787,6 +840,7 @@
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
+        $("#boostMetabolicFields").addClass("d-none");
 
         setFieldRequired("#jenisHadiah", false);
         setFieldRequired("#jenisEwallet", false);
@@ -807,6 +861,11 @@
           $("#popPgdFields").removeClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
           setFieldRequired("#jumlahPeserta", true);
+        } else if (selected === "Boost Metabolic") {
+          $("#boostMetabolicFields").removeClass("d-none");
+          setFieldRequired("#namaApoteker", true);
+          setFieldRequired("#telpApoteker", true);
+          setFieldRequired("#emailApoteker", true);
         } else {
           $("#produkDipilihWrapper").addClass("d-none");
           setFieldRequired("#produkDipilih", false);
