@@ -120,6 +120,11 @@
         transition: opacity 0.5s ease;
         pointer-events: none;
       }
+      .form-check-input {
+        border: 2px solid #333 !important;
+        width: 1.3em;
+        height: 1.3em;
+      }
     </style>
   </head>
 
@@ -234,7 +239,7 @@
                   <div class="form-text text-start">
                     <span
                       style="font-style: italic; font-weight: bold; color: #000"
-                      >Untuk ASM Vacant, Masukkan NIP SM. (Khusus MSA & VBR
+                      >* Untuk ASM Vacant, Masukkan NIP SM. (Khusus MSA & VBR
                       Masukkan NIP NSM)</span
                     >
                   </div>
@@ -294,7 +299,7 @@
                     <option value="Voucher Indomaret">Voucher Indomaret</option>
                     <option value="Voucher MAP">Voucher MAP</option>
                     <option value="E-Wallet">E-Wallet</option>
-                    <option value="Barang">Barang</option>
+                    <option value="Barang">Elektronik</option>
                   </select>
                 </div>
 
@@ -325,7 +330,7 @@
                         placeholder="Masukkan Nama Penerima"
                       />
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 mb-3">
                       <label class="form-label">Alamat Pengiriman</label>
                       <textarea
                         class="form-control"
@@ -354,19 +359,22 @@
                         class="form-control"
                         id="noEwallet"
                         placeholder="Masukkan No. E-Wallet"
+                        pattern="[0-9]{10,15}"
+                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
                         Nomor yang Anda masukkan belum sesuai. Silakan periksa
                         kembali.
                       </div>
                     </div>
-                    <div class="col-md-4">
-                      <label class="form-label">Nama Akun</label>
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label">Nama Akun E-Wallet</label>
                       <input
                         type="text"
                         class="form-control"
                         id="namaEwallet"
-                        placeholder="Masukkan Akun E-Wallet"
+                        placeholder="Contoh: abednegoefra"
                       />
                     </div>
                   </div>
@@ -374,7 +382,7 @@
                   <div id="barangFields" class="row g-3 d-none">
                     <div class="col-12">
                       <label class="form-label"
-                        >Nama Barang Elektronik (Sesuai Hadiah)</label
+                        >Nama Elektronik (Sesuai Budget Hadiah)</label
                       >
                       <input
                         type="text"
@@ -408,7 +416,7 @@
                         placeholder="Masukkan Nama Penerima"
                       />
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 mb-3">
                       <label class="form-label">Alamat Pengiriman</label>
                       <textarea
                         class="form-control"
@@ -420,22 +428,26 @@
                   </div>
                 </div>
 
-                <div
-                  class="form-check ms-1 mt-3 mb-0 d-flex align-items-center"
-                >
-                  <input
-                    class="form-check-input me-2"
-                    type="checkbox"
-                    id="confirmCheck"
-                    required
-                  />
-                  <label
-                    class="form-check-label fw-medium"
-                    for="confirmCheck"
-                    style="margin: 0"
-                  >
-                    <strong>SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong>
-                  </label>
+                <div class="col-12 mt-1 mb-2">
+                  <div class="p-2 border border-dark border-2 rounded">
+                    <div class="form-check d-flex align-items-center">
+                      <input
+                        class="form-check-input me-2"
+                        type="checkbox"
+                        id="confirmCheck"
+                        required
+                      />
+                      <label
+                        class="form-check-label fw-medium d-flex align-items-center"
+                        for="confirmCheck"
+                        style="margin: 0"
+                      >
+                        <strong
+                          >SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong
+                        >
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="mt-4 mb-2">
@@ -508,7 +520,7 @@
   <option value="Voucher Indomaret">Voucher Indomaret</option>
   <option value="Voucher MAP">Voucher MAP</option>
   <option value="E-Wallet">E-Wallet</option>
-  <option value="Barang">Barang</option>
+  <option value="Barang">Elektronik</option>
 `;
             $("#jenisHadiah").trigger("change.select2");
 
