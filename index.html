@@ -358,9 +358,10 @@
                         type="text"
                         class="form-control"
                         id="noEwallet"
-                        placeholder="Masukkan No. E-Wallet"
-                        pattern="[0-9]{10,15}"
-                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        pattern="08[0-9]{8,13}"
+                        inputmode="numeric"
+                        maxlength="15"
+                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
                         oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
@@ -398,8 +399,10 @@
                         class="form-control"
                         id="telpBarang"
                         placeholder="Masukkan No. Telp Penerima"
-                        pattern="[0-9]{10,15}"
-                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        pattern="08[0-9]{8,13}"
+                        inputmode="numeric"
+                        maxlength="15"
+                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
                         oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
