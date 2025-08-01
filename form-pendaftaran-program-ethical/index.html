@@ -110,6 +110,27 @@
         transition: opacity 0.5s ease;
         pointer-events: none;
       }
+      /* Gaya untuk checkbox agar outline hitam */
+      .form-check-input[type="checkbox"] {
+        border-color: #000; /* Outline hitam */
+      }
+
+      /* Saat dicentang */
+      .form-check-input[type="checkbox"]:checked {
+        background-color: #0b5ed7; /* Kotak hitam */
+        border-color: #000; /* Outline hitam */
+      }
+
+      /* Hover agar terlihat interaktif */
+      .form-check-input[type="checkbox"]:hover {
+        border-color: #0b5ed7;
+      }
+
+      /* Fokus agar tetap outline hitam */
+      .form-check-input[type="checkbox"]:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+      }
     </style>
   </head>
   <!-- Loader -->
@@ -421,7 +442,125 @@
                   </div>
                 </div>
 
-                <div id="boostMetabolicFields" class="row g-3 d-none mt-2">
+                <div id="boostMetabolicFields" class="row g-3 d-none mt-0">
+                  <div id="produkSwitchWrapper" class="row g-3 d-none">
+                    <div class="col-12 mt-1">
+                      <label class="form-label fw-bold">Pilihan Produk</label>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Profibrat200"
+                          data-label="Profibrat 200 mg"
+                        />
+                        <label class="form-check-label" for="Profibrat200">
+                          Profibrat 200 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Stavinor10"
+                          data-label="Stavinor 10 mg"
+                        />
+                        <label class="form-check-label" for="Stavinor10">
+                          Stavinor 10 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Stavinor20"
+                          data-label="Stavinor 20 mg"
+                        />
+                        <label class="form-check-label" for="Stavinor20">
+                          Stavinor 20 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Stavinor40"
+                          data-label="Stavinor 40 mg"
+                        />
+                        <label class="form-check-label" for="Stavinor40">
+                          Stavinor 40 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Vastrol10"
+                          data-label="Vastrol 10 mg"
+                        />
+                        <label class="form-check-label" for="Vastrol10">
+                          Vastrol 10 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Vastrol20"
+                          data-label="Vastrol 20 mg"
+                        />
+                        <label class="form-check-label" for="Vastrol20">
+                          Vastrol 20 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Rechol10"
+                          data-label="Rechol 10 mg"
+                        />
+                        <label class="form-check-label" for="Rechol10">
+                          Rechol 10 mg
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input produkSwitch"
+                          type="checkbox"
+                          id="Rechol20"
+                          data-label="Rechol 20 mg"
+                        />
+                        <label class="form-check-label" for="Rechol20">
+                          Rechol 20 mg
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="col-md-12">
                     <label for="namaApoteker" class="form-label"
                       >Nama Apoteker / Owner</label
@@ -465,22 +604,25 @@
                   <input type="date" class="form-control" id="tanggalPK" />
                 </div>
 
-                <div
-                  class="form-check ms-1 mt-3 mb-0 d-flex align-items-center"
-                >
-                  <input
-                    class="form-check-input me-2 big-checkbox"
-                    type="checkbox"
-                    id="confirmCheck"
-                    required
-                  />
-                  <label
-                    class="form-check-label fw-medium ms-2"
-                    for="confirmCheck"
-                    style="margin: 0"
-                  >
-                    <strong>SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong>
-                  </label>
+                <div class="col-12 mt-1 mt-4">
+                  <div class="p-2 border border-dark border-2 rounded">
+                    <div class="form-check d-flex align-items-center">
+                      <input
+                        class="form-check-input me-2 mt-0"
+                        type="checkbox"
+                        id="confirmCheck"
+                        required
+                      />
+                      <label
+                        class="form-check-label fw-medium mb-0"
+                        for="confirmCheck"
+                      >
+                        <strong
+                          >SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong
+                        >
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="col-12 mt-4">
@@ -531,6 +673,14 @@
           "#cabangBank",
           "#tanggalRealisasi",
           "#jumlahPeserta",
+          "#Profibrat200",
+          "#Stavinor10",
+          "#Stavinor20",
+          "#Stavinor40",
+          "#Vastrol10",
+          "#Vastrol20",
+          "#Rechol10",
+          "#Rechol20",
         ];
 
         fieldsToClear.forEach((id) => {
@@ -548,6 +698,7 @@
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
+        $("#produkSwitchWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
 
         [
@@ -694,6 +845,19 @@
             );
           }
 
+          if (program === "Boost Metabolic") {
+            const checkedProduk = document.querySelectorAll(
+              '#produkSwitchWrapper input[type="checkbox"]:checked'
+            );
+            if (checkedProduk.length === 0) {
+              return Swal.fire(
+                "Pilih Produk",
+                "Minimal pilih satu produk untuk Boost Metabolic.",
+                "warning"
+              );
+            }
+          }
+
           const baseData = {
             nip,
             nama: document.getElementById("namaEthical").value,
@@ -739,6 +903,15 @@
               document.getElementById("telpApoteker").value || "";
             baseData.emailApoteker =
               document.getElementById("emailApoteker").value || "";
+
+            const switches = document.querySelectorAll(".produkSwitch");
+
+            const produkStatus = Array.from(switches).map((sw) => ({
+              label: sw.dataset.label,
+              status: sw.checked ? "Yes" : "No",
+            }));
+
+            baseData.productMetabolic = JSON.stringify(produkStatus);
           } else if (program === "PK to PBF") {
             baseData.tanggalPelaksanaan =
               document.getElementById("tanggalPK").value || "";
@@ -789,6 +962,20 @@
               $("#emailApoteker").val("");
               $("#tanggalPK").val("");
 
+              [
+                "#Profibrat200",
+                "#Stavinor10",
+                "#Stavinor20",
+                "#Stavinor40",
+                "#Vastrol10",
+                "#Vastrol20",
+                "#Rechol10",
+                "#Rechol20",
+              ].forEach((id) => {
+                const el = document.querySelector(id);
+                if (el) el.checked = false;
+              });
+
               // Sembunyikan field dinamis kembali
               $("#produkDipilihWrapper").addClass("d-none");
               $("#jenisHadiahWrapper").addClass("d-none");
@@ -796,6 +983,7 @@
               $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
               $("#boostMetabolicFields").addClass("d-none");
+              $("#produkSwitchWrapper").addClass("d-none");
               $("#tanggalPelaksanaanPK").addClass("d-none");
 
               // Hapus required dynamic
@@ -866,6 +1054,8 @@
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
+        $("#produkSwitchWrapper").addClass("d-none");
+        $("#tanggalPelaksanaanPK").addClass("d-none");
 
         setFieldRequired("#produkDipilih", false);
         setFieldRequired("#jenisHadiah", false);
@@ -893,6 +1083,7 @@
           setFieldRequired("#jumlahPeserta", true);
         } else if (selected === "Boost Metabolic") {
           $("#boostMetabolicFields").removeClass("d-none");
+          $("#produkSwitchWrapper").removeClass("d-none");
           setFieldRequired("#namaApoteker", true);
           setFieldRequired("#telpApoteker", true);
           setFieldRequired("#emailApoteker", true);
