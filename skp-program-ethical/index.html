@@ -501,8 +501,7 @@
                   type="button" 
                   class="btn w-100 text-white ${generateBtnClass}"
                   style="background-color: var(--bs-primary);" 
-                  onclick="generateSkp('${item.program}','${item.id}')"
-          }','${item.id}')">
+                    onclick="generateSkp('${item.program}','${item.id}')">
                   Generate SKP
                 </button>
               </div>
@@ -542,7 +541,7 @@
 
     <script>
       const apiURL =
-        "https://script.google.com/a/macros/pharosindonesia.id/s/AKfycbyfI2jk3tGoddwWmoLLSpNK0wAdTf93uJ4b-9u8yESkB2WmvNkC_eVCCm0swFddbPuQ/exec"; // Ganti dengan WebApp URL kamu
+        "https://script.google.com/macros/s/AKfycbz826AQlFzxMepG_MrJc-Cq4X2CCbX0tDgNoAyW-gDeAkzJK3FcVAUi8TJs3-mFN3N5/exec"; // Ganti dengan WebApp URL kamu
 
       function generateSkp(program, id) {
         Swal.fire({
