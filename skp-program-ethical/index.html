@@ -248,7 +248,7 @@
             <li class="nav-item">
               <a
                 class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-pendaftaran-program-ethical"
+                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/skp-program-ethical/"
                 >SKP Program Ethical</a
               >
             </li>
@@ -439,20 +439,17 @@
           // 🔹 Link jika ada
           const downloadLink = item.generateSkp
             ? `<a href="${item.generateSkp}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">
-           Download SKP
-         </a>`
+         Download SKP
+       </a>`
             : "";
 
           const uploadedLink = item.uploadSkp
             ? `<a href="${item.uploadSkp}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">
-           Uploaded SKP
-         </a>`
+         Uploaded SKP
+       </a>`
             : "";
 
-          // 🔹 Hanya kasih margin-top pada tombol jika ada link di atasnya
-          const generateBtnClass = downloadLink ? "mt-0" : "mt-1";
-          const uploadBtnClass = uploadedLink ? "mt-0" : "mt-1";
-
+          // 🔹 Card Template
           const card = `
       <div class="col-md-6 mb-4">
         <div class="card card-modern h-100 shadow-sm border-0">
@@ -475,7 +472,7 @@
                 <small class="text-secondary">Status</small>
                 <p class="fw-bold m-0">${item.statusSKP || "-"}</p>
               </div>
-              <div class="col-6">
+              <div class="col-6 ms-0">
                 <small class="text-secondary">Tipe Program</small>
                 <p class="m-0">${item.program || "-"}</p>
               </div>
@@ -486,7 +483,7 @@
                 <small class="text-secondary">Diajukan oleh</small>
                 <p class="m-0">${item.namaPengaju || "-"}</p>
               </div>
-              <div class="col-6">
+              <div class="col-6 ms-0">
                 <small class="text-secondary">NIP</small>
                 <p class="m-0">${item.nip || "-"}</p>
               </div>
@@ -495,25 +492,28 @@
 
           <div class="card-footer bg-white border-0 pt-0">
             <div class="d-flex justify-content-between mt-2 gap-2">
-              <div class="w-50">
+              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
                 ${downloadLink}
                 <button 
                   type="button" 
-                  class="btn w-100 text-white ${generateBtnClass}"
+                  class="btn w-100 text-white mt-1"
                   style="background-color: var(--bs-primary);" 
-                    onclick="generateSkp('${item.program}','${item.id}')">
+                  onclick="generateSkp('${item.program}','${item.id}')">
                   Generate SKP
                 </button>
               </div>
-              <div class="w-50">
+              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
                 ${uploadedLink}
+                <input type="file" id="uploadInput-${
+                  item.id
+                }" hidden accept=".pdf,image/png,image/jpeg" />
                 <button 
                   type="button" 
-                  class="btn w-100 text-white ${uploadBtnClass}"
+                  class="btn w-100 text-white mt-1"
                   style="background-color: #009045;" 
-                  onclick="uploadSkp('${item.program}','${item.namaOutlet}','${
-            item.id
-          }')">
+                  onclick="document.getElementById('uploadInput-${
+                    item.id
+                  }').click()">
                   Upload SKP
                 </button>
               </div>
@@ -523,6 +523,14 @@
       </div>
     `;
           skpList.append(card);
+
+          // 🔹 Event listener untuk file input
+          $(`#uploadInput-${item.id}`).on("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+              uploadSkp(item.program, item.namaOutlet, item.id, file);
+            }
+          });
         });
       }
 
@@ -541,36 +549,52 @@
 
     <script>
       const apiURL =
-        "https://script.google.com/macros/s/AKfycbz826AQlFzxMepG_MrJc-Cq4X2CCbX0tDgNoAyW-gDeAkzJK3FcVAUi8TJs3-mFN3N5/exec"; // Ganti dengan WebApp URL kamu
+        "https://script.google.com/macros/s/AKfycbz826AQlFzxMepG_MrJc-Cq4X2CCbX0tDgNoAyW-gDeAkzJK3FcVAUi8TJs3-mFN3N5/exec";
 
       function generateSkp(program, id) {
         Swal.fire({
-          title: "Generating SKP...",
+          title: "Membuat SKP...",
+          text: "Tunggu sebentar, data sedang diproses :)",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
           didOpen: () => Swal.showLoading(),
         });
 
-        fetch(apiURL, {
-          method: "POST",
-          body: JSON.stringify({
-            action: "generateSkp",
-            program: program,
-            id: id,
-          }),
-          headers: { "Content-Type": "application/json" },
-        })
+        const url = `${apiURL}?action=generateSkp&program=${encodeURIComponent(
+          program
+        )}&id=${encodeURIComponent(id)}`;
+
+        fetch(url)
           .then((res) => res.json())
           .then((result) => {
             Swal.close();
             if (result.success) {
-              Swal.fire({ icon: "success", title: "SKP Berhasil Dibuat!" });
+              Swal.fire({
+                icon: "success",
+                title: "SKP Berhasil Dibuat!",
+              });
 
-              // Update link download SKP di card
+              // 🔹 Update data di allSKPData
+              const idx = allSKPData.findIndex(
+                (d) => d.id === id && d.program === program
+              );
+              if (idx !== -1) {
+                allSKPData[idx].generateSkp = result.url;
+              }
+
+              // 🔹 Update DOM link download SKP
               const card = $(`button[onclick*="'${id}'"]`).closest(".card");
-              card
-                .find(".card-footer .w-50:first")
-                .prepend(
+              const footer = card.find(".card-footer .w-50:first");
+              const existingLink = footer.find("a.text-primary");
+
+              if (existingLink.length === 0) {
+                footer.prepend(
                   `<a href="${result.url}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">Download SKP</a>`
                 );
+              } else {
+                existingLink.attr("href", result.url);
+              }
             } else {
               Swal.fire({
                 icon: "error",
@@ -587,6 +611,87 @@
               text: "Gagal generate SKP.",
             });
           });
+      }
+      function uploadSkp(program, outletName, id, file) {
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire({
+            icon: "warning",
+            title: "Format file tidak didukung!",
+            text: "Hanya PDF, JPG, JPEG, atau PNG yang diperbolehkan.",
+          });
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const base64File = e.target.result.split(",")[1];
+
+          Swal.fire({
+            title: "Mengupload SKP...",
+            text: "Harap tunggu sebentar",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          fetch(apiURL, {
+            method: "POST",
+            body: new URLSearchParams({
+              action: "uploadSkp",
+              program: program,
+              id: id,
+              file: base64File,
+              filename: file.name,
+              mimeType: file.type,
+            }),
+          })
+            .then((res) => res.json())
+            .then((result) => {
+              Swal.close();
+              if (result.success) {
+                Swal.fire({ icon: "success", title: "Upload Berhasil!" });
+
+                // 🔹 Update data di allSKPData
+                const idx = allSKPData.findIndex(
+                  (d) => d.id === id && d.program === program
+                );
+                if (idx !== -1) {
+                  allSKPData[idx].uploadSkp = result.url;
+                }
+
+                // 🔹 Update link uploaded di DOM
+                const card = $(`input[id='uploadInput-${id}']`).closest(
+                  ".card"
+                );
+                const footer = card.find(".card-footer .w-50:last");
+
+                const existingLink = footer.find("a.text-success");
+                if (existingLink.length === 0) {
+                  footer.prepend(
+                    `<a href="${result.url}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">Uploaded SKP</a>`
+                  );
+                } else {
+                  existingLink.attr("href", result.url);
+                }
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Gagal Upload",
+                  text: result.message,
+                });
+              }
+            })
+            .catch(() => {
+              Swal.close();
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Gagal upload file.",
+              });
+            });
+        };
+
+        reader.readAsDataURL(file);
       }
     </script>
   </body>
