@@ -18,6 +18,10 @@
       href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap"
+      rel="stylesheet"
+    />
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -67,11 +71,15 @@
         padding: 0.5rem 0.9rem;
       }
 
+      button,
+      .btn {
+        font-weight: bold !important;
+      }
+
       .btn-primary {
         background-color: #0d6efd;
         border: none;
         padding: 0.55rem 1rem;
-        font-weight: 500;
         border-radius: 0.5rem;
       }
 
@@ -190,6 +198,62 @@
         font-size: 1rem; /* lebih besar dari default */
         font-weight: 600; /* sedikit lebih tebal */
       }
+      /* 🔹 Logo LUMORA */
+      .lumora-logo {
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 1px;
+        font-size: 1.6rem;
+        display: inline-block;
+        color: #ffd54f;
+        animation: goldGlow 3s ease-in-out infinite,
+          floatY 4s ease-in-out infinite;
+        text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80; /* Shadow awal */
+      }
+
+      /* 🔹 Ikon Petir */
+      .lightning-icon {
+        animation: yellowFlash 2.2s ease-in-out infinite,
+          floatY 4s ease-in-out infinite;
+        transform-origin: center;
+        filter: drop-shadow(0 0 4px #fff8e1) drop-shadow(0 0 8px #ffcc80); /* Glow sama dengan teks */
+      }
+
+      /* Glow kuning-oranye elegan */
+      @keyframes goldGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80;
+          color: #ffd54f;
+        }
+        50% {
+          text-shadow: 0 0 6px #fff4c2, 0 0 12px #ffb74d;
+          color: #ffb300;
+        }
+      }
+
+      /* Floating sinkron */
+      @keyframes floatY {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-2px);
+        }
+      }
+
+      /* Flash Petir lembut dengan shadow */
+      @keyframes yellowFlash {
+        0%,
+        100% {
+          fill: #ffffff;
+          filter: drop-shadow(0 0 3px #fff9c4) drop-shadow(0 0 6px #ffecb3);
+        }
+        50% {
+          fill: #ffeb3b;
+          filter: drop-shadow(0 0 5px #fff4c2) drop-shadow(0 0 10px #ffd54f);
+        }
+      }
     </style>
   </head>
 
@@ -200,19 +264,19 @@
     >
       <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2 me-3" href="#">
+          <!-- 🔹 ICON PETIR -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"
             height="32"
-            fill="white"
-            class="bi bi-bar-chart-line-fill"
+            class="bi bi-lightning-charge-fill lightning-icon"
             viewBox="0 0 16 16"
           >
-            <path
-              d="M1 13.5a.5.5 0 0 1 .5-.5H15v1H1.5a.5.5 0 0 1-.5-.5zm6-11A.5.5 0 0 1 7.5 3v8a.5.5 0 0 1-1 0V3A.5.5 0 0 1 7 2.5zm4 3A.5.5 0 0 1 11.5 6v5a.5.5 0 0 1-1 0V6A.5.5 0 0 1 11 5.5zm-8 2A.5.5 0 0 1 3.5 8v3a.5.5 0 0 1-1 0V8A.5.5 0 0 1 3 7.5z"
-            />
+            <path d="M11 0L6 9h4l-1 7 5-10H9l2-6z" />
           </svg>
-          <span class="text-white">FORM PROGRAM</span>
+
+          <!-- 🔹 NAMA BRAND -->
+          <span class="text-white lumora-logo animated-logo">LUMORA</span>
         </a>
 
         <!-- Hamburger di kanan -->
@@ -231,13 +295,6 @@
         <!-- Menu collapsible di kiri -->
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto mt-2 mt-lg-0 ms-2">
-            <li class="nav-item">
-              <a
-                class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/"
-                >Form Hadiah Trade</a
-              >
-            </li>
             <li class="nav-item">
               <a
                 class="nav-link text-white fw-bold ms-1"
@@ -277,8 +334,6 @@
           <select class="form-select" id="filterProgram">
             <option value="">Semua Program</option>
             <option>Boost Metabolic</option>
-            <option>POP</option>
-            <option>PGD</option>
           </select>
         </div>
         <div class="col-md-2">
@@ -306,6 +361,53 @@
 
       <!-- List hasil -->
       <div class="row" id="skpList"></div>
+
+      <!-- 🔹 Modal Upload SKP -->
+      <div
+        class="modal fade"
+        id="uploadSkpModal"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title">Upload File SKP</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p class="mb-2">Outlet: <b id="modalOutletName">-</b></p>
+              <input
+                type="file"
+                class="form-control mb-3"
+                id="modalUploadFile"
+                accept=".pdf,image/png,image/jpeg"
+              />
+              <small class="text-secondary">Format: PDF, JPG, PNG</small>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                id="btnConfirmUpload"
+              >
+                Upload
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -461,7 +563,9 @@
           <div class="card-body py-3">
             <div class="mb-2">
               <small class="text-secondary">Nama Outlet</small>
-              <p class="fw-bold text-primary mb-1">${item.namaOutlet || "-"}</p>
+              <p class="fw-bold fs-5 text-primary mb-1">${
+                item.namaOutlet || "-"
+              }</p>
               <p class="text-muted m-0"><strong>${
                 item.kodePI || "-"
               }</strong> | ${item.kota || "-"}</p>
@@ -472,7 +576,7 @@
                 <small class="text-secondary">Status</small>
                 <p class="fw-bold m-0">${item.statusSKP || "-"}</p>
               </div>
-              <div class="col-6 ms-0">
+              <div class="col-6 ps-0">
                 <small class="text-secondary">Tipe Program</small>
                 <p class="m-0">${item.program || "-"}</p>
               </div>
@@ -483,7 +587,7 @@
                 <small class="text-secondary">Diajukan oleh</small>
                 <p class="m-0">${item.namaPengaju || "-"}</p>
               </div>
-              <div class="col-6 ms-0">
+              <div class="col-6 ps-0">
                 <small class="text-secondary">NIP</small>
                 <p class="m-0">${item.nip || "-"}</p>
               </div>
@@ -511,9 +615,9 @@
                   type="button" 
                   class="btn w-100 text-white mt-1"
                   style="background-color: #009045;" 
-                  onclick="document.getElementById('uploadInput-${
-                    item.id
-                  }').click()">
+                  onclick="openUploadModal('${item.program}','${
+            item.namaOutlet
+          }','${item.id}')">
                   Upload SKP
                 </button>
               </div>
@@ -570,9 +674,18 @@
           .then((result) => {
             Swal.close();
             if (result.success) {
+              const outletName =
+                allSKPData.find((d) => d.id === id && d.program === program)
+                  ?.namaOutlet || "Outlet";
+
               Swal.fire({
                 icon: "success",
-                title: "SKP Berhasil Dibuat!",
+                title: "Generate SKP Berhasil",
+                html: `SKP untuk <b>${outletName}</b> berhasil dibuat!<br>
+    <a href="${result.url}" target="_blank" 
+       class="d-inline-block mt-2 text-primary text-decoration-underline">
+       Download SKP
+    </a>`,
               });
 
               // 🔹 Update data di allSKPData
@@ -583,7 +696,7 @@
                 allSKPData[idx].generateSkp = result.url;
               }
 
-              // 🔹 Update DOM link download SKP
+              // 🔹 Update DOM link download SKP di card
               const card = $(`button[onclick*="'${id}'"]`).closest(".card");
               const footer = card.find(".card-footer .w-50:first");
               const existingLink = footer.find("a.text-primary");
@@ -629,7 +742,7 @@
 
           Swal.fire({
             title: "Mengupload SKP...",
-            text: "Harap tunggu sebentar",
+            text: "Tunggu sebentar, data sedang diproses :)",
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading(),
           });
@@ -649,7 +762,19 @@
             .then((result) => {
               Swal.close();
               if (result.success) {
-                Swal.fire({ icon: "success", title: "Upload Berhasil!" });
+                const outletName =
+                  allSKPData.find((d) => d.id === id && d.program === program)
+                    ?.namaOutlet || "Outlet";
+
+                Swal.fire({
+                  icon: "success",
+                  title: "Upload SKP Berhasil",
+                  html: `File SKP untuk <b>${outletName}</b> berhasil diupload!<br>
+        <a href="${result.url}" target="_blank" 
+           class="d-inline-block mt-2 text-success text-decoration-underline">
+           Uploaded SKP
+        </a>`,
+                });
 
                 // 🔹 Update data di allSKPData
                 const idx = allSKPData.findIndex(
@@ -660,12 +785,10 @@
                 }
 
                 // 🔹 Update link uploaded di DOM
-                const card = $(`input[id='uploadInput-${id}']`).closest(
-                  ".card"
-                );
+                const card = $(`button[onclick*="'${id}'"]`).closest(".card");
                 const footer = card.find(".card-footer .w-50:last");
-
                 const existingLink = footer.find("a.text-success");
+
                 if (existingLink.length === 0) {
                   footer.prepend(
                     `<a href="${result.url}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">Uploaded SKP</a>`
@@ -693,6 +816,48 @@
 
         reader.readAsDataURL(file);
       }
+
+      let currentUpload = { program: "", outlet: "", id: "" };
+
+      function openUploadModal(program, outletName, id) {
+        // 🔹 Cari data SKP berdasarkan program & id
+        const data = allSKPData.find(
+          (d) => d.id === id && d.program === program
+        );
+
+        // 🔹 Cek apakah SKP sudah di-generate
+        if (!data || !data.generateSkp) {
+          Swal.fire({
+            icon: "warning",
+            title: "Belum Generate SKP",
+            text: "Silakan generate SKP terlebih dahulu sebelum upload.",
+          });
+          return; // ❌ Stop, tidak buka modal
+        }
+
+        // 🔹 Jika sudah ada SKP, buka modal upload
+        currentUpload = { program, outlet: outletName, id };
+        $("#modalOutletName").text(outletName);
+        $("#modalUploadFile").val(""); // reset file input
+        $("#uploadSkpModal").modal("show");
+      }
+
+      $("#btnConfirmUpload").on("click", function () {
+        const file = $("#modalUploadFile")[0].files[0];
+        if (!file) {
+          Swal.fire({ icon: "warning", title: "Pilih file terlebih dahulu!" });
+          return;
+        }
+
+        // 🔹 Jalankan upload
+        $("#uploadSkpModal").modal("hide");
+        uploadSkp(
+          currentUpload.program,
+          currentUpload.outlet,
+          currentUpload.id,
+          file
+        );
+      });
     </script>
   </body>
 </html>
