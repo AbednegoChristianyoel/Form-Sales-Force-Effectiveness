@@ -339,6 +339,7 @@
           <select class="form-select" id="filterProgram">
             <option value="">Semua Program</option>
             <option>Boost Metabolic</option>
+            <option>Insentif Mod & Rozgra</option>
           </select>
         </div>
         <div class="col-md-2">
@@ -392,7 +393,9 @@
                 id="modalUploadFile"
                 accept=".pdf,image/png,image/jpeg"
               />
-              <small class="text-secondary">Format: PDF, JPG, PNG</small>
+              <small class="text-secondary"
+                >Format: PDF, JPG, PNG & Ukuran Maks: 5 MB</small
+              >
             </div>
             <div class="modal-footer">
               <button
@@ -490,6 +493,10 @@
               ...(data["PGD"] || []).map((item) => ({
                 ...item,
                 program: "PGD",
+              })),
+              ...(data["Insentif Mod & Rozgra"] || []).map((item) => ({
+                ...item,
+                program: "Insentif Mod & Rozgra",
               })),
             ];
 
@@ -673,6 +680,7 @@
         "https://script.google.com/macros/s/AKfycbz826AQlFzxMepG_MrJc-Cq4X2CCbX0tDgNoAyW-gDeAkzJK3FcVAUi8TJs3-mFN3N5/exec";
 
       function generateSkp(program, id) {
+        console.log(program);
         Swal.fire({
           title: "Membuat SKP...",
           text: "Tunggu sebentar, data sedang diproses :)",
@@ -744,11 +752,26 @@
       }
       function uploadSkp(program, outletName, id, file) {
         const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        const MAX_SIZE_MB = 5; // 🔹 Maksimal 10 MB
+
         if (!allowedTypes.includes(file.type)) {
           Swal.fire({
             icon: "warning",
             title: "Format file tidak didukung!",
             text: "Hanya PDF, JPG, JPEG, atau PNG yang diperbolehkan.",
+          });
+          return;
+        }
+
+        // 🔹 Cek ukuran file
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+          Swal.fire({
+            icon: "warning",
+            title: "File Terlalu Besar!",
+            html: `Ukuran file maksimal <b>${MAX_SIZE_MB} MB</b>.<br>
+             File yang dipilih berukuran <b>${(file.size / 1024 / 1024).toFixed(
+               2
+             )} MB</b>.`,
           });
           return;
         }
@@ -787,10 +810,10 @@
                   icon: "success",
                   title: "Upload SKP Berhasil",
                   html: `File SKP untuk <b>${outletName}</b> berhasil diupload!<br>
-                  <a href="${result.url}" target="_blank" 
-                    class="d-inline-block mt-2 text-success text-decoration-underline">
-                    Uploaded SKP
-                  </a>`,
+            <a href="${result.url}" target="_blank" 
+              class="d-inline-block mt-2 text-success text-decoration-underline">
+              Uploaded SKP
+            </a>`,
                 });
 
                 // 🔹 Update data di allSKPData

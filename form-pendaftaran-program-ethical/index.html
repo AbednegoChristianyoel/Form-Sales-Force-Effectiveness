@@ -504,23 +504,39 @@
                   />
                 </div>
 
-                <div id="produkDipilihWrapper" class="col-12 d-none mt-3">
+                <!-- 🔹 Field Nama Owner/Apotek untuk Insentif SC -->
+                <div id="ownerFieldsInsentif" class="row g-3 d-none mt-2">
+                  <div class="col-md-6">
+                    <label class="form-label">Nama Owner / Apotek</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="namaOwnerInsentif"
+                      placeholder="Masukkan Nama Owner / Apoteker"
+                    />
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">No. Telp / WA</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="telpOwnerInsentif"
+                      placeholder="Contoh: 0878213512311"
+                      pattern="08[0-9]{8,13}"
+                      maxlength="15"
+                      oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
+                      oninput="this.setCustomValidity('')"
+                    />
+                  </div>
+                </div>
+
+                <div id="produkDipilihWrapper" class="col-12 d-none mt-0">
                   <label class="form-label">Produk yang Dipilih</label>
                   <select id="produkDipilih" class="form-select">
                     <option value="">Pilih Produk</option>
                     <option value="Rozgra Group">Rozgra Group</option>
                     <option value="Modafil">Modafil</option>
                     <option value="Modafil & Rozgra">Modafil & Rozgra</option>
-                  </select>
-                </div>
-
-                <!-- Tambahan untuk Program Insentif SC Modafil & Rozgra -->
-                <div id="jenisHadiahWrapper" class="col-12 d-none">
-                  <label class="form-label">Jenis Hadiah</label>
-                  <select id="jenisHadiah" class="form-select">
-                    <option value="">Pilih Jenis Hadiah</option>
-                    <option value="E-Wallet">E-Wallet</option>
-                    <option value="Transfer Bank">Transfer Bank</option>
                   </select>
                 </div>
 
@@ -884,7 +900,6 @@
           "#kotaOutletEthical",
           "#alamatOutletEthical",
           "#produkDipilih",
-          "#jenisHadiah",
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
@@ -914,7 +929,6 @@
         $("#confirmCheck").prop("checked", false);
 
         $("#produkDipilihWrapper").addClass("d-none");
-        $("#jenisHadiahWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
@@ -924,7 +938,6 @@
 
         [
           "#produkDipilih",
-          "#jenisHadiah",
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
@@ -1101,23 +1114,16 @@
           if (program === "Insentif SC Modafil & Rozgra") {
             baseData.produkDipilih =
               document.getElementById("produkDipilih").value || "";
-            baseData.jenisHadiah = document.getElementById("jenisHadiah").value;
-
-            if (baseData.jenisHadiah === "E-Wallet") {
-              baseData.jenisEwallet =
-                document.getElementById("jenisEwallet").value;
-              baseData.noTelpEwallet =
-                document.getElementById("noTelpEwallet").value;
-              baseData.namaAkunEwallet =
-                document.getElementById("namaAkunEwallet").value;
-            } else if (baseData.jenisHadiah === "Transfer Bank") {
-              baseData.namaBank = document.getElementById("namaBank").value;
-              baseData.noRek = document.getElementById("noRek").value;
-              baseData.namaAkunBank =
-                document.getElementById("namaAkunBank").value;
-              baseData.cabangBank =
-                document.getElementById("cabangBank").value || "";
-            }
+            baseData.namaOwner =
+              document.getElementById("namaOwnerInsentif").value || "";
+            baseData.telpOwner =
+              document.getElementById("telpOwnerInsentif").value || "";
+            baseData.jenisEwallet =
+              document.getElementById("jenisEwallet").value || "";
+            baseData.noTelpEwallet =
+              document.getElementById("noTelpEwallet").value || "";
+            baseData.namaAkunEwallet =
+              document.getElementById("namaAkunEwallet").value || "";
           } else if (program === "POP" || program === "PGD") {
             baseData.tanggalRealisasi =
               document.getElementById("tanggalRealisasi").value;
@@ -1173,7 +1179,6 @@
               $("#kotaOutletEthical").val("");
               $("#alamatOutletEthical").val("");
               $("#produkDipilih").val("");
-              $("#jenisHadiah").val("");
               $("#jenisEwallet").val("");
               $("#noTelpEwallet").val("");
               $("#namaAkunEwallet").val("");
@@ -1188,7 +1193,8 @@
               $("#telpApoteker").val("");
               $("#emailApoteker").val("");
               $("#tanggalPK").val("");
-
+              $("#namaOwnerInsentif").val("");
+              $("#telpOwnerInsentif").val("");
               [
                 "#Profibrat200",
                 "#Stavinor10",
@@ -1205,7 +1211,6 @@
 
               // Sembunyikan field dinamis kembali
               $("#produkDipilihWrapper").addClass("d-none");
-              $("#jenisHadiahWrapper").addClass("d-none");
               $("#ewalletFields").addClass("d-none");
               $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
@@ -1215,7 +1220,6 @@
 
               // Hapus required dynamic
               setFieldRequired("#produkDipilih", false);
-              setFieldRequired("#jenisHadiah", false);
               setFieldRequired("#jenisEwallet", false);
               setFieldRequired("#noTelpEwallet", false);
               setFieldRequired("#namaAkunEwallet", false);
@@ -1285,16 +1289,15 @@
         const selected = $(this).val();
 
         $("#produkDipilihWrapper").addClass("d-none");
-        $("#jenisHadiahWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
+        $("#ownerFieldsInsentif").addClass("d-none");
 
         setFieldRequired("#produkDipilih", false);
-        setFieldRequired("#jenisHadiah", false);
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
         setFieldRequired("#namaAkunEwallet", false);
@@ -1307,12 +1310,20 @@
         setFieldRequired("#namaApoteker", false);
         setFieldRequired("#telpApoteker", false);
         setFieldRequired("#emailApoteker", false);
+        setFieldRequired("#namaOwnerInsentif", false);
+        setFieldRequired("#telpOwnerInsentif", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#produkDipilihWrapper").removeClass("d-none");
-          $("#jenisHadiahWrapper").removeClass("d-none");
+          $("#ownerFieldsInsentif").removeClass("d-none");
+          $("#ewalletFields").removeClass("d-none");
+          setFieldRequired("#jenisEwallet", true);
+          setFieldRequired("#noTelpEwallet", true);
+          setFieldRequired("#namaAkunEwallet", true);
+
           setFieldRequired("#produkDipilih", true);
-          setFieldRequired("#jenisHadiah", true);
+          setFieldRequired("#namaOwnerInsentif", true);
+          setFieldRequired("#telpOwnerInsentif", true);
         } else if (selected === "POP" || selected === "PGD") {
           $("#popPgdFields").removeClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
@@ -1329,34 +1340,6 @@
         } else {
           $("#produkDipilihWrapper").addClass("d-none");
           setFieldRequired("#produkDipilih", false);
-        }
-      });
-
-      $("#jenisHadiah").on("change", function () {
-        const jenis = $(this).val();
-
-        $("#ewalletFields").addClass("d-none");
-        $("#bankFields").addClass("d-none");
-
-        setFieldRequired("#jenisEwallet", false);
-        setFieldRequired("#noTelpEwallet", false);
-        setFieldRequired("#namaAkunEwallet", false);
-        setFieldRequired("#namaBank", false);
-        setFieldRequired("#noRek", false);
-        setFieldRequired("#namaAkunBank", false);
-        setFieldRequired("#cabangBank", false);
-
-        if (jenis === "E-Wallet") {
-          $("#ewalletFields").removeClass("d-none");
-          setFieldRequired("#jenisEwallet", true);
-          setFieldRequired("#noTelpEwallet", true);
-          setFieldRequired("#namaAkunEwallet", true);
-        } else if (jenis === "Transfer Bank") {
-          $("#bankFields").removeClass("d-none");
-          setFieldRequired("#namaBank", true);
-          setFieldRequired("#noRek", true);
-          setFieldRequired("#namaAkunBank", true);
-          setFieldRequired("#cabangBank", true);
         }
       });
       window.addEventListener("load", () => {
