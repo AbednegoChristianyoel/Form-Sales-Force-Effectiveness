@@ -735,6 +735,10 @@
               } else {
                 existingLink.attr("href", result.url);
               }
+              const generateBtn = card.find('button[onclick*="generateSkp"]');
+              generateBtn.prop("disabled", true);
+              generateBtn.removeClass("text-white").addClass("btn-secondary");
+              generateBtn.css("background-color", "");
             } else {
               Swal.fire({
                 icon: "error",
