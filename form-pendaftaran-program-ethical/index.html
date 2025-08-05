@@ -765,26 +765,44 @@
                 </div>
 
                 <!-- Tambahan untuk Program POP dan PGD -->
-                <div id="popPgdFields" class="row d-none mt-3">
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">Estimasi Tanggal Realisasi</label>
-                    <input
-                      type="date"
-                      id="tanggalRealisasi"
-                      class="form-control"
-                    />
+                <div id="popPgdFields" class="col-12 d-none">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label"
+                        >Estimasi Tanggal Realisasi</label
+                      >
+                      <input
+                        type="date"
+                        id="tanggalRealisasi"
+                        class="form-control"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label"
+                        >Jumlah Peserta (Pack), Include PSR</label
+                      >
+                      <input
+                        type="number"
+                        id="jumlahPeserta"
+                        class="form-control"
+                        min="1"
+                        placeholder="Masukkan Jumlah Peserta (Termasuk PSR)"
+                      />
+                    </div>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label"
-                      >Jumlah Peserta (Pack), Include PSR</label
-                    >
-                    <input
-                      type="number"
-                      id="jumlahPeserta"
-                      class="form-control"
-                      min="1"
-                      placeholder="Masukkan Jumlah Peserta (Termasuk PSR)"
-                    />
+                </div>
+
+                <div id="tempatPelaksanaanWrapper" class="col-12 d-none mt-0">
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <label class="form-label">Tempat Pelaksanaan</label>
+                      <input
+                        type="text"
+                        id="tempatPelaksanaan"
+                        class="form-control"
+                        placeholder="Masukkan Tempat Pelaksanaan PGD"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -979,7 +997,13 @@
                   <label for="tanggalPK" class="form-label"
                     >Tanggal Pelaksanaan</label
                   >
-                  <input type="date" class="form-control" id="tanggalPK" />
+                  <input
+                    type="date"
+                    class="form-control"
+                    name="tanggalPK"
+                    id="tanggalPK"
+                    required
+                  />
                 </div>
 
                 <div class="col-12 mt-1 mt-4">
@@ -1058,6 +1082,7 @@
           "#Vastrol20",
           "#Rechol10",
           "#Rechol20",
+          "#tempatPelaksanaan",
         ];
 
         fieldsToClear.forEach((id) => {
@@ -1075,6 +1100,7 @@
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
+        $("#tempatPelaksanaanWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
         $("#produkPediatrikWrapper").addClass("d-none");
 
@@ -1089,6 +1115,7 @@
           "#cabangBank",
           "#tanggalRealisasi",
           "#jumlahPeserta",
+          "#tempatPelaksanaan",
         ].forEach((id) => setFieldRequired(id, false));
       }
 
@@ -1279,7 +1306,7 @@
               document.getElementById("noTelpEwallet").value || "";
             baseData.namaAkunEwallet =
               document.getElementById("namaAkunEwallet").value || "";
-          } else if (program === "POP" || program === "PGD") {
+          } else if (program === "POP") {
             baseData.tanggalRealisasi =
               document.getElementById("tanggalRealisasi").value;
             baseData.jumlahPeserta =
@@ -1297,6 +1324,13 @@
             );
 
             baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
+          } else if (program === "PGD") {
+            baseData.tanggalRealisasi =
+              document.getElementById("tanggalRealisasi").value;
+            baseData.jumlahPeserta =
+              document.getElementById("jumlahPeserta").value;
+            baseData.tempatPelaksanaan =
+              document.getElementById("tempatPelaksanaan").value || "";
           } else if (program === "Boost Metabolic") {
             baseData.namaApoteker =
               document.getElementById("namaApoteker").value || "";
@@ -1384,6 +1418,7 @@
               $("#popPgdFields").addClass("d-none");
               $("#boostMetabolicFields").addClass("d-none");
               $("#produkSwitchWrapper").addClass("d-none");
+              $("#tempatPelaksanaanWrapper").addClass("d-none");
               $("#tanggalPelaksanaanPK").addClass("d-none");
               $("#produkPediatrikWrapper").addClass("d-none");
               document
@@ -1468,6 +1503,7 @@
         $("#produkSwitchWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
         $("#ownerFieldsInsentif").addClass("d-none");
+        $("#produkPediatrikWrapper").addClass("d-none");
 
         setFieldRequired("#produkDipilih", false);
         setFieldRequired("#jenisEwallet", false);
@@ -1496,11 +1532,19 @@
           setFieldRequired("#produkDipilih", true);
           setFieldRequired("#namaOwnerInsentif", true);
           setFieldRequired("#telpOwnerInsentif", true);
-        } else if (selected === "POP" || selected === "PGD") {
+        } else if (selected === "POP") {
           $("#popPgdFields").removeClass("d-none");
           $("#produkPediatrikWrapper").removeClass("d-none");
+          $("#tempatPelaksanaanWrapper").addClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
           setFieldRequired("#jumlahPeserta", true);
+        } else if (selected === "PGD") {
+          $("#popPgdFields").removeClass("d-none");
+          $("#produkPediatrikWrapper").addClass("d-none");
+          $("#tempatPelaksanaanWrapper").removeClass("d-none");
+          setFieldRequired("#tanggalRealisasi", true);
+          setFieldRequired("#jumlahPeserta", true);
+          setFieldRequired("#tempatPelaksanaan", true);
         } else if (selected === "Boost Metabolic") {
           $("#boostMetabolicFields").removeClass("d-none");
           $("#produkSwitchWrapper").removeClass("d-none");
@@ -1513,6 +1557,8 @@
         } else {
           $("#produkDipilihWrapper").addClass("d-none");
           setFieldRequired("#produkDipilih", false);
+          $("#tanggalPelaksanaanPK").addClass("d-none");
+          setFieldRequired("#tanggalPK", false);
         }
       });
       window.addEventListener("load", () => {
