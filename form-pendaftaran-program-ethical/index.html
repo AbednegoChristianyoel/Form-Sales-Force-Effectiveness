@@ -56,6 +56,12 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <!-- Tambahkan sebelum </head> -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
       body {
         background: #ffffff;
@@ -505,43 +511,35 @@
                 </div>
 
                 <!-- 🔹 Field Nama Owner/Apotek untuk Insentif SC -->
-                <div id="ownerFieldsInsentif" class="row g-3 d-none mt-2">
-                  <div class="col-md-6">
-                    <label class="form-label">Nama Owner / Apotek</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="namaOwnerInsentif"
-                      placeholder="Masukkan Nama Owner / Apoteker"
-                    />
+                <div id="ownerFieldsInsentif" class="col-12 d-none">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Nama Owner / Apotek</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="namaOwnerInsentif"
+                        placeholder="Masukkan Nama Owner / Apoteker"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">No. Telp / WA</label>
+                      <input
+                        type="tel"
+                        class="form-control"
+                        id="telpOwnerInsentif"
+                        placeholder="Contoh: 0878213512311"
+                        pattern="08[0-9]{8,13}"
+                        maxlength="15"
+                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
+                        oninput="this.setCustomValidity('')"
+                      />
+                    </div>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">No. Telp / WA</label>
-                    <input
-                      type="tel"
-                      class="form-control"
-                      id="telpOwnerInsentif"
-                      placeholder="Contoh: 0878213512311"
-                      pattern="08[0-9]{8,13}"
-                      maxlength="15"
-                      oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                      oninput="this.setCustomValidity('')"
-                    />
-                  </div>
-                </div>
-
-                <div id="produkDipilihWrapper" class="col-12 d-none mt-0">
-                  <label class="form-label">Produk yang Dipilih</label>
-                  <select id="produkDipilih" class="form-select">
-                    <option value="">Pilih Produk</option>
-                    <option value="Rozgra Group">Rozgra Group</option>
-                    <option value="Modafil">Modafil</option>
-                    <option value="Modafil & Rozgra">Modafil & Rozgra</option>
-                  </select>
                 </div>
 
                 <!-- Detail E-Wallet -->
-                <div id="ewalletFields" class="col-12 d-none">
+                <div id="ewalletFields" class="col-12 d-none mt-0">
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label class="form-label">Jenis E-Wallet</label>
@@ -765,16 +763,18 @@
                 </div>
 
                 <!-- Tambahan untuk Program POP dan PGD -->
-                <div id="popPgdFields" class="col-12 d-none">
+                <div id="popPgdFields" class="col-12 d-none mt-3">
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label class="form-label"
                         >Estimasi Tanggal Realisasi</label
                       >
                       <input
-                        type="date"
+                        type="text"
                         id="tanggalRealisasi"
                         class="form-control"
+                        placeholder="DD/MM/YYYY"
+                        autocomplete="off"
                       />
                     </div>
                     <div class="col-md-6 mb-3">
@@ -788,6 +788,39 @@
                         min="1"
                         placeholder="Masukkan Jumlah Peserta (Termasuk PSR)"
                       />
+                    </div>
+                  </div>
+                </div>
+
+                <div id="salesPGDFields" class="col-12 d-none mt-0">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Total Sales Program</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input
+                          type="text"
+                          id="totalSalesProgram"
+                          class="form-control"
+                          placeholder="Masukkan Total Sales Program"
+                          pattern="[0-9,.]*"
+                          inputmode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Avg Sales Program</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input
+                          type="text"
+                          id="avgSalesProgram"
+                          class="form-control"
+                          placeholder="Masukkan Avg Sales Program"
+                          pattern="[0-9,.]*"
+                          inputmode="numeric"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -998,11 +1031,11 @@
                     >Tanggal Pelaksanaan</label
                   >
                   <input
-                    type="date"
-                    class="form-control"
-                    name="tanggalPK"
+                    type="text"
                     id="tanggalPK"
-                    required
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    autocomplete="off"
                   />
                 </div>
 
@@ -1064,7 +1097,6 @@
           "#namaOutletEthical",
           "#kotaOutletEthical",
           "#alamatOutletEthical",
-          "#produkDipilih",
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
@@ -1083,6 +1115,8 @@
           "#Rechol10",
           "#Rechol20",
           "#tempatPelaksanaan",
+          "#totalSalesProgram",
+          "#avgSalesProgram",
         ];
 
         fieldsToClear.forEach((id) => {
@@ -1094,7 +1128,6 @@
         $("#programEthical").val(null).trigger("change");
         $("#confirmCheck").prop("checked", false);
 
-        $("#produkDipilihWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
@@ -1105,7 +1138,6 @@
         $("#produkPediatrikWrapper").addClass("d-none");
 
         [
-          "#produkDipilih",
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
@@ -1152,6 +1184,26 @@
         placeholder: "Pilih Program",
         allowClear: true,
       });
+
+      function formatRupiah(angka) {
+        if (!angka) return "";
+        // Hilangkan semua karakter selain angka
+        angka = angka.replace(/\D/g, "");
+        // Format ribuan
+        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+
+      // Event untuk format otomatis saat input
+      $("#totalSalesProgram, #avgSalesProgram").on("input", function () {
+        const val = $(this).val().replace(/\D/g, "");
+        $(this).val(formatRupiah(val));
+      });
+
+      function toYYYYMMDD(dateStr) {
+        if (!dateStr) return "";
+        const [day, month, year] = dateStr.split("/");
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      }
 
       document
         .getElementById("searchEthicalBtn")
@@ -1294,8 +1346,6 @@
           };
 
           if (program === "Insentif SC Modafil & Rozgra") {
-            baseData.produkDipilih =
-              document.getElementById("produkDipilih").value || "";
             baseData.namaOwner =
               document.getElementById("namaOwnerInsentif").value || "";
             baseData.telpOwner =
@@ -1307,8 +1357,9 @@
             baseData.namaAkunEwallet =
               document.getElementById("namaAkunEwallet").value || "";
           } else if (program === "POP") {
-            baseData.tanggalRealisasi =
-              document.getElementById("tanggalRealisasi").value;
+            baseData.tanggalRealisasi = toYYYYMMDD(
+              document.getElementById("tanggalRealisasi").value
+            );
             baseData.jumlahPeserta =
               document.getElementById("jumlahPeserta").value;
 
@@ -1325,12 +1376,21 @@
 
             baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
           } else if (program === "PGD") {
-            baseData.tanggalRealisasi =
-              document.getElementById("tanggalRealisasi").value;
+            baseData.tanggalRealisasi = toYYYYMMDD(
+              document.getElementById("tanggalRealisasi").value
+            );
             baseData.jumlahPeserta =
               document.getElementById("jumlahPeserta").value;
             baseData.tempatPelaksanaan =
               document.getElementById("tempatPelaksanaan").value || "";
+            baseData.totalSalesProgram =
+              document
+                .getElementById("totalSalesProgram")
+                .value.replace(/\./g, "") || "";
+            baseData.avgSalesProgram =
+              document
+                .getElementById("avgSalesProgram")
+                .value.replace(/\./g, "") || "";
           } else if (program === "Boost Metabolic") {
             baseData.namaApoteker =
               document.getElementById("namaApoteker").value || "";
@@ -1348,8 +1408,9 @@
 
             baseData.productMetabolic = JSON.stringify(produkStatus);
           } else if (program === "PK to PBF") {
-            baseData.tanggalPelaksanaan =
-              document.getElementById("tanggalPK").value || "";
+            baseData.tanggalPelaksanaan = toYYYYMMDD(
+              document.getElementById("tanggalPK").value || ""
+            );
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -1380,7 +1441,6 @@
               $("#namaOutletEthical").val("");
               $("#kotaOutletEthical").val("");
               $("#alamatOutletEthical").val("");
-              $("#produkDipilih").val("");
               $("#jenisEwallet").val("");
               $("#noTelpEwallet").val("");
               $("#namaAkunEwallet").val("");
@@ -1397,6 +1457,8 @@
               $("#tanggalPK").val("");
               $("#namaOwnerInsentif").val("");
               $("#telpOwnerInsentif").val("");
+              $("#totalSalesProgram").val("");
+              $("#avgSalesProgram").val("");
               [
                 "#Profibrat200",
                 "#Stavinor10",
@@ -1412,7 +1474,6 @@
               });
 
               // Sembunyikan field dinamis kembali
-              $("#produkDipilihWrapper").addClass("d-none");
               $("#ewalletFields").addClass("d-none");
               $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
@@ -1426,7 +1487,6 @@
                 .forEach((el) => (el.checked = false));
 
               // Hapus required dynamic
-              setFieldRequired("#produkDipilih", false);
               setFieldRequired("#jenisEwallet", false);
               setFieldRequired("#noTelpEwallet", false);
               setFieldRequired("#namaAkunEwallet", false);
@@ -1495,7 +1555,6 @@
       $("#programEthical").on("change", function () {
         const selected = $(this).val();
 
-        $("#produkDipilihWrapper").addClass("d-none");
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
@@ -1504,8 +1563,8 @@
         $("#tanggalPelaksanaanPK").addClass("d-none");
         $("#ownerFieldsInsentif").addClass("d-none");
         $("#produkPediatrikWrapper").addClass("d-none");
+        $("#salesPGDFields").addClass("d-none");
 
-        setFieldRequired("#produkDipilih", false);
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
         setFieldRequired("#namaAkunEwallet", false);
@@ -1520,16 +1579,15 @@
         setFieldRequired("#emailApoteker", false);
         setFieldRequired("#namaOwnerInsentif", false);
         setFieldRequired("#telpOwnerInsentif", false);
+        setFieldRequired("#totalSalesProgram", false);
+        setFieldRequired("#avgSalesProgram", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
-          $("#produkDipilihWrapper").removeClass("d-none");
           $("#ownerFieldsInsentif").removeClass("d-none");
           $("#ewalletFields").removeClass("d-none");
           setFieldRequired("#jenisEwallet", true);
           setFieldRequired("#noTelpEwallet", true);
           setFieldRequired("#namaAkunEwallet", true);
-
-          setFieldRequired("#produkDipilih", true);
           setFieldRequired("#namaOwnerInsentif", true);
           setFieldRequired("#telpOwnerInsentif", true);
         } else if (selected === "POP") {
@@ -1542,9 +1600,12 @@
           $("#popPgdFields").removeClass("d-none");
           $("#produkPediatrikWrapper").addClass("d-none");
           $("#tempatPelaksanaanWrapper").removeClass("d-none");
+          $("#salesPGDFields").removeClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
           setFieldRequired("#jumlahPeserta", true);
           setFieldRequired("#tempatPelaksanaan", true);
+          setFieldRequired("#totalSalesProgram", true);
+          setFieldRequired("#avgSalesProgram", true);
         } else if (selected === "Boost Metabolic") {
           $("#boostMetabolicFields").removeClass("d-none");
           $("#produkSwitchWrapper").removeClass("d-none");
@@ -1555,8 +1616,6 @@
           $("#tanggalPelaksanaanPK").removeClass("d-none");
           setFieldRequired("#tanggalPK", true);
         } else {
-          $("#produkDipilihWrapper").addClass("d-none");
-          setFieldRequired("#produkDipilih", false);
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
         }
@@ -1568,6 +1627,16 @@
           setTimeout(() => loader.remove(), 500); // Hapus loader setelah animasi selesai
         }
         initTomSelectOutlet([]);
+        flatpickr("#tanggalRealisasi", {
+          dateFormat: "d/m/Y",
+          allowInput: true,
+          locale: "id",
+        });
+        flatpickr("#tanggalPK", {
+          dateFormat: "d/m/Y",
+          allowInput: true,
+          locale: "id",
+        });
       });
     </script>
   </body>
