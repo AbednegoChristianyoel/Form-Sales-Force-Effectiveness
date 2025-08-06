@@ -291,6 +291,9 @@
         color: #6c757d;
         margin-left: auto;
       }
+      #avgSalesProgram {
+        background-color: rgb(233, 236, 239) !important;
+      }
     </style>
   </head>
   <!-- Loader -->
@@ -777,16 +780,31 @@
                         autocomplete="off"
                       />
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3 d-none" id="pesertaPopWrapper">
                       <label class="form-label"
                         >Jumlah Peserta (Pack), Include PSR</label
                       >
                       <input
                         type="number"
-                        id="jumlahPeserta"
+                        id="jumlahPesertaPop"
                         class="form-control"
                         min="1"
                         placeholder="Masukkan Jumlah Peserta (Termasuk PSR)"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3 d-none" id="pesertaPgdWrapper">
+                      <label class="form-label"
+                        >Jumlah Peserta (Pack), Maks 3 Orang / Outlet</label
+                      >
+                      <input
+                        type="number"
+                        id="jumlahPesertaPgd"
+                        class="form-control"
+                        min="1"
+                        max="3"
+                        placeholder="Maksimal 3 Orang / Outlet"
+                        oninvalid="this.setCustomValidity('Maksimal 3 Orang / Outlet')"
+                        oninput="this.setCustomValidity('')"
                       />
                     </div>
                   </div>
@@ -809,16 +827,20 @@
                       </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label class="form-label">Avg Sales Program</label>
+                      <label class="form-label"
+                        >Avg Sales Program (6 Bulan)</label
+                      >
                       <div class="input-group">
                         <span class="input-group-text">Rp</span>
                         <input
                           type="text"
                           id="avgSalesProgram"
-                          class="form-control"
+                          class="form-control bg-light"
                           placeholder="Masukkan Avg Sales Program"
                           pattern="[0-9,.]*"
                           inputmode="numeric"
+                          readonly
+                          tabindex="-1"
                         />
                       </div>
                     </div>
@@ -1105,7 +1127,8 @@
           "#namaAkunBank",
           "#cabangBank",
           "#tanggalRealisasi",
-          "#jumlahPeserta",
+          "#jumlahPesertaPop",
+          "#jumlahPesertaPgd",
           "#Profibrat200",
           "#Stavinor10",
           "#Stavinor20",
@@ -1146,7 +1169,8 @@
           "#namaAkunBank",
           "#cabangBank",
           "#tanggalRealisasi",
-          "#jumlahPeserta",
+          "#jumlahPesertaPop",
+          "#jumlahPesertaPgd",
           "#tempatPelaksanaan",
         ].forEach((id) => setFieldRequired(id, false));
       }
@@ -1361,7 +1385,7 @@
               document.getElementById("tanggalRealisasi").value
             );
             baseData.jumlahPeserta =
-              document.getElementById("jumlahPeserta").value;
+              document.getElementById("jumlahPesertaPop").value;
 
             const pediatrikSwitches = document.querySelectorAll(
               ".produkPediatrikSwitch"
@@ -1380,7 +1404,20 @@
               document.getElementById("tanggalRealisasi").value
             );
             baseData.jumlahPeserta =
-              document.getElementById("jumlahPeserta").value;
+              document.getElementById("jumlahPesertaPgd").value;
+            // ...checker...
+            if (
+              !baseData.jumlahPeserta ||
+              Number(baseData.jumlahPeserta) < 1 ||
+              Number(baseData.jumlahPeserta) > 3
+            ) {
+              Swal.fire(
+                "Jumlah Peserta Tidak Valid",
+                "Jumlah peserta untuk PGD harus 1-3 orang per outlet.",
+                "warning"
+              );
+              return;
+            }
             baseData.tempatPelaksanaan =
               document.getElementById("tempatPelaksanaan").value || "";
             baseData.totalSalesProgram =
@@ -1449,7 +1486,8 @@
               $("#namaAkunBank").val("");
               $("#cabangBank").val("");
               $("#tanggalRealisasi").val("");
-              $("#jumlahPeserta").val("");
+              $("#jumlahPesertaPop").val("");
+              $("#jumlahPesertaPgd").val("");
               $("#confirmCheck").prop("checked", false);
               $("#namaApoteker").val("");
               $("#telpApoteker").val("");
@@ -1496,7 +1534,8 @@
               setFieldRequired("#namaAkunBank", false);
               setFieldRequired("#cabangBank", false);
               setFieldRequired("#tanggalRealisasi", false);
-              setFieldRequired("#jumlahPeserta", false);
+              setFieldRequired("#jumlahPesertaPop", false);
+              setFieldRequired("#jumlahPesertaPgd", false);
               setFieldRequired("#namaApoteker", false);
               setFieldRequired("#telpApoteker", false);
               setFieldRequired("#emailApoteker", false);
@@ -1574,7 +1613,8 @@
         setFieldRequired("#namaAkunBank", false);
         setFieldRequired("#cabangBank", false);
         setFieldRequired("#tanggalRealisasi", false);
-        setFieldRequired("#jumlahPeserta", false);
+        setFieldRequired("#jumlahPesertaPop", false);
+        setFieldRequired("#jumlahPesertaPgd", false);
         setFieldRequired("#namaApoteker", false);
         setFieldRequired("#telpApoteker", false);
         setFieldRequired("#emailApoteker", false);
@@ -1595,15 +1635,21 @@
           $("#popPgdFields").removeClass("d-none");
           $("#produkPediatrikWrapper").removeClass("d-none");
           $("#tempatPelaksanaanWrapper").addClass("d-none");
+          $("#pesertaPopWrapper").removeClass("d-none");
+          $("#pesertaPgdWrapper").addClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
-          setFieldRequired("#jumlahPeserta", true);
+          setFieldRequired("#jumlahPesertaPop", true);
+          setFieldRequired("#jumlahPesertaPgd", false);
         } else if (selected === "PGD") {
           $("#popPgdFields").removeClass("d-none");
           $("#produkPediatrikWrapper").addClass("d-none");
           $("#tempatPelaksanaanWrapper").removeClass("d-none");
           $("#salesPGDFields").removeClass("d-none");
+          $("#pesertaPopWrapper").addClass("d-none");
+          $("#pesertaPgdWrapper").removeClass("d-none");
           setFieldRequired("#tanggalRealisasi", true);
-          setFieldRequired("#jumlahPeserta", true);
+          setFieldRequired("#jumlahPesertaPgd", true);
+          setFieldRequired("#jumlahPesertaPop", false);
           setFieldRequired("#tempatPelaksanaan", true);
           setFieldRequired("#totalSalesProgram", true);
           setFieldRequired("#avgSalesProgram", true);
@@ -1619,6 +1665,8 @@
         } else {
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
+          $("#pesertaPopWrapper").addClass("d-none");
+          $("#pesertaPgdWrapper").addClass("d-none");
         }
       });
       window.addEventListener("load", () => {
@@ -1638,6 +1686,16 @@
           allowInput: true,
           locale: "id",
         });
+      });
+      $("#totalSalesProgram").on("input", function () {
+        const val = $(this).val().replace(/\D/g, "");
+        $(this).val(formatRupiah(val));
+        // Hitung avg otomatis
+        let avg = "";
+        if (val) {
+          avg = Math.floor(Number(val) / 6);
+        }
+        $("#avgSalesProgram").val(formatRupiah(avg.toString()));
       });
     </script>
   </body>
