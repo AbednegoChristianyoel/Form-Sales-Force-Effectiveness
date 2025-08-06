@@ -1380,6 +1380,19 @@
             );
           }
 
+          if (program === "Presentasi Produk Neuro Pain Metabolic") {
+            const checkedProduk = document.querySelectorAll(
+              '#produkSwitchWrapper input[type="checkbox"]:checked'
+            );
+            if (checkedProduk.length === 0) {
+              return Swal.fire(
+                "Pilih Produk",
+                "Minimal pilih satu produk untuk Presentasi Produk Neuro Pain Metabolic.",
+                "warning"
+              );
+            }
+          }
+
           if (program === "Boost Metabolic") {
             const checkedProduk = document.querySelectorAll(
               '#produkSwitchWrapper input[type="checkbox"]:checked'
@@ -1565,6 +1578,9 @@
               $("#totalSalesProgram").val("");
               $("#avgSalesProgram").val("");
               $("#tempatPelaksanaan").val("");
+              $("#tanggalPresentasiNeuro").val("");
+              $("#jumlahPesertaNeuro").val("");
+              $("#biayaNeuro").val("");
               [
                 "#Profibrat200",
                 "#Stavinor10",
