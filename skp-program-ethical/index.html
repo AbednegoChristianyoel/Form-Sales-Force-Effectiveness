@@ -368,6 +368,9 @@
           <select class="form-select" id="filterProgram">
             <option value="">Semua Program</option>
             <option>Boost Metabolic</option>
+            <option value="Presentasi Produk Neuro Pain Metabolic">
+              Presentasi Produk Neuro Pain Metabolic
+            </option>
             <option>Insentif Mod & Rozgra</option>
             <option>POP</option>
             <option>PGD</option>
@@ -484,7 +487,7 @@
 
       function getDataByNIP(nip) {
         const apiURL =
-          "https://script.google.com/macros/s/AKfycbyCfQvH4DUpdzSfHbdcZLrH1xWQSK2fAUgXef2s5KjS65ywawThz7JnJ1u8b_6H_slnog/exec";
+          "https://script.google.com/macros/s/AKfycby8yvOjfrRMHBQVT-X6JmdJcfS2lkzyCwLvxVpkci_WIcYiCZDtp59_IM08tyGufog-bQ/exec";
 
         Swal.fire({
           title: "Memuat data...",
@@ -529,6 +532,12 @@
                 ...item,
                 program: "Insentif Mod & Rozgra",
               })),
+              ...(data["Presentasi Produk Neuro Pain Metabolic"] || []).map(
+                (item) => ({
+                  ...item,
+                  program: "Presentasi Produk Neuro Pain Metabolic",
+                })
+              ),
             ];
 
             renderSKPCards(allSKPData);
