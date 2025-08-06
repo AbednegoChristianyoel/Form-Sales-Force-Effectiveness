@@ -465,6 +465,9 @@
                   <select id="programEthical" class="form-select" required>
                     <option value="">Pilih Program</option>
                     <option value="Boost Metabolic">Boost Metabolic</option>
+                    <option value="Presentasi Produk Neuro Pain Metabolic">
+                      Presentasi Produk Neuro Pain Metabolic
+                    </option>
                     <option value="Insentif SC Modafil & Rozgra">
                       Insentif SC Modafil & Rozgra
                     </option>
@@ -1048,6 +1051,52 @@
                   </div>
                 </div>
 
+                <div id="presentasiNeuroFields" class="col-12 d-none mt-0">
+                  <div class="row">
+                    <!-- Item Boost Metabolic (gunakan field produkSwitchWrapper yang sudah ada) -->
+                    <div
+                      id="produkSwitchWrapperPresentasi"
+                      class="col-12 mb-3 mt-3"
+                    ></div>
+
+                    <div class="col-md-12 mb-3">
+                      <label class="form-label">Tanggal Presentasi</label>
+                      <input
+                        type="text"
+                        id="tanggalPresentasiNeuro"
+                        class="form-control"
+                        placeholder="DD/MM/YYYY"
+                        autocomplete="off"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Jumlah Peserta</label>
+                      <input
+                        type="number"
+                        id="jumlahPesertaNeuro"
+                        class="form-control"
+                        min="1"
+                        placeholder="Masukkan Jumlah Peserta"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Total Biaya (Rp)</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input
+                          type="text"
+                          id="biayaNeuro"
+                          class="form-control bg-light"
+                          placeholder="Total Biaya"
+                          readonly
+                          tabindex="-1"
+                          style="background-color: rgb(233, 236, 239)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div id="tanggalPelaksanaanPK" class="mb-3 d-none">
                   <label for="tanggalPK" class="form-label"
                     >Tanggal Pelaksanaan</label
@@ -1096,7 +1145,7 @@
 
     <script>
       const scriptURL =
-        "https://script.google.com/macros/s/AKfycbyCfQvH4DUpdzSfHbdcZLrH1xWQSK2fAUgXef2s5KjS65ywawThz7JnJ1u8b_6H_slnog/exec";
+        "https://script.google.com/macros/s/AKfycby8yvOjfrRMHBQVT-X6JmdJcfS2lkzyCwLvxVpkci_WIcYiCZDtp59_IM08tyGufog-bQ/exec";
       let globalOutletData = {};
 
       // Fungsi untuk mengatur required secara dinamis
@@ -1276,6 +1325,7 @@
               programSelect.innerHTML = `
             <option value="">Pilih Program</option>
             <option value="Boost Metabolic">Boost Metabolic</option>
+            <option value="Presentasi Produk Neuro Pain Metabolic">Presentasi Produk Neuro Pain Metabolic</option>
             <option value="Insentif SC Modafil & Rozgra">Insentif SC Modafil & Rozgra</option>
             <option value="POP">POP</option>
             <option value="PGD">PGD</option>
@@ -1444,6 +1494,23 @@
             }));
 
             baseData.productMetabolic = JSON.stringify(produkStatus);
+          } else if (program === "Presentasi Produk Neuro Pain Metabolic") {
+            baseData.tanggalPresentasi =
+              document.getElementById("tanggalPresentasiNeuro").value || "";
+            baseData.jumlahPeserta =
+              document.getElementById("jumlahPesertaNeuro").value || "";
+            baseData.biaya = (document.getElementById("biayaNeuro").value || "")
+              .replace(/\./g, "")
+              .replace(/,/g, "");
+            // Ambil produk Boost Metabolic yang dipilih di wrapper presentasi
+            const switches = document.querySelectorAll(
+              "#produkSwitchWrapperPresentasi input[type='checkbox']"
+            );
+            const produkStatus = Array.from(switches).map((sw) => ({
+              label: sw.dataset.label,
+              status: sw.checked ? "Yes" : "No",
+            }));
+            baseData.productMetabolic = JSON.stringify(produkStatus);
           } else if (program === "PK to PBF") {
             baseData.tanggalPelaksanaan = toYYYYMMDD(
               document.getElementById("tanggalPK").value || ""
@@ -1540,6 +1607,8 @@
               setFieldRequired("#telpApoteker", false);
               setFieldRequired("#emailApoteker", false);
               setFieldRequired("#tanggalPK", false);
+              setFieldRequired("#tanggalPresentasiNeuro", false);
+              setFieldRequired("#jumlahPesertaNeuro", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
@@ -1604,6 +1673,8 @@
         $("#ownerFieldsInsentif").addClass("d-none");
         $("#produkPediatrikWrapper").addClass("d-none");
         $("#salesPGDFields").addClass("d-none");
+        $("#presentasiNeuroFields").addClass("d-none");
+        $("#produkSwitchWrapperPresentasi").html("");
 
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
@@ -1622,6 +1693,8 @@
         setFieldRequired("#telpOwnerInsentif", false);
         setFieldRequired("#totalSalesProgram", false);
         setFieldRequired("#avgSalesProgram", false);
+        setFieldRequired("#tanggalPresentasiNeuro", false);
+        setFieldRequired("#jumlahPesertaNeuro", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#ownerFieldsInsentif").removeClass("d-none");
@@ -1662,11 +1735,22 @@
         } else if (selected === "PK to PBF") {
           $("#tanggalPelaksanaanPK").removeClass("d-none");
           setFieldRequired("#tanggalPK", true);
+        } else if (selected === "Presentasi Produk Neuro Pain Metabolic") {
+          $("#presentasiNeuroFields").removeClass("d-none");
+          // Clone isi produkSwitchWrapper ke produkSwitchWrapperPresentasi TANPA class d-none
+          const produkHtml = $("#produkSwitchWrapper").html();
+          $("#produkSwitchWrapperPresentasi")
+            .html(produkHtml)
+            .removeClass("d-none");
+          setFieldRequired("#tanggalPresentasiNeuro", true);
+          setFieldRequired("#jumlahPesertaNeuro", true);
         } else {
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
           $("#pesertaPopWrapper").addClass("d-none");
           $("#pesertaPgdWrapper").addClass("d-none");
+          setFieldRequired("#tanggalPresentasiNeuro", false);
+          setFieldRequired("#jumlahPesertaNeuro", false);
         }
       });
       window.addEventListener("load", () => {
@@ -1686,6 +1770,11 @@
           allowInput: true,
           locale: "id",
         });
+        flatpickr("#tanggalPresentasiNeuro", {
+          dateFormat: "d/m/Y",
+          allowInput: true,
+          locale: "id",
+        });
       });
       $("#totalSalesProgram").on("input", function () {
         const val = $(this).val().replace(/\D/g, "");
@@ -1696,6 +1785,11 @@
           avg = Math.floor(Number(val) / 6);
         }
         $("#avgSalesProgram").val(formatRupiah(avg.toString()));
+      });
+      $("#jumlahPesertaNeuro").on("input", function () {
+        const jumlah = parseInt($(this).val(), 10) || 0;
+        const biaya = jumlah * 50000;
+        $("#biayaNeuro").val(biaya ? formatRupiah(biaya.toString()) : "");
       });
     </script>
   </body>
