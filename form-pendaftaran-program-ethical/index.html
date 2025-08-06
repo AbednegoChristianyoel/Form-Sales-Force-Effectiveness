@@ -62,6 +62,10 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
     <style>
       body {
         background: #ffffff;
@@ -293,6 +297,34 @@
       }
       #avgSalesProgram {
         background-color: rgb(233, 236, 239) !important;
+      }
+      .select2-clear-wrapper {
+        position: relative;
+        padding-right: 3.2rem; /* Lebih besar dari lebar tombol */
+      }
+
+      .select2-container--default .select2-selection--multiple {
+        border: none !important;
+        border-radius: 0 !important;
+      }
+
+      .select2-container {
+        width: 100% !important;
+      }
+
+      #clearProdukNeuroBtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 2.5rem; /* Lebar tombol, sesuaikan dengan icon */
+        z-index: 10;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
       }
     </style>
   </head>
@@ -1080,10 +1112,22 @@
                 <div id="presentasiNeuroFields" class="col-12 d-none mt-0">
                   <div class="row">
                     <!-- Item Boost Metabolic (gunakan field produkSwitchWrapper yang sudah ada) -->
-                    <div
-                      id="produkSwitchWrapperPresentasi"
-                      class="col-12 mb-3 mt-3"
-                    ></div>
+                    <div class="col-12 mb-3 mt-3">
+                      <label class="form-label fw-bold"
+                        >Pilih Produk Neuro</label
+                      >
+                      <div class="select2-clear-wrapper position-relative p-0">
+                        <select id="produkNeuroSelect" multiple></select>
+                        <button
+                          type="button"
+                          id="clearProdukNeuroBtn"
+                          class="btn btn-outline-danger clear-btn me-0"
+                          title="Hapus semua pilihan"
+                        >
+                          <i class="bi bi-trash" style="font-size: 1.2rem"></i>
+                        </button>
+                      </div>
+                    </div>
 
                     <div class="col-md-12 mb-3">
                       <label class="form-label">Tanggal Presentasi</label>
@@ -1407,13 +1451,11 @@
           }
 
           if (program === "Presentasi Produk Neuro Pain Metabolic") {
-            const checkedProduk = document.querySelectorAll(
-              '#produkSwitchWrapper input[type="checkbox"]:checked'
-            );
-            if (checkedProduk.length === 0) {
+            const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
+            if (produkNeuroSelected.length === 0) {
               return Swal.fire(
                 "Pilih Produk",
-                "Minimal pilih satu produk untuk Presentasi Produk Neuro Pain Metabolic.",
+                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
                 "warning"
               );
             }
@@ -1541,15 +1583,22 @@
             baseData.biaya = (document.getElementById("biayaNeuro").value || "")
               .replace(/\./g, "")
               .replace(/,/g, "");
-            // Ambil produk Boost Metabolic yang dipilih di wrapper presentasi
-            const switches = document.querySelectorAll(
-              "#produkSwitchWrapperPresentasi input[type='checkbox']"
-            );
-            const produkStatus = Array.from(switches).map((sw) => ({
-              label: sw.dataset.label,
-              status: sw.checked ? "Yes" : "No",
+            // Ambil produk Neuro Metabolic yang dipilih di wrapper presentasi
+            const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
+            if (produkNeuroSelected.length === 0) {
+              Swal.fire(
+                "Pilih Produk",
+                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
+                "warning"
+              );
+              return;
+            }
+            // Buat array objek sesuai format lama
+            const produkNeuroStatus = produkNeuroList.map((label) => ({
+              label,
+              status: produkNeuroSelected.includes(label) ? "Yes" : "No",
             }));
-            baseData.productMetabolic = JSON.stringify(produkStatus);
+            baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
           } else if (program === "PK to PBF") {
             baseData.tanggalPelaksanaan = toYYYYMMDD(
               document.getElementById("tanggalPK").value || ""
@@ -1778,12 +1827,8 @@
           $("#tanggalPelaksanaanPK").removeClass("d-none");
           setFieldRequired("#tanggalPK", true);
         } else if (selected === "Presentasi Produk Neuro Pain Metabolic") {
+          setTimeout(initProdukNeuroSelect, 10);
           $("#presentasiNeuroFields").removeClass("d-none");
-          // Clone isi produkSwitchWrapper ke produkSwitchWrapperPresentasi TANPA class d-none
-          const produkHtml = $("#produkSwitchWrapper").html();
-          $("#produkSwitchWrapperPresentasi")
-            .html(produkHtml)
-            .removeClass("d-none");
           setFieldRequired("#tanggalPresentasiNeuro", true);
           setFieldRequired("#jumlahPesertaNeuro", true);
         } else {
@@ -1832,6 +1877,65 @@
         const jumlah = parseInt($(this).val(), 10) || 0;
         const biaya = jumlah * 50000;
         $("#biayaNeuro").val(biaya ? formatRupiah(biaya.toString()) : "");
+      });
+      const produkNeuroList = [
+        "ACETRAM 37.5/325MG FC TABLET",
+        "INHIPUMP 40MG/10ML DRY INJECTION",
+        "LANPRACID 30 MG CAPSULE",
+        "APRION 150 MG CAPSULE",
+        "APRION 75 MG CAPSULE",
+        "LETHIRA 500 MG TABLET FC",
+        "VERONIL 250 MG/5 ML SYRUP 120 ML",
+        "DIZINE 10MG TAB 50`S",
+        "DARVON 6 MG TABLET",
+        "AMTOCORT 4 MG TABLET",
+        "TORAS 4 MG TABLET",
+        "TORAS 8 MG TABLET",
+        "PLEXION 50MG TAB SC 100`S",
+        "ACLONAC 25 TABLET FC",
+        "ACLONAC 50 TABLET FC",
+        "ACTREL 100 MG CAPSULE",
+        "ACTREL 200 MG CAPSULE",
+        "BLASTOFEN 25 MG FC TABLET",
+        "BLASTOFEN 50 MG/2 ML INJECTION",
+        "EVIDUR 120 MG FC TABLET",
+        "FLEROXI 20 MG FLASH TABLET",
+        "MELOXICAM 15MG TAB 30S (OGB)",
+        "MOXAM 15",
+        "MOXAM 7.5 MG TABLET",
+        "SCELTO 30 INJEKSI",
+        "MAGERIX 500 MCG CAPSULE",
+        "ZEUFOR 1000 MG/8ML INJECTION",
+        "ZEUFOR 500 MG TABLET",
+        "UC-FLEX 40 MG TABLET",
+      ];
+
+      // Inisialisasi Tom Select pada produkNeuroSelect
+      function initProdukNeuroSelect() {
+        const select = document.getElementById("produkNeuroSelect");
+        select.innerHTML = ""; // Kosongkan dulu
+        produkNeuroList.forEach((produk) => {
+          const opt = document.createElement("option");
+          opt.value = produk;
+          opt.textContent = produk;
+          select.appendChild(opt);
+        });
+        if (window.produkNeuroTom) window.produkNeuroTom.destroy();
+        window.produkNeuroTom = new TomSelect(select, {
+          plugins: ["remove_button"],
+          maxItems: null,
+          create: false,
+          placeholder: "Cari & Pilih produk Neuro Pain Metabolic",
+          allowEmptyOption: true,
+          closeAfterSelect: false,
+          persist: false,
+          searchField: ["text"],
+        });
+      }
+      $(document).on("click", "#clearProdukNeuroBtn", function () {
+        if (window.produkNeuroTom) {
+          window.produkNeuroTom.clear();
+        }
       });
     </script>
   </body>
