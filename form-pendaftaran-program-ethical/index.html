@@ -500,9 +500,9 @@
                     <option value="Presentasi Produk Neuro Pain Metabolic">
                       Presentasi Produk Neuro Pain Metabolic
                     </option>
-                    <option value="Insentif SC Modafil & Rozgra">
+                    <!-- <option value="Insentif SC Modafil & Rozgra">
                       Insentif SC Modafil & Rozgra
-                    </option>
+                    </option> -->
                     <option value="POP">POP</option>
                     <option value="PGD">PGD</option>
                     <option value="PK to PBF">PK to PBF</option>
@@ -1168,16 +1168,32 @@
                 </div>
 
                 <div id="tanggalPelaksanaanPK" class="mb-3 d-none">
-                  <label for="tanggalPK" class="form-label"
-                    >Tanggal Pelaksanaan</label
-                  >
-                  <input
-                    type="text"
-                    id="tanggalPK"
-                    class="form-control"
-                    placeholder="DD/MM/YYYY"
-                    autocomplete="off"
-                  />
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="tanggalPK" class="form-label"
+                        >Tanggal Pelaksanaan</label
+                      >
+                      <input
+                        type="text"
+                        id="tanggalPK"
+                        class="form-control"
+                        placeholder="DD/MM/YYYY"
+                        autocomplete="off"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="jumlahPesertaPK" class="form-label"
+                        >Jumlah Peserta</label
+                      >
+                      <input
+                        type="number"
+                        id="jumlahPesertaPK"
+                        class="form-control"
+                        min="1"
+                        placeholder="Masukkan Jumlah Peserta"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div class="col-12 mt-1 mt-4">
@@ -1259,6 +1275,7 @@
           "#tempatPelaksanaan",
           "#totalSalesProgram",
           "#avgSalesProgram",
+          "#jumlahPesertaPK",
         ];
 
         fieldsToClear.forEach((id) => {
@@ -1603,6 +1620,8 @@
             baseData.tanggalPelaksanaan = toYYYYMMDD(
               document.getElementById("tanggalPK").value || ""
             );
+            baseData.jumlahPesertaPK =
+              document.getElementById("jumlahPesertaPK").value || "";
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -1656,6 +1675,7 @@
               $("#tanggalPresentasiNeuro").val("");
               $("#jumlahPesertaNeuro").val("");
               $("#biayaNeuro").val("");
+              $("#jumlahPesertaPK").val("");
               [
                 "#Profibrat200",
                 "#Stavinor10",
@@ -1700,6 +1720,7 @@
               setFieldRequired("#tanggalPK", false);
               setFieldRequired("#tanggalPresentasiNeuro", false);
               setFieldRequired("#jumlahPesertaNeuro", false);
+              setFieldRequired("#jumlahPesertaPK", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
@@ -1826,6 +1847,7 @@
         } else if (selected === "PK to PBF") {
           $("#tanggalPelaksanaanPK").removeClass("d-none");
           setFieldRequired("#tanggalPK", true);
+          setFieldRequired("#jumlahPesertaPK", true);
         } else if (selected === "Presentasi Produk Neuro Pain Metabolic") {
           setTimeout(initProdukNeuroSelect, 10);
           $("#presentasiNeuroFields").removeClass("d-none");
@@ -1838,6 +1860,7 @@
           $("#pesertaPgdWrapper").addClass("d-none");
           setFieldRequired("#tanggalPresentasiNeuro", false);
           setFieldRequired("#jumlahPesertaNeuro", false);
+          setFieldRequired("#jumlahPesertaPK", false);
         }
       });
       window.addEventListener("load", () => {
