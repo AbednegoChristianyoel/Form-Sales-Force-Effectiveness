@@ -1288,7 +1288,6 @@
         if (tomOutletSelect) tomOutletSelect.clear();
         $("#programEthical").val(null).trigger("change");
         $("#confirmCheck").prop("checked", false);
-
         $("#ewalletFields").addClass("d-none");
         $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
@@ -1468,18 +1467,46 @@
             );
           }
 
-          if (program === "Presentasi Produk Neuro Pain Metabolic") {
-            const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
-            if (produkNeuroSelected.length === 0) {
+          if (program === "PGD") {
+            if (!document.getElementById("tanggalRealisasi").value.trim()) {
               return Swal.fire(
-                "Pilih Produk",
-                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
+                "Lengkapi Tanggal",
+                "Tanggal realisasi wajib diisi untuk program PGD.",
                 "warning"
               );
             }
-          }
-
-          if (program === "Boost Metabolic") {
+            const jumlahPeserta = Number(
+              document.getElementById("jumlahPesertaPgd").value
+            );
+            if (!jumlahPeserta || jumlahPeserta < 1 || jumlahPeserta > 3) {
+              return Swal.fire(
+                "Jumlah Peserta Tidak Valid",
+                "Jumlah peserta untuk PGD harus 1-3 orang.",
+                "warning"
+              );
+            }
+            if (
+              !document.getElementById("totalSalesProgram").value.trim() ||
+              !document.getElementById("avgSalesProgram").value.trim()
+            ) {
+              return Swal.fire(
+                "Lengkapi Data Sales",
+                "Total sales dan average sales wajib diisi untuk PGD.",
+                "warning"
+              );
+            }
+          } else if (program === "Boost Metabolic") {
+            if (
+              !document.getElementById("namaApoteker").value.trim() ||
+              !document.getElementById("telpApoteker").value.trim() ||
+              !document.getElementById("emailApoteker").value.trim()
+            ) {
+              return Swal.fire(
+                "Lengkapi Data Apoteker",
+                "Nama, Telepon, dan Email apoteker wajib diisi untuk Boost Metabolic.",
+                "warning"
+              );
+            }
             const checkedProduk = document.querySelectorAll(
               '#produkSwitchWrapper input[type="checkbox"]:checked'
             );
@@ -1490,16 +1517,43 @@
                 "warning"
               );
             }
-          }
-
-          if (program === "POP") {
-            const checkedPediatrik = document.querySelectorAll(
-              '#produkPediatrikWrapper input[type="checkbox"]:checked'
-            );
-            if (checkedPediatrik.length === 0) {
+          } else if (program === "Presentasi Produk Neuro Pain Metabolic") {
+            if (
+              !document.getElementById("tanggalPresentasiNeuro").value.trim()
+            ) {
+              return Swal.fire(
+                "Lengkapi Tanggal",
+                "Tanggal presentasi wajib diisi untuk program ini.",
+                "warning"
+              );
+            }
+            if (!document.getElementById("jumlahPesertaNeuro").value.trim()) {
+              return Swal.fire(
+                "Lengkapi Jumlah Peserta",
+                "Jumlah peserta wajib diisi untuk presentasi ini.",
+                "warning"
+              );
+            }
+            const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
+            if (produkNeuroSelected.length === 0) {
               return Swal.fire(
                 "Pilih Produk",
-                "Minimal pilih satu produk untuk program POP/PGD.",
+                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
+                "warning"
+              );
+            }
+          } else if (program === "PK to PBF") {
+            if (!document.getElementById("tanggalPK").value.trim()) {
+              return Swal.fire(
+                "Lengkapi Tanggal",
+                "Tanggal pelaksanaan wajib diisi untuk PK to PBF.",
+                "warning"
+              );
+            }
+            if (!document.getElementById("jumlahPesertaPK").value.trim()) {
+              return Swal.fire(
+                "Lengkapi Jumlah Peserta",
+                "Jumlah peserta wajib diisi untuk PK to PBF.",
                 "warning"
               );
             }
