@@ -829,13 +829,26 @@
                 <!-- Tambahan untuk Program POP dan PGD -->
                 <div id="popPgdFields" class="col-12 d-none mt-3">
                   <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3" id="tanggalRealisasiPopWrapper">
                       <label class="form-label"
                         >Estimasi Tanggal Realisasi</label
                       >
                       <input
                         type="text"
-                        id="tanggalRealisasi"
+                        id="tanggalRealisasiPop"
+                        class="form-control"
+                        placeholder="DD/MM/YYYY"
+                        autocomplete="off"
+                      />
+                    </div>
+
+                    <div class="col-md-6 mb-3" id="tanggalRealisasiPgdWrapper">
+                      <label class="form-label"
+                        >Estimasi Tanggal Realisasi</label
+                      >
+                      <input
+                        type="text"
+                        id="tanggalRealisasiPgd"
                         class="form-control"
                         placeholder="DD/MM/YYYY"
                         autocomplete="off"
@@ -1263,7 +1276,8 @@
           "#noRek",
           "#namaAkunBank",
           "#cabangBank",
-          "#tanggalRealisasi",
+          "#tanggalRealisasiPop",
+          "#tanggalRealisasiPgd",
           "#jumlahPesertaPop",
           "#jumlahPesertaPgd",
           "#Profibrat200",
@@ -1305,7 +1319,8 @@
           "#noRek",
           "#namaAkunBank",
           "#cabangBank",
-          "#tanggalRealisasi",
+          "#tanggalRealisasiPop",
+          "#tanggalRealisasiPgd",
           "#jumlahPesertaPop",
           "#jumlahPesertaPgd",
           "#tempatPelaksanaan",
@@ -1359,12 +1374,6 @@
         const val = $(this).val().replace(/\D/g, "");
         $(this).val(formatRupiah(val));
       });
-
-      function toYYYYMMDD(dateStr) {
-        if (!dateStr) return "";
-        const [day, month, year] = dateStr.split("/");
-        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-      }
 
       document
         .getElementById("searchEthicalBtn")
@@ -1468,7 +1477,7 @@
           }
 
           if (program === "PGD") {
-            if (!document.getElementById("tanggalRealisasi").value.trim()) {
+            if (!document.getElementById("tanggalRealisasiPgd").value.trim()) {
               return Swal.fire(
                 "Lengkapi Tanggal",
                 "Tanggal realisasi wajib diisi untuk program PGD.",
@@ -1557,6 +1566,14 @@
                 "warning"
               );
             }
+          } else if (program === "POP") {
+            if (!document.getElementById("tanggalRealisasiPop").value.trim()) {
+              return Swal.fire(
+                "Lengkapi Tanggal",
+                "Tanggal realisasi wajib diisi untuk program POP.",
+                "warning"
+              );
+            }
           }
 
           const baseData = {
@@ -1584,12 +1601,11 @@
             baseData.namaAkunEwallet =
               document.getElementById("namaAkunEwallet").value || "";
           } else if (program === "POP") {
-            baseData.tanggalRealisasi = toYYYYMMDD(
-              document.getElementById("tanggalRealisasi").value
-            );
+            baseData.tanggalRealisasi = document.getElementById(
+              "tanggalRealisasiPop"
+            ).value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPesertaPop").value;
-
             const pediatrikSwitches = document.querySelectorAll(
               ".produkPediatrikSwitch"
             );
@@ -1603,9 +1619,9 @@
 
             baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
           } else if (program === "PGD") {
-            baseData.tanggalRealisasi = toYYYYMMDD(
-              document.getElementById("tanggalRealisasi").value
-            );
+            baseData.tanggalRealisasi = document.getElementById(
+              "tanggalRealisasiPgd"
+            ).value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPesertaPgd").value;
             // ...checker...
@@ -1672,9 +1688,8 @@
             }));
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
           } else if (program === "PK to PBF") {
-            baseData.tanggalPelaksanaan = toYYYYMMDD(
-              document.getElementById("tanggalPK").value || ""
-            );
+            baseData.tanggalPelaksanaan =
+              document.getElementById("tanggalPK").value || "";
             baseData.jumlahPesertaPK =
               document.getElementById("jumlahPesertaPK").value || "";
           }
@@ -1714,7 +1729,8 @@
               $("#noRek").val("");
               $("#namaAkunBank").val("");
               $("#cabangBank").val("");
-              $("#tanggalRealisasi").val("");
+              $("#tanggalRealisasiPop").val("");
+              $("#tanggalRealisasiPgd").val("");
               $("#jumlahPesertaPop").val("");
               $("#jumlahPesertaPgd").val("");
               $("#confirmCheck").prop("checked", false);
@@ -1731,6 +1747,12 @@
               $("#jumlahPesertaNeuro").val("");
               $("#biayaNeuro").val("");
               $("#jumlahPesertaPK").val("");
+              $("#tanggalRealisasiPop").val("");
+              $("#tanggalRealisasiPgd").val("");
+              document
+                .querySelectorAll('input[type="date"]')
+                .forEach((el) => (el.value = ""));
+
               [
                 "#Profibrat200",
                 "#Stavinor10",
@@ -1754,6 +1776,11 @@
               $("#tempatPelaksanaanWrapper").addClass("d-none");
               $("#tanggalPelaksanaanPK").addClass("d-none");
               $("#produkPediatrikWrapper").addClass("d-none");
+              $("#salesPGDFields").addClass("d-none");
+              $("#produkNeuroWrapper").addClass("d-none");
+              $("#tanggalRealisasiPgdWrapper").addClass("d-none");
+              $("#tanggalRealisasiPopWrapper").addClass("d-none");
+
               document
                 .querySelectorAll(".produkPediatrikSwitch")
                 .forEach((el) => (el.checked = false));
@@ -1766,7 +1793,8 @@
               setFieldRequired("#noRek", false);
               setFieldRequired("#namaAkunBank", false);
               setFieldRequired("#cabangBank", false);
-              setFieldRequired("#tanggalRealisasi", false);
+              setFieldRequired("#tanggalRealisasiPop", false);
+              setFieldRequired("#tanggalRealisasiPgd", false);
               setFieldRequired("#jumlahPesertaPop", false);
               setFieldRequired("#jumlahPesertaPgd", false);
               setFieldRequired("#namaApoteker", false);
@@ -1846,6 +1874,8 @@
         $("#pesertaPopWrapper").addClass("d-none");
         $("#produkSwitchWrapperPresentasi").html("");
         $("#pesertaPgdWrapper").addClass("d-none");
+        $("#tanggalRealisasiPgdWrapper").addClass("d-none");
+        $("#tanggalRealisasiPopWrapper").addClass("d-none");
 
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
@@ -1854,7 +1884,8 @@
         setFieldRequired("#noRek", false);
         setFieldRequired("#namaAkunBank", false);
         setFieldRequired("#cabangBank", false);
-        setFieldRequired("#tanggalRealisasi", false);
+        setFieldRequired("#tanggalRealisasiPop", false);
+        setFieldRequired("#tanggalRealisasiPgd", false);
         setFieldRequired("#jumlahPesertaPop", false);
         setFieldRequired("#jumlahPesertaPgd", false);
         setFieldRequired("#namaApoteker", false);
@@ -1866,6 +1897,8 @@
         setFieldRequired("#avgSalesProgram", false);
         setFieldRequired("#tanggalPresentasiNeuro", false);
         setFieldRequired("#jumlahPesertaNeuro", false);
+        setFieldRequired("#jumlahPesertaPK", false);
+        setFieldRequired("#tanggalPK", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#ownerFieldsInsentif").removeClass("d-none");
@@ -1881,7 +1914,10 @@
           $("#tempatPelaksanaanWrapper").addClass("d-none");
           $("#pesertaPopWrapper").removeClass("d-none");
           $("#pesertaPgdWrapper").addClass("d-none");
-          setFieldRequired("#tanggalRealisasi", true);
+          $("#tanggalRealisasiPopWrapper").removeClass("d-none");
+          $("#tanggalRealisasiPgdWrapper").addClass("d-none");
+          setFieldRequired("#tanggalRealisasiPop", true);
+          setFieldRequired("#tanggalRealisasiPgd ", false);
           setFieldRequired("#jumlahPesertaPop", true);
           setFieldRequired("#jumlahPesertaPgd", false);
         } else if (selected === "PGD") {
@@ -1891,7 +1927,10 @@
           $("#salesPGDFields").removeClass("d-none");
           $("#pesertaPopWrapper").addClass("d-none");
           $("#pesertaPgdWrapper").removeClass("d-none");
-          setFieldRequired("#tanggalRealisasi", true);
+          $("#tanggalRealisasiPopWrapper").addClass("d-none");
+          $("#tanggalRealisasiPgdWrapper").removeClass("d-none");
+          setFieldRequired("#tanggalRealisasiPgd", true);
+          setFieldRequired("#tanggalRealisasiPop ", false);
           setFieldRequired("#jumlahPesertaPgd", true);
           setFieldRequired("#jumlahPesertaPop", false);
           setFieldRequired("#tempatPelaksanaan", false);
@@ -1929,7 +1968,12 @@
           setTimeout(() => loader.remove(), 500); // Hapus loader setelah animasi selesai
         }
         initTomSelectOutlet([]);
-        flatpickr("#tanggalRealisasi", {
+        flatpickr("#tanggalRealisasiPop", {
+          dateFormat: "d/m/Y",
+          allowInput: true,
+          locale: "id",
+        });
+        flatpickr("#tanggalRealisasiPgd", {
           dateFormat: "d/m/Y",
           allowInput: true,
           locale: "id",
