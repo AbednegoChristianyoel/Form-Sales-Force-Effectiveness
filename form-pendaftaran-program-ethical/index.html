@@ -1568,35 +1568,13 @@
               );
             }
           } else if (program === "POP") {
-            baseData.tanggalRealisasi = document.getElementById(
-              "tanggalRealisasiPop"
-            ).value;
-            baseData.jumlahPeserta =
-              document.getElementById("jumlahPesertaPop").value;
-
-            const pediatrikSwitches = document.querySelectorAll(
-              ".produkPediatrikSwitch"
-            );
-
-            const checkedPediatrik = Array.from(pediatrikSwitches).filter(
-              (sw) => sw.checked
-            );
-            if (checkedPediatrik.length === 0) {
+            if (!document.getElementById("tanggalRealisasiPop").value.trim()) {
               return Swal.fire(
-                "Pilih Produk",
-                "Minimal pilih satu produk Pediatrik untuk program POP.",
+                "Lengkapi Tanggal",
+                "Tanggal realisasi wajib diisi untuk program POP.",
                 "warning"
               );
             }
-
-            const produkPediatrikStatus = Array.from(pediatrikSwitches).map(
-              (sw) => ({
-                label: sw.dataset.label,
-                status: sw.checked ? "Yes" : "No",
-              })
-            );
-
-            baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
           }
 
           const baseData = {
@@ -1632,6 +1610,17 @@
             const pediatrikSwitches = document.querySelectorAll(
               ".produkPediatrikSwitch"
             );
+
+            const checkedPediatrik = Array.from(pediatrikSwitches).filter(
+              (sw) => sw.checked
+            );
+            if (checkedPediatrik.length === 0) {
+              return Swal.fire(
+                "Pilih Produk",
+                "Minimal pilih satu produk Pediatrik untuk program POP.",
+                "warning"
+              );
+            }
 
             const produkPediatrikStatus = Array.from(pediatrikSwitches).map(
               (sw) => ({
