@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Program MTI</title>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCwxPY-M6lwt7JLZEeexUrhKVgVZj_enHE",
+        authDomain: "data-outlet-pharos.firebaseapp.com",
+        projectId: "data-outlet-pharos",
+        storageBucket: "data-outlet-pharos.appspot.com",
+        messagingSenderId: "651086534605",
+        appId: "1:651086534605:web:228339d21beb359a709684",
+        measurementId: "G-7FQQZ2K3T0",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://connect-assets.prosple.com/cdn/ff/nDJLhKo3GxHUnuJJLt-cRdMGUAmxDY2NSAzboL84_ec/1700559379/public/styles/scale_and_crop_center_120x120/public/2023-11/Logo-Pharos-Indonesia-200x200-2023.jpg?itok=4-AmM7sn"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background: #ffffff;
+        font-family: "Roboto", sans-serif;
+        font-size: 1.1rem;
+      }
+      .navbar-custom {
+        background-color: #0d6efd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .card {
+        border-radius: 1rem;
+        box-shadow: 0 0 30px rgba(13, 110, 253, 0.15);
+        background-color: #ffffff;
+        padding: 1.5rem 1.75rem;
+      }
+      h2 {
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #0d6efd;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 0.5rem;
+        padding: 0.55rem 0.9rem;
+      }
+      .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+        padding: 0.65rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+      }
+      .ts-wrapper {
+        width: 100%;
+      }
+
+      .ts-control {
+        padding: 0.375rem 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.275rem; /* sama dengan .form-control */
+        min-height: calc(1.5em + 0.75rem + 2px);
+        font-size: 1rem;
+        background-color: #fff;
+        color: #212529;
+        line-height: 1.5;
+        box-shadow: none;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .ts-control::placeholder,
+      .ts-control input::placeholder,
+      .ts-control.single .item {
+        color: #6c757d !important;
+        opacity: 1 !important;
+      }
+
+      .ts-control input {
+        font-size: 1rem;
+        color: #212529;
+        line-height: 1.5;
+      }
+
+      .ts-control:focus,
+      .ts-control:hover {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .ts-wrapper.single .ts-control {
+        display: flex;
+        align-items: center;
+      }
+
+      .ts-dropdown {
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        z-index: 1000;
+      }
+
+      .ts-dropdown .active {
+        background-color: #f8f9fa;
+      }
+
+      .ts-control .item {
+        background: none;
+        border: none;
+        padding-left: 0;
+        color: #212529;
+      }
+
+      .ts-control .clear-button {
+        color: #6c757d;
+        margin-left: auto;
+      }
+      /* Gaya untuk checkbox agar outline hitam */
+      .form-check-input[type="checkbox"] {
+        border-color: #000; /* Outline hitam */
+      }
+
+      /* Saat dicentang */
+      .form-check-input[type="checkbox"]:checked {
+        background-color: #0b5ed7; /* Kotak hitam */
+        border-color: #000; /* Outline hitam */
+      }
+
+      /* Hover agar terlihat interaktif */
+      .form-check-input[type="checkbox"]:hover {
+        border-color: #0b5ed7;
+      }
+
+      /* Fokus agar tetap outline hitam */
+      .form-check-input[type="checkbox"]:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+      }
+      .form-check {
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-check-input {
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        margin-right: 0.3rem;
+        flex-shrink: 0;
+        vertical-align: middle;
+      }
+
+      .form-check-input[type="radio"] {
+        margin-top: 0; /* hilangkan margin default */
+        vertical-align: middle; /* sejajarkan dengan teks */
+      }
+
+      .form-check-label {
+        vertical-align: middle; /* teks ikut sejajar */
+      }
+      ::placeholder {
+        color: #bbb !important;
+        opacity: 1;
+      }
+      .readonly-field {
+        background-color: #e9ecef !important; /* abu-abu Bootstrap */
+        pointer-events: none; /* mencegah klik / ketik */
+      }
+    </style>
+  </head>
+
+  <!-- Loader -->
+  <div
+    id="loader-wrapper"
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <div
+      class="spinner-border text-primary"
+      role="status"
+      style="width: 4rem; height: 4rem"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <body>
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
+    >
+      <div class="container">
+        <!-- Brand -->
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 ms-2 me-3"
+          href="#"
+        >
+          <!-- Icon Baru (Calm Style) -->
+          <i class="bi bi-clipboard-check text-white fs-3"></i>
+          <!-- Nama Brand -->
+          <span class="text-white fw-bold" style="font-size: 1.4rem">
+            Listing MTI
+          </span>
+        </a>
+        <!-- Hamburger Toggle -->
+        <button
+          class="navbar-toggler ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Menu Navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav mt-2 mt-lg-0 ms-2">
+            <li class="nav-item">
+              <a class="nav-link text-white fw-bold ms-1" href="#"
+                >Form Listing MTI</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white fw-bold ms-1" href="#"
+                >Daftar Listing MTI</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card">
+            <h2 class="text-center mb-3 mt-2">FORM LISTING MTI</h2>
+            <h5 class="fw-bold text-primary mt-1 mb-0 pb-0">INPUT DATA DIRI</h5>
+            <hr
+              class="mx-auto mt-3 mb-3"
+              style="border-top: 3px dashed #5f5f5f; width: 100%"
+            />
+            <form id="mtiForm">
+              <!-- Bagian NIP -->
+              <div class="row g-3 align-items-end">
+                <div class="col-md-8">
+                  <label for="nipMTI" class="form-label">NIP</label>
+                  <input
+                    type="text"
+                    id="nipMTI"
+                    class="form-control"
+                    placeholder="Masukkan NIP"
+                    required
+                  />
+                </div>
+                <div class="col-md-4">
+                  <button
+                    type="button"
+                    class="btn btn-primary w-100"
+                    id="searchMTIBtn"
+                  >
+                    Validasi NIP
+                  </button>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label">Nama</label>
+                  <input
+                    type="text"
+                    id="namaMTI"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Jabatan</label>
+                  <input
+                    type="text"
+                    id="jabatanMTI"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Divisi</label>
+                  <input
+                    type="text"
+                    id="divisiMTI"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+
+                <!-- Bagian Outlet -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    INPUT DETAIL OUTLET
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
+
+                <div class="col-12 mt-3">
+                  <label class="form-label d-block"
+                    >Apakah Outlet Punya Kode PI?</label
+                  >
+                  <div class="form-check form-check-inline mb-2">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="piOption"
+                      id="piAda"
+                      value="ada"
+                      checked
+                    />
+                    <label class="form-check-label" for="piAda"
+                      >Ada Kode PI</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline mb-0">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="piOption"
+                      id="piTidak"
+                      value="tidak"
+                    />
+                    <label class="form-check-label" for="piTidak"
+                      >Tidak Ada Kode PI</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3" id="dropdownOutlet">
+                  <label for="outletMTI" class="form-label">Kode Outlet</label>
+                  <select id="outletMTI">
+                    <option value="">Pilih Outlet</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" id="labelKodePi">Kode PI</label>
+                  <input
+                    type="text"
+                    id="kodePi"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Nama Outlet</label>
+                  <input
+                    type="text"
+                    id="namaOutlet"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Kota</label>
+                  <input
+                    type="text"
+                    id="kotaOutlet"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Alamat Outlet</label>
+                  <input
+                    type="text"
+                    id="alamatOutlet"
+                    class="form-control"
+                    readonly
+                  />
+                </div>
+
+                <!-- Konfirmasi -->
+                <div class="col-12 mt-5">
+                  <div class="ps-2 pt-1 border border-dark border-2 rounded">
+                    <div class="form-check d-flex align-items-center">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="confirmCheck"
+                        required
+                      />
+                      <label
+                        class="form-check-label fw-medium"
+                        for="confirmCheck"
+                      >
+                        <strong
+                          >SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong
+                        >
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-primary w-100">
+                    Submit Data
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader-wrapper");
+        if (loader) {
+          loader.classList.add("fade-out");
+          setTimeout(() => loader.remove(), 500);
+        }
+      });
+
+      let globalOutletData = {};
+      let tomOutletSelect;
+
+      // inisialisasi TomSelect sekali di awal
+      document.addEventListener("DOMContentLoaded", () => {
+        tomOutletSelect = new TomSelect("#outletMTI", {
+          placeholder: "Pilih Outlet",
+          plugins: ["clear_button"],
+          closeAfterSelect: true,
+          maxOptions: 1000,
+        });
+      });
+
+      document.getElementById("searchMTIBtn").addEventListener("click", () => {
+        const nip = document.getElementById("nipMTI").value.trim();
+        if (!nip)
+          return Swal.fire(
+            "Perhatian",
+            "Harap isi NIP terlebih dahulu.",
+            "warning"
+          );
+
+        Swal.fire({
+          title: "Mencari data...",
+          text: "Tunggu sebentar, data sedang diproses :)",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        fetch(
+          `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            Swal.close();
+
+            if (!data || !data.nama)
+              return Swal.fire(
+                "Tidak Ditemukan",
+                "Data NIP tidak ditemukan.",
+                "error"
+              );
+
+            // isi data karyawan
+            document.getElementById("namaMTI").value = data.nama || "";
+            document.getElementById("jabatanMTI").value = data.jabatan || "";
+            document.getElementById("divisiMTI").value = data.divisi || "";
+
+            // reset dan isi ulang opsi outlet ke TomSelect
+            globalOutletData = {};
+            tomOutletSelect.clearOptions();
+            tomOutletSelect.addOption({ value: "", text: "Pilih Outlet" });
+
+            (data.outlets || []).forEach((outlet) => {
+              globalOutletData[outlet.kode] = outlet;
+              tomOutletSelect.addOption({
+                value: outlet.kode,
+                text: outlet.kode,
+              });
+            });
+
+            tomOutletSelect.refreshOptions(false);
+          })
+          .catch((err) => {
+            Swal.close();
+            Swal.fire({
+              icon: "error",
+              title: "Gagal Mengambil Data",
+              text: err.message || err,
+            });
+          });
+      });
+
+      const labelKodePi = document.getElementById("labelKodePi");
+
+      // event ketika pilih outlet
+      document.getElementById("outletMTI").addEventListener("change", (e) => {
+        const kode = e.target.value;
+        if (globalOutletData[kode]) {
+          const o = globalOutletData[kode];
+          document.getElementById("kodePi").value = o.kodePi || "";
+          document.getElementById("namaOutlet").value = o.nama || "";
+          document.getElementById("kotaOutlet").value = o.kota || "";
+          document.getElementById("alamatOutlet").value = o.alamat || "";
+        } else {
+          document.getElementById("kodePi").value = "";
+          document.getElementById("namaOutlet").value = "";
+          document.getElementById("kotaOutlet").value = "";
+          document.getElementById("alamatOutlet").value = "";
+        }
+      });
+
+      // event ketika ganti pilihan radio ada/tidak kode PI
+      document.querySelectorAll('input[name="piOption"]').forEach((radio) => {
+        radio.addEventListener("change", togglePiMode);
+      });
+
+      // 🔥 jalankan sekali saat awal load
+      togglePiMode();
+
+      function togglePiMode() {
+        const readonly = document.getElementById("piAda").checked;
+        const dropdown = document.getElementById("dropdownOutlet");
+
+        if (readonly) {
+          // kalau ada kode PI → field readonly + dropdown muncul
+          dropdown.style.display = "block";
+          labelKodePi.textContent = "Kode PI";
+
+          ["kodePi", "namaOutlet", "kotaOutlet", "alamatOutlet"].forEach(
+            (id) => {
+              const field = document.getElementById(id);
+              field.value = ""; // kosongin dulu
+              field.setAttribute("readonly", true);
+              field.classList.add("readonly-field");
+              field.removeAttribute("placeholder"); // 🔥 hapus hint saat readonly
+            }
+          );
+        } else {
+          // kalau tidak ada kode PI → field editable + dropdown hilang
+          dropdown.style.display = "none";
+          labelKodePi.textContent = "Kode Distributor";
+
+          // kosongkan juga dropdown
+          tomOutletSelect.clear();
+
+          ["kodePi", "namaOutlet", "kotaOutlet", "alamatOutlet"].forEach(
+            (id) => {
+              const field = document.getElementById(id);
+              field.removeAttribute("readonly");
+              field.classList.remove("readonly-field");
+              field.value = "";
+
+              // 🔥 tambahkan hint sesuai field
+              if (id === "kodePi")
+                field.placeholder = "Masukkan Kode Distributor";
+              if (id === "namaOutlet")
+                field.placeholder = "Masukkan Nama Outlet";
+              if (id === "kotaOutlet")
+                field.placeholder = "Masukkan Kota Outlet";
+              if (id === "alamatOutlet")
+                field.placeholder = "Masukkan Alamat Outlet";
+            }
+          );
+        }
+      }
+
+      document.getElementById("mtiForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const outletData = {
+          kodePi: document.getElementById("kodePi").value,
+          nama: document.getElementById("namaOutlet").value,
+          kota: document.getElementById("kotaOutlet").value,
+          alamat: document.getElementById("alamatOutlet").value,
+        };
+
+        console.log("Data Outlet yang dikirim:", outletData);
+        Swal.fire("Success", "Data berhasil dikumpulkan!", "success");
+      });
+    </script>
+  </body>
+</html>
