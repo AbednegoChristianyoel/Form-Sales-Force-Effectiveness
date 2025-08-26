@@ -64,6 +64,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
     <style>
       body {
         background: #ffffff;
@@ -75,7 +79,7 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
       .card {
-        border-radius: 1rem;
+        border-radius: 8px;
         box-shadow: 0 0 30px rgba(13, 110, 253, 0.15);
         background-color: #ffffff;
         padding: 1.5rem 1.75rem;
@@ -87,7 +91,7 @@
       }
       .form-control,
       .form-select {
-        border-radius: 0.5rem;
+        border-radius: 8px;
         padding: 0.55rem 0.9rem;
       }
       .btn-primary {
@@ -95,7 +99,7 @@
         border: none;
         padding: 0.65rem;
         font-weight: 500;
-        border-radius: 0.5rem;
+        border-radius: 8px;
       }
       .ts-wrapper {
         width: 100%;
@@ -213,6 +217,55 @@
         background-color: #e9ecef !important; /* abu-abu Bootstrap */
         pointer-events: none; /* mencegah klik / ketik */
       }
+      table thead th {
+        text-align: center;
+        vertical-align: middle;
+      }
+      /* Header gradien */
+      .table-gradient {
+        background: linear-gradient(90deg, #0d6efd, #4dabf7);
+      }
+
+      /* Rounded corner pada table */
+      #produkTable {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      /* Hover effect row */
+      #produkTable tbody tr:hover {
+        background-color: #f1f7ff;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+      }
+
+      /* Striping lebih soft */
+      #produkTable tbody tr:nth-child(odd) {
+        background-color: #fafafa;
+      }
+
+      /* Action button lebih modern */
+      .btn-action {
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        transition: 0.2s;
+      }
+      .btn-action:hover {
+        transform: scale(1.05);
+      }
+      .btn-success-dark {
+        background-color: #006838 !important; /* hijau tua Bootstrap */
+        color: #fff !important; /* teks putih */
+        border: none;
+        padding: 0.65rem;
+        font-weight: 500;
+        border-radius: 8px;
+      }
+      .btn-success-dark:hover {
+        background-color: #006838 !important; /* versi lebih gelap saat hover */
+        color: #fff !important; /* tetap putih saat hover */
+      }
     </style>
   </head>
 
@@ -288,12 +341,12 @@
       </div>
     </nav>
 
-    <div class="container mt-5 mb-5">
+    <div class="container-fluid mt-5 mb-5">
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="card">
             <h2 class="text-center mb-3 mt-2">FORM LISTING MTI</h2>
-            <h5 class="fw-bold text-primary mt-1 mb-0 pb-0">INPUT DATA DIRI</h5>
+            <h5 class="fw-bold text-primary mt-1 mb-0 pb-0">DATA DIRI SALES</h5>
             <hr
               class="mx-auto mt-3 mb-3"
               style="border-top: 3px dashed #5f5f5f; width: 100%"
@@ -352,7 +405,7 @@
                 <!-- Bagian Outlet -->
                 <div class="col-12 mt-4">
                   <h5 class="fw-bold text-primary mt-1 mb-3">
-                    INPUT DETAIL OUTLET
+                    DETAIL DATA OUTLET
                   </h5>
                   <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
                 </div>
@@ -432,6 +485,374 @@
                   />
                 </div>
 
+                <div class="col-12">
+                  <label class="form-label d-block"
+                    >Apakah Mempunyai NPWP?</label
+                  >
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="punyaNPWP"
+                      id="npwpYa"
+                      value="ya"
+                      checked
+                    />
+                    <label class="form-check-label" for="npwpYa">Ya</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="punyaNPWP"
+                      id="npwpTidak"
+                      value="tidak"
+                    />
+                    <label class="form-check-label" for="npwpTidak"
+                      >Tidak</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <label class="form-label">Nomor NPWP / KTP Terdaftar</label>
+                  <input
+                    type="text"
+                    id="nomorktpNPWP"
+                    class="form-control"
+                    placeholder="Masukkan Nomor NPWP / KTP"
+                  />
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Tipe NPWP</label>
+                  <select id="tipeNPWP" class="form-select">
+                    <option value="">Pilih Tipe NPWP</option>
+                    <option value="Badan">Badan</option>
+                    <option value="Pribadi">Pribadi</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Nama NPWP Terdaftar</label>
+                  <input
+                    type="text"
+                    id="namaNPWP"
+                    class="form-control"
+                    placeholder="Masukkan Nama NPWP"
+                  />
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Distributor Coverage</label>
+                  <select id="coverageDistributor" class="form-select">
+                    <option value="">Pilih Distributor</option>
+                    <option value="AMS">AMS</option>
+                    <option value="PPG">PPG</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Sub Dist Coverage</label>
+                  <select id="subDistCoverage" class="form-select">
+                    <option value="">Pilih Sub Distributor</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">PKP / NON PKP</label>
+                  <select id="statusPKP" class="form-select">
+                    <option value="">Pilih Status</option>
+                    <option value="Release Faktur Pajak">
+                      Release Faktur Pajak
+                    </option>
+                    <option value="Tidak Release Faktur Pajak">
+                      Tidak Release Faktur Pajak
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Gross Up / Non Gross Up</label>
+                  <select id="grossUp" class="form-select">
+                    <option value="">Pilih Opsi</option>
+                    <option value="Gross Up">Gross Up</option>
+                    <option value="Non Gross Up">Non Gross Up</option>
+                  </select>
+                </div>
+
+                <!-- Bagian Tambah Produk -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    PLAN ITEM LISTING
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
+
+                <!-- Table Produk -->
+                <div class="table-responsive">
+                  <table
+                    class="table table-hover align-middle text-center shadow-sm rounded"
+                    id="produkTable"
+                  >
+                    <thead class="table-gradient text-white">
+                      <tr>
+                        <th>PROCODE</th>
+                        <th>NAMA ITEM</th>
+                        <th>COST CENTER COVERAGE</th>
+                        <th id="labelListingFee">
+                          LISTING FEE / ITEM (DPP, EXC PPN)
+                        </th>
+                        <th>QTY PO (UB)</th>
+                        <th>HNA</th>
+                        <th>VALUE ESTIMATE (RUPIAH)</th>
+                        <th>ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Baris Produk Dinamis -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Tombol Tambah Produk -->
+                <button
+                  type="button"
+                  class="btn btn-success-dark w-100 mt-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#produkModal"
+                >
+                  + Tambah Produk
+                </button>
+                <!-- Modal Tambah Produk -->
+                <div class="modal fade" id="produkModal" tabindex="-1">
+                  <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <!-- <-- Tambahkan modal-dialog-centered -->
+                    <div class="modal-content">
+                      <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Tambah Produk</h5>
+                        <button
+                          type="button"
+                          class="btn-close btn-close-white"
+                          data-bs-dismiss="modal"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="produkForm">
+                          <div class="mb-3">
+                            <label class="form-label">Pilih Produk</label>
+                            <select
+                              class="form-select"
+                              id="selectProduk"
+                              required
+                            >
+                              <option value="">-- Pilih Produk --</option>
+                            </select>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label">Procode</label>
+                              <input
+                                type="text"
+                                class="form-control bg-light"
+                                id="procode"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label">Nama Item</label>
+                              <input
+                                type="text"
+                                class="form-control bg-light"
+                                id="itname"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-12 mb-3">
+                              <label class="form-label"
+                                >Cost Center Coverage</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control bg-light"
+                                id="costCenter"
+                                readonly
+                              />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label"
+                                >Listing Fee / Item (Exc. PPN)</label
+                              >
+                              <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input
+                                  type="text"
+                                  class="form-control bg-light"
+                                  id="listingFee"
+                                  readonly
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label">HNA</label>
+                              <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input
+                                  type="text"
+                                  class="form-control bg-light"
+                                  id="hna"
+                                  readonly
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label">QTY PO (UB)</label>
+                              <div class="input-group">
+                                <input
+                                  type="number"
+                                  class="form-control"
+                                  id="qtyListing"
+                                  min="1"
+                                />
+                                <span class="input-group-text">UB</span>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label class="form-label">Value Estimate</label>
+                              <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input
+                                  type="text"
+                                  class="form-control bg-light"
+                                  id="valueEstimate"
+                                  readonly
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer d-flex justify-content-between">
+                        <button
+                          type="button"
+                          class="btn btn-primary w-100"
+                          id="saveProdukBtn"
+                        >
+                          Simpan Produk
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ringkasan Perhitungan PO -->
+                <div class="mt-4 p-3 border rounded bg-light">
+                  <h6 class="fw-bold">RINGKASAN PERHITUNGAN PO</h6>
+                  <div class="row">
+                    <div class="col-md-6">TOTAL VALUE PO:</div>
+                    <div class="col-md-6 text-end" id="totalFeePO">Rp0</div>
+                  </div>
+                </div>
+
+                <!-- Ringkasan Perhitungan -->
+                <div class="mt-4 p-3 border rounded bg-light">
+                  <h6 class="fw-bold">RINGKASAN PERHITUNGAN</h6>
+                  <div class="row">
+                    <div class="col-md-6" id="labelTotalFeeListingItem">
+                      TOTAL FEE LISTING ITEM:
+                    </div>
+                    <div class="col-md-6 text-end" id="totalFee">Rp0</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">PPN (11%):</div>
+                    <div class="col-md-6 text-end" id="ppnValue">Rp0</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">TOTAL FEE + PPN:</div>
+                    <div class="col-md-6 text-end" id="totalFeePPN">Rp0</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">PPh</div>
+                    <div class="col-md-6 text-end" id="pphValue">Rp0</div>
+                  </div>
+                  <div class="row fw-bold bg-warning mt-2 p-2 rounded">
+                    <div class="col-md-6">TOTAL BAYAR:</div>
+                    <div class="col-md-6 text-end" id="totalBayar">Rp0</div>
+                  </div>
+                </div>
+
+                <!-- Bagian Metode Pembayaran -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    METODE PEMBAYARAN
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <label class="form-label">Jenis Transaksi</label>
+                  <select id="jenisTransaksi" class="form-select" required>
+                    <option value="">Pilih Jenis Transaksi</option>
+                    <option value="Transfer Langsung">Transfer Langsung</option>
+                    <option value="Potong Tagihan Distributor">
+                      Potong Tagihan Distributor
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Nomor Rekening</label>
+                  <input
+                    type="text"
+                    id="nomorRekening"
+                    class="form-control"
+                    placeholder="Masukkan Nomor Rekening"
+                  />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Nama Pemilik Rekening</label>
+                  <input
+                    type="text"
+                    id="namaPemilikRekening"
+                    class="form-control"
+                    placeholder="Masukkan Nama Pemilik Rekening"
+                  />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Nama Bank</label>
+                  <input
+                    type="text"
+                    id="namaBank"
+                    class="form-control"
+                    placeholder="Masukkan Nama Bank"
+                  />
+                </div>
+
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">Kantor Cabang Penerima</label>
+                  <input
+                    type="text"
+                    id="cabangPenerima"
+                    class="form-control"
+                    placeholder="Masukkan Kantor Cabang Penerima"
+                  />
+                </div>
+
+                <!-- Bagian Catatan -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    CATATAN / INFORMASI TAMBAHAN
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <label class="form-label">Jumlah Outlet</label>
+                  <input
+                    type="number"
+                    id="jumlahOutlet"
+                    class="form-control"
+                    placeholder="Masukkan Jumlah Outlet"
+                  />
+                </div>
+
                 <!-- Konfirmasi -->
                 <div class="col-12 mt-5">
                   <div class="ps-2 pt-1 border border-dark border-2 rounded">
@@ -446,9 +867,7 @@
                         class="form-check-label fw-medium"
                         for="confirmCheck"
                       >
-                        <strong
-                          >SAYA MENYATAKAN DATA YANG DIISI SUDAH BENAR</strong
-                        >
+                        <strong>SAYA MENYATAKAN DATA SUDAH BENAR</strong>
                       </label>
                     </div>
                   </div>
@@ -634,6 +1053,424 @@
 
         console.log("Data Outlet yang dikirim:", outletData);
         Swal.fire("Success", "Data berhasil dikumpulkan!", "success");
+      });
+
+      // Event toggle NPWP
+      document.querySelectorAll('input[name="punyaNPWP"]').forEach((radio) => {
+        radio.addEventListener("change", () => {
+          const isPunyaNPWP = document.getElementById("npwpYa").checked;
+
+          ["tipeNPWP", "namaNPWP"].forEach((id) => {
+            const field = document.getElementById(id);
+            if (!isPunyaNPWP) {
+              field.value = "";
+              field.setAttribute(
+                "data-placeholder",
+                field.placeholder || field.options?.[0]?.text || ""
+              );
+              if (field.tagName === "SELECT") {
+                field.selectedIndex = -1; // hilangkan pilihan dropdown
+              } else {
+                field.placeholder = ""; // kosongkan hint input
+              }
+              field.classList.add("disabled-empty");
+              field.disabled = true;
+            } else {
+              field.disabled = false;
+              if (field.tagName !== "SELECT") {
+                field.placeholder =
+                  field.getAttribute("data-placeholder") || "";
+              }
+              field.classList.remove("disabled-empty");
+            }
+          });
+        });
+      });
+      // Event Distributor Coverage → kontrol Sub Dist Coverage
+      document
+        .getElementById("coverageDistributor")
+        .addEventListener("change", () => {
+          const coverage = document.getElementById("coverageDistributor").value;
+          const subDistSelect = document.getElementById("subDistCoverage");
+
+          // kosongkan dulu opsinya
+          subDistSelect.innerHTML =
+            '<option value="">--Pilih Sub Distributor--</option>';
+
+          if (coverage === "PPG") {
+            const ppgList = [
+              "Langsung ke Distributor",
+              "BETHANIA FARMA SEJAHTERA, PT - BANGKO",
+              "LAKSA NUSANTARA FARMA, PT - BALIKPAPAN",
+              "LIMA JAYA FARMATAMA, PT - PADANG",
+              "MASAMEDI INTIFARMINDO, PT - KAB. MAGELANG",
+              "MASAMEDI INTIFARMINDO, PT - KAB. SIDOARJO",
+              "MASAMEDI INTIFARMINDO, PT - KAB. TASIKMALAYA",
+              "MASAMEDI INTIFARMINDO, PT - KOTA BANDUNG",
+              "MASAMEDI INTIFARMINDO, PT - KOTA BOGOR",
+              "MASAMEDI INTIFARMINDO, PT - KOTA SEMARANG",
+              "MASAMEDI INTIFARMINDO, PT - KOTA TANGERANG",
+              "MASAMEDI INTIFARMINDO, PT (SMD) - KAB. SUMEDANG",
+              "PAUH MANDIRI SEJAHTERA, PT - BENGKULU",
+              "PESONA GENDIS SEJATI, PT - KOTA DENPASAR",
+              "RESTU INDO MEDICA, PT - MEDAN",
+              "RIAU ANDALAN FARMA, PT - PEKANBARU",
+              "SARWA MANGGALLA RAYA, PT - JAKARTA UTARA",
+            ];
+
+            ppgList.forEach((subdist) => {
+              const option = new Option(subdist, subdist);
+              subDistSelect.add(option);
+            });
+
+            // pastikan enabled
+            subDistSelect.disabled = false;
+            subDistSelect.classList.remove("readonly-field");
+          } else if (coverage === "AMS") {
+            // disable field (readonly effect)
+            subDistSelect.innerHTML =
+              '<option value="Tidak Melalui Subdist">Tidak Melalui Subdist</option>';
+            subDistSelect.disabled = false;
+          } else {
+            // disable field (readonly effect)
+            subDistSelect.innerHTML =
+              '<option value="Tidak Melalui Subdist">Tidak Melalui Subdist</option>';
+            subDistSelect.disabled = false;
+          }
+        });
+
+      // Data produk
+      const produkData = [
+        {
+          procode: "P001",
+          itname: "Produk A",
+          costCenter: "CC01",
+          listingFee: 10000,
+          hna: 20000,
+        },
+        {
+          procode: "P002",
+          itname: "Produk B",
+          costCenter: "CC02",
+          listingFee: 15000,
+          hna: 30000,
+        },
+      ];
+
+      // Isi dropdown produk
+      const selectProduk = document.getElementById("selectProduk");
+      produkData.forEach((p) => {
+        const opt = document.createElement("option");
+        opt.value = p.procode;
+        opt.textContent = p.itname;
+        selectProduk.appendChild(opt);
+      });
+
+      // Fungsi format Rupiah
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID").format(angka || 0);
+      }
+
+      // Saat pilih produk → isi otomatis
+      selectProduk.addEventListener("change", (e) => {
+        // Reset semua field dulu
+        [
+          "procode",
+          "itname",
+          "costCenter",
+          "listingFee",
+          "hna",
+          "valueEstimate",
+          "qtyListing",
+        ].forEach((id) => {
+          document.getElementById(id).value = "";
+        });
+
+        const selected = produkData.find((p) => p.procode === e.target.value);
+        if (selected) {
+          document.getElementById("procode").value = selected.procode;
+          document.getElementById("itname").value = selected.itname;
+          document.getElementById("costCenter").value = selected.costCenter;
+          document.getElementById("listingFee").value = formatRupiah(
+            selected.listingFee
+          );
+          document.getElementById("hna").value = formatRupiah(selected.hna);
+
+          // Set qty default 1
+          const qty =
+            parseInt(document.getElementById("qtyListing").value) || 0;
+          document.getElementById("valueEstimate").value = formatRupiah(
+            selected.hna * qty
+          );
+        }
+      });
+
+      // Saat input Qty PO → hitung ulang Value Estimate
+      document.getElementById("qtyListing").addEventListener("input", () => {
+        const selected = produkData.find(
+          (p) => p.procode === selectProduk.value
+        );
+        if (selected) {
+          const qty =
+            parseInt(document.getElementById("qtyListing").value) || 0;
+          document.getElementById("valueEstimate").value = formatRupiah(
+            selected.hna * qty
+          );
+        }
+      });
+
+      // Simpan produk ke tabel dengan validasi wajib
+      document.getElementById("saveProdukBtn").addEventListener("click", () => {
+        const requiredFields = [
+          "procode",
+          "itname",
+          "costCenter",
+          "listingFee",
+          "hna",
+          "qtyListing",
+          "valueEstimate",
+        ];
+        const emptyFields = requiredFields.filter(
+          (id) => !document.getElementById(id).value
+        );
+
+        if (emptyFields.length > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Data Belum Lengkap",
+            html: "Semua field wajib diisi sebelum menyimpan produk.",
+          });
+          return;
+        }
+
+        const procode = document.getElementById("procode").value;
+        const tbody = document.querySelector("#produkTable tbody");
+
+        // 🔥 Cek duplikat
+        const sudahAda = Array.from(tbody.querySelectorAll("tr")).some(
+          (row) => row.querySelector("td").textContent === procode
+        );
+        if (sudahAda) {
+          Swal.fire({
+            icon: "warning",
+            title: "Produk sudah ditambahkan",
+            text: "Produk ini sudah ada di tabel dan tidak bisa ditambahkan dua kali.",
+          });
+          return;
+        }
+
+        const itname = document.getElementById("itname").value;
+        const costCenter = document.getElementById("costCenter").value;
+        const listingFeeRaw = document
+          .getElementById("listingFee")
+          .value.replace(/[^\d]/g, "");
+        const hnaRaw = document
+          .getElementById("hna")
+          .value.replace(/[^\d]/g, "");
+        const valueEstimate = document.getElementById("valueEstimate").value;
+        const qtyListing = document.getElementById("qtyListing").value;
+
+        let listingFee = parseFloat(listingFeeRaw) || 0;
+
+        // 🔥 cek gross up
+        const grossUpStatus = document.getElementById("grossUp").value;
+        const punyaNPWP = document.getElementById("npwpYa")?.checked;
+        const tipeNPWP = document.getElementById("tipeNPWP")?.value;
+
+        if (grossUpStatus === "Gross Up") {
+          if (punyaNPWP && tipeNPWP === "Badan") {
+            listingFee = listingFee * (100 / 98);
+          } else {
+            listingFee = listingFee * (100 / 97.5);
+          }
+        }
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+    <td>${procode}</td>
+    <td>${itname}</td>
+    <td>${costCenter}</td>
+    <td data-fee="${listingFeeRaw}">Rp${formatRupiah(listingFee)}</td>
+    <td>${qtyListing}</td>
+    <td>Rp${formatRupiah(hnaRaw)}</td>
+    <td>${valueEstimate}</td>
+    <td>
+      <button class="btn btn-danger btn-sm btn-action hapusProdukBtn">
+        <i class="bi bi-trash"></i> Hapus
+      </button>
+    </td>
+  `;
+        tbody.appendChild(row);
+
+        // disable option produk
+        const option = selectProduk.querySelector(`option[value="${procode}"]`);
+        if (option) option.disabled = true;
+
+        // reset form produk
+        [
+          "procode",
+          "itname",
+          "costCenter",
+          "listingFee",
+          "hna",
+          "valueEstimate",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        selectProduk.value = "";
+        qtyListing.value = "";
+
+        // tutup modal
+        const modalEl = document.getElementById("produkModal");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.hide();
+
+        // hitung ulang
+        hitungRingkasan();
+      });
+
+      // Event hapus produk
+      document
+        .querySelector("#produkTable tbody")
+        .addEventListener("click", (e) => {
+          if (e.target.classList.contains("hapusProdukBtn")) {
+            const row = e.target.closest("tr");
+            const procode = row.querySelector("td").textContent;
+
+            // Aktifkan kembali option produk di dropdown
+            const option = selectProduk.querySelector(
+              `option[value="${procode}"]`
+            );
+            if (option) option.disabled = false;
+
+            row.remove();
+            hitungRingkasan();
+          }
+        });
+      function parseCurrency(text) {
+        // buang Rp dan spasi
+        let cleaned = text.replace(/Rp|\s/g, "");
+
+        // kalau ada format ribuan Eropa (15.384,615)
+        // ganti titik ribuan → kosong, koma → titik
+        cleaned = cleaned.replace(/\./g, "").replace(/,/g, ".");
+
+        return parseFloat(cleaned) || 0;
+      }
+      function hitungRingkasan() {
+        const tbody = document.querySelector("#produkTable tbody");
+        let totalValueEstimate = 0; // total PO
+        let totalListingFee = 0; // total fee listing
+
+        tbody.querySelectorAll("tr").forEach((row) => {
+          // Ambil Value Estimate (Rp)
+          const valueEstimateText = row.children[6].textContent;
+          const valueEstimate = parseCurrency(valueEstimateText);
+          totalValueEstimate += valueEstimate;
+
+          // Ambil Listing Fee (Rp) × Qty
+          const listingFeeText = row.children[3].textContent;
+          const listingFee = parseCurrency(listingFeeText);
+          const qty = parseInt(row.children[4].textContent) || 0;
+          totalListingFee += listingFee;
+        });
+
+        // ambil status NPWP
+        const punyaNPWP = document.getElementById("npwpYa")?.checked;
+        const tipeNPWP = document.getElementById("tipeNPWP")?.value;
+        const grossUp = document.getElementById("grossUp")?.value;
+        const releaseFP = document.getElementById("statusPKP")?.value;
+
+        let totalFeeAdjusted = totalListingFee;
+
+        // PPN
+        let ppn = 0;
+        if (releaseFP === "Release Faktur Pajak") {
+          ppn = totalFeeAdjusted * 0.11;
+        }
+
+        // PPh
+        let pph = 0;
+        if (punyaNPWP && tipeNPWP === "Badan") {
+          pph = totalFeeAdjusted * 0.02;
+        } else {
+          pph = totalFeeAdjusted * 0.025;
+        }
+
+        // Total Bayar
+        ppn = Math.round(ppn);
+        pph = Math.round(pph);
+        const totalBayar = Math.round(totalFeeAdjusted + ppn - pph);
+
+        // Tampilkan hasil
+        document.getElementById("totalFeePO").textContent =
+          "Rp" + formatRupiah(totalValueEstimate); // total PO
+        document.getElementById("totalFee").textContent =
+          "Rp" + formatRupiah(totalFeeAdjusted); // total listing fee (gross up)
+        document.getElementById("ppnValue").textContent =
+          "Rp" + formatRupiah(ppn);
+        document.getElementById("pphValue").textContent =
+          "Rp" + formatRupiah(pph);
+        document.getElementById("totalFeePPN").textContent =
+          "Rp" + formatRupiah(totalFeeAdjusted + ppn);
+        document.getElementById("totalBayar").textContent =
+          "Rp" + formatRupiah(totalBayar);
+      }
+
+      // Trigger perubahan NPWP, GrossUp, Release Faktur Pajak
+      ["npwpYa", "npwpTidak", "tipeNPWP", "grossUp", "statusPKP"].forEach(
+        (id) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("change", hitungRingkasan);
+        }
+      );
+      // Event ganti Gross Up → ubah label
+      document
+        .getElementById("grossUp")
+        .addEventListener("change", function () {
+          const labelListing = document.getElementById("labelListingFee");
+          const labelTotalFee = document.getElementById(
+            "labelTotalFeeListingItem"
+          );
+
+          if (this.value === "Gross Up") {
+            labelListing.textContent =
+              "Listing Fee / Item (DPP, EXC PPN) [Gross Up]";
+            labelTotalFee.textContent = "TOTAL FEE LISTING ITEM (GROSS UP):";
+          } else {
+            labelListing.textContent = "Listing Fee / Item (DPP, EXC PPN)";
+            labelTotalFee.textContent = "TOTAL FEE LISTING ITEM:";
+          }
+        });
+
+      function updateListingFeeDisplay() {
+        const grossUpStatus = document.getElementById("grossUp").value;
+        const punyaNPWP = document.getElementById("npwpYa")?.checked;
+        const tipeNPWP = document.getElementById("tipeNPWP")?.value;
+
+        document.querySelectorAll("#produkTable tbody tr").forEach((row) => {
+          const tdFee = row.children[3]; // kolom listing fee
+          const originalFee = parseFloat(tdFee.getAttribute("data-fee")) || 0;
+          let displayFee = originalFee;
+
+          if (grossUpStatus === "Gross Up") {
+            if (punyaNPWP && tipeNPWP === "Badan") {
+              displayFee = originalFee * (100 / 98);
+            } else {
+              displayFee = originalFee * (100 / 97.5);
+            }
+          }
+
+          // 🔥 Bulatkan ke rupiah
+          displayFee = Math.round(displayFee);
+
+          tdFee.textContent = "Rp" + formatRupiah(displayFee);
+        });
+
+        hitungRingkasan();
+      }
+
+      ["grossUp", "npwpYa", "npwpTidak", "tipeNPWP"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("change", updateListingFeeDisplay);
       });
     </script>
   </body>
