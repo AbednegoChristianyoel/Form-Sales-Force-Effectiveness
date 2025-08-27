@@ -927,12 +927,12 @@
                 </div>
 
                 <div class="col-md-6 mt-3">
-                  <label class="form-label">Kantor Cabang Penerima</label>
+                  <label class="form-label">Kantor Cabang Pembantu (KCP)</label>
                   <input
                     type="text"
-                    id="cabangPenerima"
+                    id="kcpBank"
                     class="form-control"
-                    placeholder="Masukkan Kantor Cabang Penerima"
+                    placeholder="Masukkan Kantor Cabang Pembantu (KCP)"
                     required
                   />
                 </div>
@@ -1052,6 +1052,12 @@
       });
 
       const labelKodePi = document.getElementById("labelKodePi");
+
+      function getNumberFromRupiah(value) {
+        if (!value) return 0;
+        // buang Rp, titik, spasi, koma
+        return parseFloat(value.replace(/Rp|\s|\./g, "")) || 0;
+      }
 
       // event ketika pilih outlet
       document.getElementById("outletMTI").addEventListener("change", (e) => {
@@ -1720,10 +1726,10 @@
               procode: cells[0].textContent,
               itname: cells[1].textContent,
               costCenter: cells[2].textContent,
-              listingFee: cells[3].textContent,
-              qty: cells[4].textContent,
-              hna: cells[5].textContent,
-              valueEstimate: cells[6].textContent,
+              listingFee: getNumberFromRupiah(cells[3].textContent), // hanya angka
+              qty: parseInt(cells[4].textContent) || 0,
+              hna: getNumberFromRupiah(cells[5].textContent), // hanya angka
+              valueEstimate: getNumberFromRupiah(cells[6].textContent), // hanya angka
             });
           });
 
@@ -1746,7 +1752,7 @@
             kota: document.getElementById("kotaOutlet").value,
             alamat: document.getElementById("alamatOutlet").value,
             jumlahOutlet: document.getElementById("jumlahOutlet")?.value || "",
-            nomorKtp: document.getElementById("noKtp")?.value || "",
+            nomorKtp: document.getElementById("nomorktpNPWP")?.value || "",
             tipeNpwp: document.getElementById("tipeNPWP")?.value || "",
             namaNpwp: document.getElementById("namaNPWP")?.value || "",
             distributor: document.getElementById("coverageDistributor").value,
@@ -1754,19 +1760,33 @@
             pkp: document.getElementById("statusPKP").value,
             grossUp: document.getElementById("grossUp").value,
             metodePembayaran:
-              document.getElementById("metodePembayaran")?.value || "",
+              document.getElementById("jenisTransaksi")?.value || "",
             produkList: JSON.stringify(produkList),
             totalQtyPO: document.getElementById("totalQty").textContent,
-            totalValuePO: document.getElementById("totalFeePO").textContent,
-            totalListingFee: document.getElementById("totalFee").textContent,
-            dcFee: document.getElementById("dcFeeValue").textContent,
-            ppn: document.getElementById("ppnValue").textContent,
-            feePlusPpn: document.getElementById("totalFeePPN").textContent,
-            pph: document.getElementById("pphValue").textContent,
-            totalBayar: document.getElementById("totalBayar").textContent,
+            totalValuePO: getNumberFromRupiah(
+              document.getElementById("totalFeePO").textContent
+            ),
+            totalListingFee: getNumberFromRupiah(
+              document.getElementById("totalFee").textContent
+            ),
+            dcFee: getNumberFromRupiah(
+              document.getElementById("dcFeeValue").textContent
+            ),
+            ppn: getNumberFromRupiah(
+              document.getElementById("ppnValue").textContent
+            ),
+            feePlusPpn: getNumberFromRupiah(
+              document.getElementById("totalFeePPN").textContent
+            ),
+            pph: getNumberFromRupiah(
+              document.getElementById("pphValue").textContent
+            ),
+            totalBayar: getNumberFromRupiah(
+              document.getElementById("totalBayar").textContent
+            ),
             jenisTransaksi:
               document.getElementById("jenisTransaksi")?.value || "",
-            noRekening: document.getElementById("noRekening")?.value || "",
+            noRekening: document.getElementById("nomorRekening")?.value || "",
             namaPemilikRekening:
               document.getElementById("namaPemilikRekening")?.value || "",
             kcpBank: document.getElementById("kcpBank")?.value || "",
