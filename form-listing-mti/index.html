@@ -495,6 +495,7 @@
                     id="jumlahOutlet"
                     class="form-control"
                     placeholder="Masukkan Jumlah Outlet"
+                    required
                   />
                 </div>
 
@@ -536,6 +537,7 @@
                     id="nomorktpNPWP"
                     class="form-control"
                     placeholder="Masukkan Nomor NPWP / KTP"
+                    required
                   />
                 </div>
                 <div class="col-md-6 mt-3">
@@ -557,7 +559,7 @@
                 </div>
                 <div class="col-md-6 mt-3">
                   <label class="form-label">Distributor Coverage</label>
-                  <select id="coverageDistributor" class="form-select">
+                  <select id="coverageDistributor" class="form-select" required>
                     <option value="">-- Pilih Distributor --</option>
                     <option value="AMS">AMS</option>
                     <option value="PPG">PPG</option>
@@ -565,13 +567,13 @@
                 </div>
                 <div class="col-md-6 mt-3">
                   <label class="form-label">Sub Dist Coverage</label>
-                  <select id="subDistCoverage" class="form-select">
+                  <select id="subDistCoverage" class="form-select" required>
                     <option value="">-- Pilih Sub Distributor --</option>
                   </select>
                 </div>
                 <div class="col-md-6 mt-3">
                   <label class="form-label">PKP / NON PKP</label>
-                  <select id="statusPKP" class="form-select">
+                  <select id="statusPKP" class="form-select" required>
                     <option value="">-- Pilih Status --</option>
                     <option value="Release Faktur Pajak">
                       Release Faktur Pajak
@@ -583,7 +585,7 @@
                 </div>
                 <div class="col-md-6 mt-3">
                   <label class="form-label">Gross Up / Non Gross Up</label>
-                  <select id="grossUp" class="form-select">
+                  <select id="grossUp" class="form-select" required>
                     <option value="">-- Pilih Opsi --</option>
                     <option value="Gross Up">Gross Up</option>
                     <option value="Non Gross Up">Non Gross Up</option>
@@ -898,6 +900,7 @@
                     id="nomorRekening"
                     class="form-control"
                     placeholder="Masukkan Nomor Rekening"
+                    required
                   />
                 </div>
 
@@ -908,6 +911,7 @@
                     id="namaPemilikRekening"
                     class="form-control"
                     placeholder="Masukkan Nama Pemilik Rekening"
+                    required
                   />
                 </div>
 
@@ -918,6 +922,7 @@
                     id="namaBank"
                     class="form-control"
                     placeholder="Masukkan Nama Bank"
+                    required
                   />
                 </div>
 
@@ -928,6 +933,7 @@
                     id="cabangPenerima"
                     class="form-control"
                     placeholder="Masukkan Kantor Cabang Penerima"
+                    required
                   />
                 </div>
 
@@ -1129,21 +1135,6 @@
           );
         }
       }
-
-      document.getElementById("mtiForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const outletData = {
-          kodePi: document.getElementById("kodePi").value,
-          nama: document.getElementById("namaOutlet").value,
-          kota: document.getElementById("kotaOutlet").value,
-          alamat: document.getElementById("alamatOutlet").value,
-        };
-
-        console.log("Data Outlet yang dikirim:", outletData);
-        Swal.fire("Success", "Data berhasil dikumpulkan!", "success");
-      });
-
       // Event toggle NPWP
       document.querySelectorAll('input[name="punyaNPWP"]').forEach((radio) => {
         radio.addEventListener("change", () => {
@@ -1664,7 +1655,58 @@
         if (el) el.addEventListener("change", updateListingFeeDisplay);
       });
 
+      document.addEventListener("DOMContentLoaded", function () {
+        const piAda = document.getElementById("piAda");
+        const piTidak = document.getElementById("piTidak");
+        const outletMTI = document.getElementById("outletMTI");
+        const kodePi = document.getElementById("kodePi");
+        const namaOutlet = document.getElementById("namaOutlet");
+        const kotaOutlet = document.getElementById("kotaOutlet");
+        const alamatOutlet = document.getElementById("alamatOutlet");
+
+        const npwpYa = document.getElementById("npwpYa");
+        const npwpTidak = document.getElementById("npwpTidak");
+        const tipeNPWP = document.getElementById("tipeNPWP");
+        const namaNPWP = document.getElementById("namaNPWP");
+
+        function updateRequiredFields() {
+          // === Validasi PI ===
+          if (piAda.checked) {
+            outletMTI.required = true;
+            kodePi.required = false;
+            namaOutlet.required = false;
+            kotaOutlet.required = false;
+            alamatOutlet.required = false;
+          } else if (piTidak.checked) {
+            outletMTI.required = false;
+            kodePi.required = true;
+            namaOutlet.required = true;
+            kotaOutlet.required = true;
+            alamatOutlet.required = true;
+          }
+
+          // === Validasi NPWP ===
+          if (npwpYa.checked) {
+            tipeNPWP.required = true;
+            namaNPWP.required = true;
+          } else if (npwpTidak.checked) {
+            tipeNPWP.required = false;
+            namaNPWP.required = false;
+          }
+        }
+
+        // Jalankan saat load pertama
+        updateRequiredFields();
+
+        // Pas ganti pilihan, update aturan required
+        piAda.addEventListener("change", updateRequiredFields);
+        piTidak.addEventListener("change", updateRequiredFields);
+        npwpYa.addEventListener("change", updateRequiredFields);
+        npwpTidak.addEventListener("change", updateRequiredFields);
+      });
+
       // 🚀 Event submit form utama
+      document.getElementById("mtiForm");
       document
         .getElementById("mtiForm")
         .addEventListener("submit", async (e) => {
@@ -1687,7 +1729,7 @@
 
           // susun data sesuai kolom sheet
           const payload = {
-            id: "", // kalau ada id
+            id: "",
             status: "Draft",
             approval: "",
             namaPt:
@@ -1707,7 +1749,7 @@
             nomorKtp: document.getElementById("noKtp")?.value || "",
             tipeNpwp: document.getElementById("tipeNPWP")?.value || "",
             namaNpwp: document.getElementById("namaNPWP")?.value || "",
-            Distributor: document.getElementById("coverageDistributor").value,
+            distributor: document.getElementById("coverageDistributor").value,
             subDistributor: document.getElementById("subDistCoverage").value,
             pkp: document.getElementById("statusPKP").value,
             grossUp: document.getElementById("grossUp").value,
@@ -1730,6 +1772,9 @@
             kcpBank: document.getElementById("kcpBank")?.value || "",
           };
 
+          // 🔎 DEBUG: log payload ke console
+          console.log("🚀 Payload dikirim ke Apps Script:", payload);
+
           try {
             Swal.fire({
               title: "Mengirim data...",
@@ -1738,15 +1783,23 @@
             });
 
             const res = await fetch(
-              "https://script.google.com/a/macros/pharosindonesia.id/s/AKfycbxJygYOlV92jruiCErlj-2Dnhi38OgynlRvsNs7hVqHyWkF4VCw0XRvom_-SXLaAQLz/exec",
+              "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec",
               {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(payload),
               }
             );
 
+            // 🔎 DEBUG: log raw response
+            console.log("📩 Raw response:", res);
+
             const result = await res.json();
+            console.log("Response:", result);
+
+            // 🔎 DEBUG: log parsed response
+            console.log("✅ Parsed response:", result);
+
             Swal.close();
 
             if (result.result === "success") {
@@ -1767,6 +1820,7 @@
             }
           } catch (err) {
             Swal.close();
+            console.error("Error submit:", err);
             Swal.fire({
               icon: "error",
               title: "Gagal Simpan",
