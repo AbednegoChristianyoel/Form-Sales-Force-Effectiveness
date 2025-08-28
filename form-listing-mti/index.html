@@ -1390,7 +1390,6 @@
         }
       });
 
-      // Simpan produk ke tabel dengan validasi wajib
       document.getElementById("saveProdukBtn").addEventListener("click", () => {
         const requiredFields = [
           "procode",
@@ -1410,6 +1409,19 @@
             icon: "error",
             title: "Data Belum Lengkap",
             html: "Semua field wajib diisi sebelum menyimpan produk.",
+          });
+          return;
+        }
+
+        // 🔥 Validasi qtyListing minimal 1
+        const qtyListing = parseInt(
+          document.getElementById("qtyListing").value
+        );
+        if (qtyListing < 1) {
+          Swal.fire({
+            icon: "error",
+            title: "Qty tidak valid",
+            text: "Jumlah listing minimal 1.",
           });
           return;
         }
@@ -1439,7 +1451,6 @@
           .getElementById("hna")
           .value.replace(/[^\d]/g, "");
         const valueEstimate = document.getElementById("valueEstimate").value;
-        const qtyListing = document.getElementById("qtyListing").value;
 
         let listingFee = parseFloat(listingFeeRaw) || 0;
 
@@ -1456,7 +1467,7 @@
           }
         }
 
-        listingFeeDisplay = Math.round(listingFee);
+        const listingFeeDisplay = Math.round(listingFee);
 
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -1489,7 +1500,7 @@
           "valueEstimate",
         ].forEach((id) => (document.getElementById(id).value = ""));
         selectProduk.value = "";
-        qtyListing.value = "";
+        document.getElementById("qtyListing").value = "";
 
         // tutup modal
         const modalEl = document.getElementById("produkModal");
