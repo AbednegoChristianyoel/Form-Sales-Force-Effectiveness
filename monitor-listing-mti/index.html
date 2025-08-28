@@ -362,7 +362,7 @@
       const storedUser = localStorage.getItem("userData");
       if (!storedUser) {
         // Belum login → redirect ke login
-        window.location.href = "login.html";
+        window.location.href = "../login.html";
       } else {
         const userData = JSON.parse(storedUser);
         console.log("User sudah login:", userData.nama);
