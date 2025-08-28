@@ -266,6 +266,27 @@
         background-color: #006838 !important; /* versi lebih gelap saat hover */
         color: #fff !important; /* tetap putih saat hover */
       }
+      /* Add validation styles */
+      .is-invalid {
+        border-color: #dc3545 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      }
+      .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+      }
+      .was-validated .form-control:invalid ~ .invalid-feedback,
+      .was-validated .form-control:invalid ~ .invalid-tooltip,
+      .form-control.is-invalid ~ .invalid-feedback,
+      .form-control.is-invalid ~ .invalid-tooltip {
+        display: block;
+      }
     </style>
   </head>
 
@@ -1733,6 +1754,33 @@
             });
           });
 
+          // ✅ Cek apakah produkList kosong
+          if (produkList.length === 0) {
+            Swal.fire({
+              icon: "error",
+              title: "Daftar produk kosong",
+              text: "Silakan tambahkan setidaknya satu produk.",
+              allowOutsideClick: false,
+              didClose: () => {
+                // scroll ke tabel produk
+                const produkTable = document.querySelector("#produkTable");
+                if (produkTable) {
+                  produkTable.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                  // opsional: highlight tabel sementara
+                  produkTable.style.transition = "background 0.5s";
+                  produkTable.style.backgroundColor = "#ffdddd";
+                  setTimeout(() => {
+                    produkTable.style.backgroundColor = "";
+                  }, 1000);
+                }
+              },
+            });
+            return; // hentikan submit
+          }
+
           // susun data sesuai kolom sheet
           const payload = {
             id: "",
@@ -1798,6 +1846,7 @@
           try {
             Swal.fire({
               title: "Mengirim data...",
+              text: "Mohon tunggu sebentar :)",
               allowOutsideClick: false,
               didOpen: () => Swal.showLoading(),
             });
@@ -1811,28 +1860,43 @@
               }
             );
 
-            // 🔎 DEBUG: log raw response
-            console.log("📩 Raw response:", res);
-
             const result = await res.json();
-            console.log("Response:", result);
-
-            // 🔎 DEBUG: log parsed response
-            console.log("✅ Parsed response:", result);
 
             Swal.close();
 
             if (result.result === "success") {
               Swal.fire({
                 icon: "success",
-                title: "Berhasil",
-                text: "Data berhasil disimpan ke Google Sheet!",
-              });
+                title: "Data Berhasil Disimpan",
+                text: "Apakah Anda ingin melakukan pengajuan untuk outlet yang sama?",
+                showCancelButton: true,
+                confirmButtonText: "Ya",
+                cancelButtonText: "Tidak",
+              }).then((response) => {
+                const tbody = document.querySelector("#produkTable tbody");
+                if (response.isConfirmed) {
+                  // ✅ Ya → reset hanya produk
+                  tbody.innerHTML = "";
+                  hitungRingkasan();
+                } else {
+                  // ❌ Tidak → reset seluruh form kecuali data diri sales
+                  const nip = document.getElementById("nipMTI").value;
+                  const nama = document.getElementById("namaMTI").value;
+                  const jabatan = document.getElementById("jabatanMTI").value;
+                  const divisi = document.getElementById("divisiMTI").value;
 
-              // reset form
-              e.target.reset();
-              document.querySelector("#produkTable tbody").innerHTML = "";
-              hitungRingkasan();
+                  // reset form
+                  e.target.reset();
+                  document.querySelector("#produkTable tbody").innerHTML = "";
+                  hitungRingkasan();
+
+                  // isi kembali data diri sales
+                  document.getElementById("nipMTI").value = nip;
+                  document.getElementById("namaMTI").value = nama;
+                  document.getElementById("jabatanMTI").value = jabatan;
+                  document.getElementById("divisiMTI").value = divisi;
+                }
+              });
             } else {
               throw new Error(
                 result.message || "Terjadi kesalahan saat simpan."
