@@ -188,6 +188,42 @@
         transition: opacity 0.5s ease;
         pointer-events: none;
       }
+      .btn-approve {
+        background-color: #28a745; /* hijau custom */
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+        transition: 0.3s;
+      }
+      .btn-approve:hover {
+        background-color: #218838;
+      }
+
+      .btn-reject {
+        background-color: #dc3545; /* merah custom */
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+        transition: 0.3s;
+      }
+      .btn-reject:hover {
+        background-color: #c82333;
+      }
+      .btn-logout {
+        background: #fff;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+      }
+
+      .btn-logout:hover {
+        background: #d6e7ff; /* putih kebiruan */
+        color: #0b5ed7;
+        border-color: #0b5ed7;
+      }
     </style>
   </head>
 
@@ -251,55 +287,54 @@
             </li>
             <li class="nav-item">
               <a class="nav-link text-white fw-bold" href="#"
-                >Daftar Listing MTI</a
+                >Monitoring Listing MTI</a
               >
             </li>
           </ul>
 
           <!-- Logout di kanan -->
           <div class="d-flex">
-            <button class="btn btn-danger" onclick="logout()">Logout</button>
+            <button class="btn btn-logout" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>
     </nav>
 
     <div class="container-md px-3">
-      <h4 class="mb-3 mt-4 text-primary">Monitor Listing MTI</h4>
+      <h4 class="mb-3 mt-4 text-primary">Monitoring Listing MTI</h4>
 
-      <!-- Filter & Search -->
-      <div class="d-flex align-items-center gap-2 mb-3">
-        <!-- Cari NIP atau Kode PI -->
-        <input
-          type="text"
-          id="nipInput"
-          class="form-control"
-          placeholder="Cari NIP"
-          style="flex: 2"
-        />
+      <div
+        class="d-flex flex-wrap align-items-center justify-content-between gap-2"
+      >
+        <div id="actionButtons" class="d-flex gap-2" style="width: 200px">
+          <button
+            class="btn btn-success fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+          >
+            <i class="bi bi-check-circle me-1"></i>
+            <span>Approve</span>
+          </button>
+          <button
+            class="btn btn-danger fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+          >
+            <i class="bi bi-x-circle me-1"></i>
+            <span>Reject</span>
+          </button>
+        </div>
 
-        <!-- Tombol Search -->
-        <button class="btn btn-primary" id="searchBtn" style="flex: 1">
-          Search
-        </button>
-
-        <!-- Filter Nama Outlet -->
-        <input
-          type="text"
-          id="filterOutlet"
-          class="form-control"
-          placeholder="Filter Nama Outlet..."
-          style="flex: 2"
-        />
-
-        <!-- Tombol Filter -->
-        <button
-          class="btn btn-primary d-flex align-items-center gap-1"
-          id="openStatusFilter"
-        >
-          <i class="bi bi-filter"></i>
-          Filter
-        </button>
+        <!-- Input + Filter -->
+        <div class="input-group" style="max-width: 350px">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Filter Nama Outlet..."
+          />
+          <button
+            class="btn btn-primary fw-bold d-flex align-items-center gap-1"
+            id="openStatusFilter"
+          >
+            <i class="bi bi-filter"></i> Filter
+          </button>
+        </div>
       </div>
 
       <hr />
@@ -326,14 +361,36 @@
             ></button>
           </div>
           <div class="modal-body">
-            <select class="form-select" id="modalStatusSelect">
-              <option value="">Semua Status</option>
-              <option>Approved</option>
-              <option>Rejected</option>
-              <option>Sudah Upload SKP</option>
-              <option>Sudah Generate SKP</option>
-              <option>Belum Generate SKP</option>
-            </select>
+            <!-- Label + Dropdown Utama -->
+            <div class="mb-3">
+              <label for="modalStatusSelect" class="form-label fw-bold"
+                >Status</label
+              >
+              <select class="form-select" id="modalStatusSelect">
+                <option value="">Semua Status</option>
+                <option value="Need Approval">Need Approval</option>
+                <option value="On Process">On Process</option>
+                <option value="Processed">Processed</option>
+                <option value="On Confirmation">On Confirmation</option>
+                <option value="Done">Done</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <!-- Label + Dropdown Tambahan (hidden default) -->
+            <div class="mb-3" id="approvalContainer" style="display: none">
+              <label for="approvalSelect" class="form-label fw-bold"
+                >Approval</label
+              >
+              <select class="form-select" id="approvalSelect">
+                <option value="">-- Pilih Approval --</option>
+                <option value="Admin">Admin</option>
+                <option value="SM / NSM">SM / NSM</option>
+                <option value="NKAM">NKAM</option>
+                <option value="Trade">Trade</option>
+              </select>
+            </div>
           </div>
           <div class="modal-footer">
             <button
@@ -350,80 +407,103 @@
             >
               Terapkan Filter
             </button>
-
-            <button class="btn btn-danger" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>
     </div>
 
     <script>
+      let userData = null;
+
       // Cek login
       const storedUser = localStorage.getItem("userData");
       if (!storedUser) {
-        // Belum login → redirect ke login
         window.location.href = "../login.html";
       } else {
-        const userData = JSON.parse(storedUser);
-        console.log("User sudah login:", userData.nama);
-        // Bisa pakai userData untuk menampilkan nama user dsb.
+        userData = JSON.parse(storedUser);
+        console.log("User sudah login:", userData);
+
+        // Jika role = Sales, hide tombol Approve & Reject
+        if (userData.roles?.toLowerCase() === "sales") {
+          document.getElementById("actionButtons").classList.add("d-none");
+        }
+
+        // 🔹 Langsung tarik data sesuai nip user login
+        if (userData.nip) {
+          console.log("Mengambil data untuk NIP:", userData.nip);
+          getDataByNIP(userData.nip);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "NIP tidak ditemukan",
+            text: "Silakan login ulang.",
+          });
+        }
       }
 
       // Tambahkan tombol logout jika mau
       function logout() {
         localStorage.removeItem("userData");
-        window.location.href = "login.html";
+        window.location.href = "../login.html";
       }
 
-      let allSKPData = [];
+      let allData = [];
 
-      $(document).ready(function () {
-        // Search
-        $("#searchBtn").on("click", function () {
-          const nip = $("#nipInput").val().trim();
-          if (!nip) {
-            Swal.fire({
-              icon: "warning",
-              title: "Perhatian!",
-              text: "Silakan isi NIP terlebih dahulu.",
-            });
-            return;
+      // Tampilkan dropdown approval jika "Need Approval" dipilih
+      document
+        .getElementById("modalStatusSelect")
+        .addEventListener("change", function () {
+          const approvalContainer =
+            document.getElementById("approvalContainer");
+          if (this.value === "Need Approval") {
+            approvalContainer.style.display = "block";
+          } else {
+            approvalContainer.style.display = "none";
           }
-          $("#filterOutlet").val("");
-          $("#modalStatusSelect").val("");
-          $("#skpList").empty();
-          getDataByNIP(nip);
         });
 
-        // Modal filter status
-        $("#openStatusFilter").on("click", function () {
-          $("#statusFilterModal").modal("show");
+      function formatDate(dateString) {
+        if (!dateString) return "-";
+        const d = new Date(dateString);
+        if (isNaN(d)) return dateString;
+        return d.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         });
-        $("#applyStatusFilter").on("click", function () {
-          const selectedStatus = $("#modalStatusSelect").val();
-          $("#filterStatus").val(selectedStatus);
-          applyFilters();
-          $("#statusFilterModal").modal("hide");
-        });
-      });
+      }
 
       function getDataByNIP(nip) {
         const apiURL =
-          "https://script.google.com/macros/s/AKfycby8yvOjfrRMHBQVT-X6JmdJcfS2lkzyCwLvxVpkci_WIcYiCZDtp59_IM08tyGufog-bQ/exec";
+          "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec"; // ganti dengan URL Apps Script
         Swal.fire({
           title: "Memuat data...",
-          text: "Tunggu sebentar :)",
+          text: "Mohon Ditunggu sebentar :)",
           allowOutsideClick: false,
           didOpen: () => Swal.showLoading(),
         });
-        fetch(`${apiURL}?nip=${encodeURIComponent(nip)}`)
+
+        fetch(apiURL)
           .then((res) => res.json())
-          .then((data) => {
+          .then((json) => {
             Swal.close();
-            const allEmpty = Object.values(data).every(
-              (arr) => arr.length === 0
+            if (json.result !== "success") {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Gagal ambil data",
+              });
+              return;
+            }
+
+            // Filter berdasarkan nip
+            const data = json.data.filter(
+              (d) => (d.nip || "").toLowerCase() === nip.toLowerCase()
             );
-            if (allEmpty) {
+
+            if (!data.length) {
               Swal.fire({
                 icon: "info",
                 title: "Tidak ada data",
@@ -432,25 +512,9 @@
               return;
             }
 
-            allSKPData = [
-              ...(data["Boost Metabolic"] || []).map((d) => ({
-                ...d,
-                program: "Boost Metabolic",
-              })),
-              ...(data["POP"] || []).map((d) => ({ ...d, program: "POP" })),
-              ...(data["PGD"] || []).map((d) => ({ ...d, program: "PGD" })),
-              ...(data["Insentif Mod & Rozgra"] || []).map((d) => ({
-                ...d,
-                program: "Insentif Mod & Rozgra",
-              })),
-              ...(data["Presentasi Produk Neuro Pain Metabolic"] || []).map(
-                (d) => ({
-                  ...d,
-                  program: "Presentasi Produk Neuro Pain Metabolic",
-                })
-              ),
-            ];
-            renderSKPCards(allSKPData);
+            allData = data;
+            console.log("Data SKP:", allData);
+            renderSKPCards(allData);
           })
           .catch((err) => {
             Swal.close();
@@ -462,32 +526,56 @@
             });
           });
       }
-
       function applyFilters() {
         const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
-        const outletFilter = $("#filterOutlet").val().toLowerCase();
-        const kodePiSearch = $("#nipInput").val().toLowerCase();
+        const approvalFilter = $("#approvalSelect").val()?.toLowerCase();
+        const outletFilter = $("input[placeholder='Filter Nama Outlet...']")
+          .val()
+          .toLowerCase();
 
-        const filtered = allSKPData.filter((item) => {
-          const programMatch = !programFilter || item.program === programFilter;
+        const filtered = allData.filter((item) => {
           const statusMatch =
-            !statusFilter ||
-            (item.statusSKP || "").toLowerCase().includes(statusFilter);
+            !statusFilter || (item.status || "").toLowerCase() === statusFilter;
+          const approvalMatch =
+            !approvalFilter ||
+            (item.approval || "").toLowerCase() === approvalFilter;
           const outletMatch =
             !outletFilter ||
             (item.namaOutlet || "").toLowerCase().includes(outletFilter);
-          const kodePiMatch =
-            !kodePiSearch ||
-            (item.kodePI || "").toLowerCase().includes(kodePiSearch) ||
-            (item.nip || "").toLowerCase().includes(kodePiSearch);
-          return programMatch && statusMatch && outletMatch && kodePiMatch;
+          return statusMatch && approvalMatch && outletMatch;
         });
+
         renderSKPCards(filtered);
+      }
+
+      // Tombol buka modal
+      $("#openStatusFilter").on("click", () => {
+        $("#statusFilterModal").modal("show");
+      });
+
+      // Tombol terapkan filter
+      $("#applyStatusFilter").on("click", () => {
+        applyFilters();
+        $("#statusFilterModal").modal("hide");
+      });
+
+      // Filter outlet realtime (ketik langsung)
+      $("input[placeholder='Filter Nama Outlet...']").on("keyup", () => {
+        applyFilters();
+      });
+
+      function formatRupiah(value) {
+        if (!value) return "-";
+        // pastikan number
+        let number = Number(value.toString().replace(/\D/g, ""));
+        if (isNaN(number)) return value;
+        return "Rp" + number.toLocaleString("id-ID");
       }
 
       function renderSKPCards(dataArray) {
         const skpList = $("#skpList");
         skpList.empty();
+
         if (!dataArray.length) {
           skpList.append(
             '<div class="col-12 text-center text-muted mt-3">Tidak ada data sesuai filter</div>'
@@ -496,35 +584,151 @@
         }
 
         dataArray.forEach((item) => {
-          const downloadLink = item.generateSkp
-            ? `<a href="${item.generateSkp}" target="_blank">Download SKP</a>`
-            : "-";
-          const uploadBtn = item.generateSkp
-            ? `<button class="btn btn-upload btn-sm">Upload SKP</button>`
-            : "-";
+          const isSales = userData.roles?.toLowerCase() === "sales";
+
           const card = `
-            <div class="col-md-4">
-              <div class="card card-modern mb-3">
-                <div class="card-body">
-                  <h5 class="card-title">${item.namaSales || "-"}</h5>
-                  <p class="mb-1"><strong>Outlet:</strong> ${
-                    item.namaOutlet || "-"
+      <div class="col-md-6 mb-4">
+        <div class="card card-modern h-100 shadow-sm border-0">
+          <!-- Header -->
+          <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+              <input 
+                type="checkbox" 
+                class="form-check-input bulk-checkbox m-0" 
+                style="margin-top:0" 
+                value="${item.id}" 
+              />
+              <p class="fw-semibold text-dark m-0">${item.id || "-"}</p>
+            </div>
+            <small class="text-muted d-flex align-items-center">${formatDate(
+              item.timeStamp
+            )}</small>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body py-3">
+            <!-- Outlet -->
+            <div class="mb-2">
+              <small class="text-secondary">Nama Outlet</small>
+              <p class="fw-bold fs-5 text-primary mb-1">${
+                item.namaOutlet || "-"
+              }</p>
+              <p class="text-muted m-0"><strong>${
+                item.kodePI || "-"
+              }</strong> | ${item.kota || "-"}</p>
+            </div>
+
+            <!-- Pengaju & Jabatan -->
+              <div class="row">
+                <div class="col-6">
+                  <small class="text-secondary">Nama Pengaju</small>
+                  <p class="fw-bold m-0">${
+                    item.namaPengaju || item.namaSales || "-"
                   }</p>
-                  <p class="mb-1"><strong>Program:</strong> ${
-                    item.program || "-"
-                  }</p>
-                  <p class="mb-1"><strong>Status:</strong> ${
-                    item.statusSKP || "-"
-                  }</p>
-                  <p class="mb-1"><strong>Kode PI:</strong> ${
-                    item.kodePI || "-"
-                  }</p>
-                  <p class="mb-1"><strong>Generate:</strong> ${downloadLink}</p>
-                  <div class="mt-2">${uploadBtn}</div>
+                </div>
+                <div class="col-6 ps-0">
+                  <small class="text-secondary">Jabatan</small>
+                  <p class="fw-bold m-0">${item.jabatan || "-"}</p>
                 </div>
               </div>
+
+              <!-- Status & Nama PT -->
+              <div class="row mt-2">
+                <div class="col-6">
+                  <small class="text-secondary">Status</small>
+                  <p class="fw-bold m-0">${
+                    item.statusSKP || item.status || "-"
+                  }</p>
+                </div>
+                <div class="col-6 ps-0">
+                  <small class="text-secondary">Nama PT</small>
+                  <p class="fw-bold m-0">${item.namaPt || "-"}</p>
+                </div>
+              </div>
+
+              <!-- List Produk -->
+              <div class="row mt-2">
+                <div class="col-12">
+                  <small class="text-secondary">List Produk</small>
+                  <p class="fw-bold m-0">
+                    ${(() => {
+                      try {
+                        let produkArr = [];
+                        if (typeof item.produkList === "string") {
+                          produkArr = JSON.parse(item.produkList);
+                        } else if (Array.isArray(item.produkList)) {
+                          produkArr = item.produkList;
+                        }
+                        if (!produkArr.length) return "-";
+                        return produkArr.map((p) => `- ${p.itname}`).join(", ");
+                      } catch (e) {
+                        return "-";
+                      }
+                    })()}
+                  </p>
+                </div>
+              </div>
+
+            <!-- Total PO & Total Bayar -->
+            <div class="row mt-2">
+              <div class="col-6">
+                <small class="text-secondary">Total PO</small>
+                <p class="fw-bold m-0">${formatRupiah(item.totalValuePO)}</p>
+              </div>
+              <div class="col-6 ps-0">
+                <small class="text-secondary">Total Bayar</small>
+                <p class="fw-bold m-0">${formatRupiah(item.totalBayar)}</p>
+              </div>
             </div>
-          `;
+          </div>
+
+          <!-- Footer -->
+          ${
+            isSales
+              ? `
+          <div class="card-footer bg-white border-0 pt-0">
+            <div class="d-flex justify-content-between mt-2 gap-2">
+              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
+                ${(() => {
+                  const disabled = item.generateSkp ? "disabled" : "";
+                  const btnClass = item.generateSkp
+                    ? "btn-secondary"
+                    : "text-white";
+                  const btnStyle = item.generateSkp
+                    ? ""
+                    : "background-color: var(--bs-primary);";
+                  return `
+                    <button 
+                      type="button" 
+                      class="btn w-100 ${btnClass} mt-1"
+                      style="${btnStyle}" 
+                      ${disabled}
+                      onclick="generateSkp('${item.program}','${item.id}')">
+                      Generate SKP
+                    </button>
+                  `;
+                })()}
+              </div>
+              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
+                <input type="file" id="uploadInput-${
+                  item.id
+                }" hidden accept=".pdf,image/png,image/jpeg" />
+                <button 
+                  type="button" 
+                  class="btn w-100 text-white mt-1"
+                  style="background-color: #009045;" 
+                  onclick="openUploadModal('${item.program}','${
+                  item.namaOutlet
+                }','${item.id}')">
+                  Upload SKP
+                </button>
+              </div>
+            </div>
+          </div>`
+              : ""
+          }
+        </div>
+      </div>`;
           skpList.append(card);
         });
       }
