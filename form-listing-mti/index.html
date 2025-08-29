@@ -403,27 +403,17 @@
             <form id="mtiForm">
               <!-- Bagian NIP -->
               <div class="row g-3 align-items-end">
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <label for="nipMTI" class="form-label">NIP</label>
                   <input
                     type="text"
                     id="nipMTI"
                     class="form-control"
-                    placeholder="Masukkan NIP"
                     required
+                    disabled
                   />
                 </div>
-                <div class="col-md-4">
-                  <button
-                    type="button"
-                    class="btn btn-primary w-100"
-                    id="searchMTIBtn"
-                  >
-                    Validasi NIP
-                  </button>
-                </div>
-
-                <div class="col-12">
+                <div class="col-6">
                   <label class="form-label">Nama</label>
                   <input
                     type="text"
@@ -488,6 +478,37 @@
                       />
                       <label class="form-check-label" for="piTidak"
                         >Tidak Ada Kode PI</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-3">
+                  <label class="form-label fw-bold">Sektor Outlet</label>
+                  <div class="d-flex gap-4 mt-1">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="sektorOutlet"
+                        id="sektorMTI"
+                        value="MTI"
+                        checked
+                      />
+                      <label class="form-check-label" for="sektorMTI"
+                        >MTI</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="sektorOutlet"
+                        id="sektorKosmetik"
+                        value="Toko Kosmetik"
+                      />
+                      <label class="form-check-label" for="sektorKosmetik"
+                        >Toko Kosmetik</label
                       >
                     </div>
                   </div>
@@ -704,7 +725,34 @@
                           >PRIMA MEDIKA LABORATORIES</label
                         >
                       </div>
+
+                      <!-- Tambahan baru -->
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="ptListing"
+                          id="ptPrimaxcel"
+                          value="PRIMAXCEL INOVASI"
+                        />
+                        <label class="form-check-label" for="ptPrimaxcel"
+                          >PRIMAXCEL INOVASI</label
+                        >
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="ptListing"
+                          id="ptPerintis"
+                          value="PERINTIS PELAYANAN PARIPURNA"
+                        />
+                        <label class="form-check-label" for="ptPerintis"
+                          >PERINTIS PELAYANAN PARIPURNA</label
+                        >
+                      </div>
                     </div>
+
                     <!-- Notes -->
                     <div class="text-danger fst-italic fw-semibold fs-6 mt-2">
                       ⚠️ Notes: Pengajuan listing tidak boleh dari beda PT
@@ -766,9 +814,9 @@
                           <div class="mb-3">
                             <label class="form-label">Pilih Produk</label>
                             <select
-                              class="form-select"
                               id="selectProduk"
                               name="selectProduk"
+                              placeholder="Cari atau pilih produk..."
                             >
                               <option value="">-- Pilih Produk --</option>
                             </select>
@@ -1083,6 +1131,8 @@
       </div>
     </div>
 
+    <script src="produkData.js"></script>
+
     <script>
       let userData = null;
       let globalOutletData = {};
@@ -1172,18 +1222,6 @@
           closeAfterSelect: true,
           maxOptions: 1000,
         });
-      });
-
-      // 🔹 Tombol search tetap bisa dipakai untuk manual
-      document.getElementById("searchMTIBtn").addEventListener("click", () => {
-        const nip = document.getElementById("nipMTI").value.trim();
-        if (!nip)
-          return Swal.fire(
-            "Perhatian",
-            "Harap isi NIP terlebih dahulu.",
-            "warning"
-          );
-        getDataByNIP(nip);
       });
 
       // 🔹 Logout
@@ -1322,121 +1360,65 @@
           });
         });
       });
-      // Event Distributor Coverage → kontrol Sub Dist Coverage
-      document
-        .getElementById("coverageDistributor")
-        .addEventListener("change", () => {
-          const coverage = document.getElementById("coverageDistributor").value;
-          const subDistSelect = document.getElementById("subDistCoverage");
-
-          // kosongkan dulu opsinya
-          subDistSelect.innerHTML =
-            '<option value="">-- Pilih Sub Distributor --</option>';
-
-          if (coverage === "PPG") {
-            const ppgList = [
-              "Tidak Melalui Subdist",
-              "BETHANIA FARMA SEJAHTERA, PT - BANGKO",
-              "LAKSA NUSANTARA FARMA, PT - BALIKPAPAN",
-              "LIMA JAYA FARMATAMA, PT - PADANG",
-              "MASAMEDI INTIFARMINDO, PT - KAB. MAGELANG",
-              "MASAMEDI INTIFARMINDO, PT - KAB. SIDOARJO",
-              "MASAMEDI INTIFARMINDO, PT - KAB. TASIKMALAYA",
-              "MASAMEDI INTIFARMINDO, PT - KOTA BANDUNG",
-              "MASAMEDI INTIFARMINDO, PT - KOTA BOGOR",
-              "MASAMEDI INTIFARMINDO, PT - KOTA SEMARANG",
-              "MASAMEDI INTIFARMINDO, PT - KOTA TANGERANG",
-              "MASAMEDI INTIFARMINDO, PT (SMD) - KAB. SUMEDANG",
-              "PAUH MANDIRI SEJAHTERA, PT - BENGKULU",
-              "PESONA GENDIS SEJATI, PT - KOTA DENPASAR",
-              "RESTU INDO MEDICA, PT - MEDAN",
-              "RIAU ANDALAN FARMA, PT - PEKANBARU",
-              "SARWA MANGGALLA RAYA, PT - JAKARTA UTARA",
-            ];
-
-            ppgList.forEach((subdist) => {
-              const option = new Option(subdist, subdist);
-              subDistSelect.add(option);
-            });
-
-            // pastikan enabled
-            subDistSelect.disabled = false;
-            subDistSelect.classList.remove("readonly-field");
-          } else if (coverage === "AMS") {
-            // disable field (readonly effect)
-            subDistSelect.innerHTML =
-              '<option value="Tidak Melalui Subdist">Tidak Melalui Subdist</option>';
-            subDistSelect.disabled = false;
-          } else {
-            // disable field (readonly effect)
-            subDistSelect.innerHTML =
-              '<option value="Tidak Melalui Subdist">Tidak Melalui Subdist</option>';
-            subDistSelect.disabled = false;
-          }
-        });
-
-      // Data produk
-      // Data produk sesuai daftar
-      const produkData = [
-        {
-          procode: "0203638",
-          itname: "MICROLAXTAB 5MG BISACODYL",
-          hna: 13000,
-          costCenter: "PHAROS INDONESIA",
-        },
-        {
-          procode: "0201630",
-          itname: "MICROLAX GEL OBAT PENCAHAR 5ML",
-          hna: 19700,
-          costCenter: "PHAROS INDONESIA",
-        },
-        {
-          procode: "0201478",
-          itname: "PRORIS SUSP 60 ML RASA JERUK",
-          hna: 23000,
-          costCenter: "PHAROS INDONESIA",
-        },
-        {
-          procode: "0200850",
-          itname: "POLYSILANE TAB. KUNYAH 5X8TAB",
-          hna: 62400,
-          costCenter: "PHAROS INDONESIA",
-        },
-        {
-          procode: "0201784",
-          itname: "POLYSILANE SUSPENSI 100 ML",
-          hna: 21218,
-          costCenter: "PHAROS INDONESIA",
-        },
-        {
-          procode: "0513576",
-          itname: "NOURISH ACNE PLAST GIRL 12P",
-          hna: 14000,
-          costCenter: "PT. PERUSAHAAN DAGANG DAN INDUSTRI FARATU",
-        },
-        {
-          procode: "0202801",
-          itname: "VERMORAN MEBENDAZOLE 500MG 12S",
-          hna: 78600,
-          costCenter: "PRIMA MEDIKA LABORATORIES",
-        },
+      // 🔹 List subdist berlaku untuk semua distributor
+      const subDistList = [
+        "Tidak Melalui Subdist",
+        "BETHANIA FARMA SEJAHTERA, PT - BANGKO",
+        "LAKSA NUSANTARA FARMA, PT - BALIKPAPAN",
+        "LIMA JAYA FARMATAMA, PT - PADANG",
+        "MASAMEDI INTIFARMINDO, PT - KAB. MAGELANG",
+        "MASAMEDI INTIFARMINDO, PT - KAB. SIDOARJO",
+        "MASAMEDI INTIFARMINDO, PT - KAB. TASIKMALAYA",
+        "MASAMEDI INTIFARMINDO, PT - KOTA BANDUNG",
+        "MASAMEDI INTIFARMINDO, PT - KOTA BOGOR",
+        "MASAMEDI INTIFARMINDO, PT - KOTA SEMARANG",
+        "MASAMEDI INTIFARMINDO, PT - KOTA TANGERANG",
+        "MASAMEDI INTIFARMINDO, PT (SMD) - KAB. SUMEDANG",
+        "PAUH MANDIRI SEJAHTERA, PT - BENGKULU",
+        "PESONA GENDIS SEJATI, PT - KOTA DENPASAR",
+        "RESTU INDO MEDICA, PT - MEDAN",
+        "RIAU ANDALAN FARMA, PT - PEKANBARU",
+        "SARWA MANGGALLA RAYA, PT - JAKARTA UTARA",
       ];
 
+      // 🚀 Isi dropdown langsung saat page load
+      window.addEventListener("DOMContentLoaded", () => {
+        const subDistSelect = document.getElementById("subDistCoverage");
+        subDistList.forEach((subdist) => {
+          const option = new Option(subdist, subdist);
+          subDistSelect.add(option);
+        });
+        subDistSelect.disabled = false;
+        subDistSelect.classList.remove("readonly-field");
+      });
+
+      // Data produk
       const selectProduk = document.getElementById("selectProduk");
       let currentPT =
         document.querySelector('input[name="ptListing"]:checked')?.value || "";
 
+      // Tom Select instance
+      let tomSelectProduk = new TomSelect("#selectProduk", {
+        create: false,
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Cari produk...",
+      });
+
       // Fungsi isi dropdown produk sesuai PT
       function loadProdukByPT(pt) {
-        selectProduk.innerHTML = '<option value="">-- Pilih Produk --</option>';
+        tomSelectProduk.clearOptions(); // hapus semua option
+        tomSelectProduk.addOption({ value: "", text: "-- Pilih Produk --" });
+
         produkData
           .filter((p) => p.costCenter === pt)
           .forEach((p) => {
-            const opt = document.createElement("option");
-            opt.value = p.procode;
-            opt.textContent = `${p.itname} (${p.procode})`;
-            selectProduk.appendChild(opt);
+            tomSelectProduk.addOption({
+              value: p.procode,
+              text: `${p.itname} (${p.procode})`,
+            });
           });
+
+        tomSelectProduk.refreshOptions(false);
       }
 
       // 🔥 Event ganti PT
@@ -1454,6 +1436,8 @@
             cancelButtonText: "Batal",
           }).then((result) => {
             if (result.isConfirmed) {
+              tomSelectProduk.clear(); // 🔹 reset value yang dipilih
+              tomSelectProduk.clearOptions(); // 🔹 hapus semua option lama
               // kosongkan tabel produk
               document.querySelector("#produkTable tbody").innerHTML = "";
               // muat ulang produk sesuai PT
@@ -1630,6 +1614,7 @@
         ].forEach((id) => (document.getElementById(id).value = ""));
         selectProduk.value = "";
         document.getElementById("qtyListing").value = "";
+        document.getElementById("totalQty").value = "";
 
         // tutup modal
         const modalEl = document.getElementById("produkModal");
@@ -1846,7 +1831,7 @@
             alamatOutlet.required = false;
           } else if (piTidak.checked) {
             outletMTI.required = false;
-            kodePi.required = true;
+            kodePi.required = false;
             namaOutlet.required = true;
             kotaOutlet.required = true;
             alamatOutlet.required = true;
@@ -2013,6 +1998,13 @@
 
           if (!mergedFileBase64) return;
 
+          let kodeInput = document.getElementById("kodePi").value;
+          let isPiMode = document.getElementById("piAda").checked;
+
+          const sektorOutlet = document.querySelector(
+            'input[name="sektorOutlet"]:checked'
+          ).value;
+
           // susun data sesuai kolom sheet
           const payload = {
             id: "",
@@ -2021,13 +2013,14 @@
             namaPt:
               document.querySelector('input[name="ptListing"]:checked')
                 ?.value || "",
+            sektorOutlet: sektorOutlet,
             nip: document.getElementById("nipMTI").value,
             namaSales: document.getElementById("namaMTI").value,
             jabatan: document.getElementById("jabatanMTI").value,
             divisi: document.getElementById("divisiMTI").value,
-            kodePI: document.getElementById("kodePi").value,
-            kodeDistributor: document.getElementById("coverageDistributor")
-              .value,
+            ...(isPiMode
+              ? { kodePI: kodeInput }
+              : { kodeDistributor: kodeInput }),
             namaOutlet: document.getElementById("namaOutlet").value,
             kota: document.getElementById("kotaOutlet").value,
             alamat: document.getElementById("alamatOutlet").value,
@@ -2064,8 +2057,6 @@
             totalBayar: getNumberFromRupiah(
               document.getElementById("totalBayar").textContent
             ),
-            jenisTransaksi:
-              document.getElementById("jenisTransaksi")?.value || "",
             noRekening: document.getElementById("nomorRekening")?.value || "",
             namaPemilikRekening:
               document.getElementById("namaPemilikRekening")?.value || "",
