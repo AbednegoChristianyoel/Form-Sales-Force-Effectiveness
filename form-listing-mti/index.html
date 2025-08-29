@@ -68,6 +68,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <style>
       body {
         background: #ffffff;
@@ -300,6 +301,17 @@
       .form-control.is-invalid ~ .invalid-tooltip {
         display: block;
       }
+      .btn-logout {
+        background: #fff;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+      }
+
+      .btn-logout:hover {
+        background: #d6e7ff; /* putih kebiruan */
+        color: #0b5ed7;
+        border-color: #0b5ed7;
+      }
     </style>
   </head>
 
@@ -334,47 +346,47 @@
     >
       <div class="container">
         <!-- Brand -->
-        <a
-          class="navbar-brand d-flex align-items-center gap-2 ms-2 me-3"
-          href="#"
-        >
-          <!-- Icon Baru (Calm Style) -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
           <i class="bi bi-clipboard-check text-white fs-3"></i>
-          <!-- Nama Brand -->
-          <span class="text-white fw-bold" style="font-size: 1.4rem">
-            Listing MTI
-          </span>
+          <span class="text-white fw-bold" style="font-size: 1.4rem"
+            >Listing MTI</span
+          >
         </a>
+
         <!-- Hamburger Toggle -->
         <button
-          class="navbar-toggler ms-auto"
+          class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <!-- Menu Navbar -->
         <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav mt-2 mt-lg-0 ms-2">
+          <!-- Menu di kiri -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
               <a
-                class="nav-link text-white fw-bold ms-1"
+                class="nav-link text-white fw-bold"
                 href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-listing-mti"
                 >Form Listing MTI</a
               >
             </li>
             <li class="nav-item">
               <a
-                class="nav-link text-white fw-bold ms-1"
+                class="nav-link text-white fw-bold"
                 href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
                 >Monitoring Listing MTI</a
               >
             </li>
           </ul>
+
+          <!-- Logout di kanan -->
+          <div class="d-flex">
+            <button class="btn btn-logout" onclick="logout()">Logout</button>
+          </div>
         </div>
       </div>
     </nav>
@@ -984,7 +996,7 @@
                   <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
                 </div>
 
-                <div class="col-md-12 mt-3">
+                <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold"
                     >Form Listing dari Store
                     <span class="text-danger">*</span></label
@@ -1073,18 +1085,87 @@
     </div>
 
     <script>
-      window.addEventListener("load", () => {
-        const loader = document.getElementById("loader-wrapper");
-        if (loader) {
-          loader.classList.add("fade-out");
-          setTimeout(() => loader.remove(), 500);
-        }
-      });
-
+      let userData = null;
       let globalOutletData = {};
       let tomOutletSelect;
 
-      // inisialisasi TomSelect sekali di awal
+      // 🔹 Fungsi ambil data NIP dan isi form + TomSelect
+      async function getDataByNIP(nip) {
+        if (!nip) return;
+
+        try {
+          Swal.fire({
+            title: "Mencari data...",
+            text: "Tunggu sebentar, data sedang diproses :)",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          const res = await fetch(
+            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`
+          );
+          const data = await res.json();
+          Swal.close();
+
+          if (!data || !data.nama) {
+            return Swal.fire(
+              "Data Tidak Ditemukan",
+              `Data NIP: ${nip} tidak ditemukan.`,
+              "error"
+            );
+          }
+
+          // isi data karyawan
+          document.getElementById("nipMTI").value = nip;
+          document.getElementById("namaMTI").value = data.nama || "";
+          document.getElementById("jabatanMTI").value = data.jabatan || "";
+          document.getElementById("divisiMTI").value = data.divisi || "";
+
+          // reset dan isi ulang opsi outlet ke TomSelect
+          globalOutletData = {};
+          tomOutletSelect.clearOptions();
+          tomOutletSelect.addOption({ value: "", text: "Pilih Outlet" });
+
+          (data.outlets || []).forEach((outlet) => {
+            globalOutletData[outlet.kode] = outlet;
+            tomOutletSelect.addOption({
+              value: outlet.kode,
+              text: outlet.kode,
+            });
+          });
+
+          tomOutletSelect.refreshOptions(false);
+        } catch (err) {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "Gagal Mengambil Data",
+            text: err.message || err,
+          });
+        }
+      }
+
+      // 🔹 Cek login saat load halaman
+      const storedUser = localStorage.getItem("userData");
+      if (!storedUser) {
+        window.location.href = "../login.html";
+      } else {
+        userData = JSON.parse(storedUser);
+        console.log("User sudah login:", userData);
+
+        if (userData.nip) {
+          // otomatis panggil fetch data sesuai NIP
+          getDataByNIP(userData.nip);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Data Tidak Ditemukan",
+            text: "Silakan login ulang.",
+          });
+        }
+      }
+
+      // 🔹 Inisialisasi TomSelect
       document.addEventListener("DOMContentLoaded", () => {
         tomOutletSelect = new TomSelect("#outletMTI", {
           placeholder: "Pilih Outlet",
@@ -1094,6 +1175,7 @@
         });
       });
 
+      // 🔹 Tombol search tetap bisa dipakai untuk manual
       document.getElementById("searchMTIBtn").addEventListener("click", () => {
         const nip = document.getElementById("nipMTI").value.trim();
         if (!nip)
@@ -1102,56 +1184,22 @@
             "Harap isi NIP terlebih dahulu.",
             "warning"
           );
+        getDataByNIP(nip);
+      });
 
-        Swal.fire({
-          title: "Mencari data...",
-          text: "Tunggu sebentar, data sedang diproses :)",
-          allowOutsideClick: false,
-          didOpen: () => Swal.showLoading(),
-        });
+      // 🔹 Logout
+      function logout() {
+        localStorage.removeItem("userData");
+        window.location.href = "../login.html";
+      }
 
-        fetch(
-          `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            Swal.close();
-
-            if (!data || !data.nama)
-              return Swal.fire(
-                "Tidak Ditemukan",
-                "Data NIP tidak ditemukan.",
-                "error"
-              );
-
-            // isi data karyawan
-            document.getElementById("namaMTI").value = data.nama || "";
-            document.getElementById("jabatanMTI").value = data.jabatan || "";
-            document.getElementById("divisiMTI").value = data.divisi || "";
-
-            // reset dan isi ulang opsi outlet ke TomSelect
-            globalOutletData = {};
-            tomOutletSelect.clearOptions();
-            tomOutletSelect.addOption({ value: "", text: "Pilih Outlet" });
-
-            (data.outlets || []).forEach((outlet) => {
-              globalOutletData[outlet.kode] = outlet;
-              tomOutletSelect.addOption({
-                value: outlet.kode,
-                text: outlet.kode,
-              });
-            });
-
-            tomOutletSelect.refreshOptions(false);
-          })
-          .catch((err) => {
-            Swal.close();
-            Swal.fire({
-              icon: "error",
-              title: "Gagal Mengambil Data",
-              text: err.message || err,
-            });
-          });
+      // 🔹 Loader fade-out
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader-wrapper");
+        if (loader) {
+          loader.classList.add("fade-out");
+          setTimeout(() => loader.remove(), 500);
+        }
       });
 
       const labelKodePi = document.getElementById("labelKodePi");
@@ -1825,6 +1873,89 @@
         npwpTidak.addEventListener("change", updateRequiredFields);
       });
 
+      function validateFiles() {
+        const fileRules = [
+          {
+            id: "formListingStore",
+            required: true,
+            label: "Form Listing Store",
+          },
+          { id: "dokumenNPWPKTP", required: true, label: "NPWP/KTP" },
+          { id: "bukuTabungan", required: true, label: "Buku Tabungan" },
+          { id: "suratKuasa", required: false, label: "Surat Kuasa" },
+        ];
+
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        const maxSize = 3 * 1024 * 1024; // 3MB
+        let errors = [];
+
+        fileRules.forEach((rule) => {
+          const input = document.getElementById(rule.id);
+          const file = input.files[0];
+
+          if (rule.required && !file) {
+            errors.push(`${rule.label} wajib diupload.`);
+          } else if (file) {
+            if (!allowedTypes.includes(file.type)) {
+              errors.push(`${rule.label} harus berupa PDF, JPG, atau PNG.`);
+            }
+            if (file.size > maxSize) {
+              errors.push(`${rule.label} maksimal 3MB.`);
+            }
+          }
+        });
+
+        if (errors.length > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Upload tidak valid",
+            html: errors.join("<br>"),
+          });
+          return false;
+        }
+        return true;
+      }
+
+      async function mergeFilesToBase64(fileInputs) {
+        const mergedPdf = await PDFLib.PDFDocument.create();
+
+        for (let inputId of fileInputs) {
+          const input = document.getElementById(inputId);
+          if (!input || !input.files[0]) continue;
+
+          const file = input.files[0];
+
+          // Hanya PDF
+          if (file.type !== "application/pdf") {
+            Swal.fire({
+              icon: "error",
+              title: "File harus PDF",
+              text: `${inputId} bukan PDF`,
+            });
+            return null;
+          }
+
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+          const copiedPages = await mergedPdf.copyPages(
+            pdf,
+            pdf.getPageIndices()
+          );
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+
+        const mergedBytes = await mergedPdf.save();
+
+        // Convert ke Base64
+        const base64String = btoa(
+          mergedBytes.reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ""
+          )
+        );
+        return base64String;
+      }
+
       // 🚀 Event submit form utama
       document.getElementById("mtiForm");
       document
@@ -1873,6 +2004,15 @@
             });
             return; // hentikan submit
           }
+
+          const mergedFileBase64 = await mergeFilesToBase64([
+            "formListingStore",
+            "dokumenNPWPKTP",
+            "bukuTabungan",
+            "suratKuasa",
+          ]);
+
+          if (!mergedFileBase64) return;
 
           // susun data sesuai kolom sheet
           const payload = {
@@ -1931,6 +2071,7 @@
             namaPemilikRekening:
               document.getElementById("namaPemilikRekening")?.value || "",
             kcpBank: document.getElementById("kcpBank")?.value || "",
+            mergedFile: mergedFileBase64,
           };
 
           // 🔎 DEBUG: log payload ke console

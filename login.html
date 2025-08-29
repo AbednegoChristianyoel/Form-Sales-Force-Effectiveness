@@ -88,7 +88,7 @@
       const storedUser = localStorage.getItem("userData");
       if (storedUser) {
         // Jika ada data login, redirect ke dashboard/index
-        window.location.href = "monitor-listing-mti/index.html"; // ganti dengan halaman utama
+        window.location.href = "monitoring-listing-mti/index.html"; // ganti dengan halaman utama
       }
 
       const SCRIPT_URL =
@@ -134,7 +134,8 @@
                 title: "Login Berhasil",
                 text: `Selamat datang, ${data.nama}`,
               }).then(
-                () => (window.location.href = "monitor-listing-mti/index.html")
+                () =>
+                  (window.location.href = "monitoring-listing-mti/index.html")
               );
             } else {
               Swal.fire({
