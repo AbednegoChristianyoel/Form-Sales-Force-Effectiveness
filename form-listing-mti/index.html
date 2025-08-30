@@ -1908,29 +1908,44 @@
           if (!input || !input.files[0]) continue;
 
           const file = input.files[0];
+          const arrayBuffer = await file.arrayBuffer();
 
-          // Hanya PDF
-          if (file.type !== "application/pdf") {
+          if (file.type === "application/pdf") {
+            // === Jika PDF: copy semua page ===
+            const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+            const copiedPages = await mergedPdf.copyPages(
+              pdf,
+              pdf.getPageIndices()
+            );
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+          } else if (file.type === "image/jpeg" || file.type === "image/png") {
+            // === Jika Gambar: convert jadi 1 halaman PDF ===
+            let image;
+            if (file.type === "image/jpeg") {
+              image = await mergedPdf.embedJpg(arrayBuffer);
+            } else {
+              image = await mergedPdf.embedPng(arrayBuffer);
+            }
+
+            const page = mergedPdf.addPage([image.width, image.height]);
+            page.drawImage(image, {
+              x: 0,
+              y: 0,
+              width: image.width,
+              height: image.height,
+            });
+          } else {
             Swal.fire({
               icon: "error",
-              title: "File harus PDF",
-              text: `${inputId} bukan PDF`,
+              title: "Format tidak didukung",
+              text: `${file.name} bukan PDF/JPG/PNG`,
             });
             return null;
           }
-
-          const arrayBuffer = await file.arrayBuffer();
-          const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
-          const copiedPages = await mergedPdf.copyPages(
-            pdf,
-            pdf.getPageIndices()
-          );
-          copiedPages.forEach((page) => mergedPdf.addPage(page));
         }
 
+        // === Simpan hasil merge ===
         const mergedBytes = await mergedPdf.save();
-
-        // Convert ke Base64
         const base64String = btoa(
           mergedBytes.reduce(
             (data, byte) => data + String.fromCharCode(byte),
