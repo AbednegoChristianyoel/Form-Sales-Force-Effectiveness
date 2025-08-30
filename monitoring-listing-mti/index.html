@@ -673,11 +673,37 @@
                 </div>
               </div>
 
-            <!-- Total PO & Total Bayar -->
+            <!-- Biaya Listing per Item & Total PO -->
             <div class="row mt-1">
               <div class="col-6">
+                <small class="text-secondary">Biaya Listing / Item</small>
+                <p class="fw-bold m-0">
+                    ${(() => {
+                      try {
+                        let produkArr = [];
+                        if (typeof item.produkList === "string") {
+                          produkArr = JSON.parse(item.produkList);
+                        } else if (Array.isArray(item.produkList)) {
+                          produkArr = item.produkList;
+                        }
+                        if (!produkArr.length) return "-";
+                        return formatRupiah(produkArr[0].listingFee || 0);
+                      } catch (e) {
+                        return "-";
+                      }
+                    })()}                             
+              </div>
+              <div class="col-6 ps-0">
                 <small class="text-secondary">Total PO</small>
                 <p class="fw-bold m-0">${formatRupiah(item.totalValuePO)}</p>
+              </div>
+            </div>
+
+            <!-- DC Fee & Total Bayar -->
+            <div class="row mt-1">
+              <div class="col-6">
+                <small class="text-secondary">DC Fee</small>
+                <p class="fw-bold m-0">${formatRupiah(item.dcFee)}</p>
               </div>
               <div class="col-6 ps-0">
                 <small class="text-secondary">Total Bayar</small>
