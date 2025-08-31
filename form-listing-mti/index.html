@@ -450,6 +450,37 @@
                 </div>
 
                 <div class="col-12 mt-3">
+                  <label class="form-label fw-bold">Sektor Outlet</label>
+                  <div class="d-flex gap-4 mt-1">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="sektorOutlet"
+                        id="sektorMTI"
+                        value="MTI"
+                        checked
+                      />
+                      <label class="form-check-label" for="sektorMTI"
+                        >MTI</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="sektorOutlet"
+                        id="sektorKosmetik"
+                        value="Toko Kosmetik"
+                      />
+                      <label class="form-check-label" for="sektorKosmetik"
+                        >Toko Kosmetik</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-3">
                   <label class="form-label fw-bold"
                     >Apakah Outlet Punya Kode PI? (Sudah Pernah
                     Registrasi)</label
@@ -478,37 +509,6 @@
                       />
                       <label class="form-check-label" for="piTidak"
                         >Tidak Ada Kode PI</label
-                      >
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 mt-3">
-                  <label class="form-label fw-bold">Sektor Outlet</label>
-                  <div class="d-flex gap-4 mt-1">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="sektorOutlet"
-                        id="sektorMTI"
-                        value="MTI"
-                        checked
-                      />
-                      <label class="form-check-label" for="sektorMTI"
-                        >MTI</label
-                      >
-                    </div>
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="sektorOutlet"
-                        id="sektorKosmetik"
-                        value="Toko Kosmetik"
-                      />
-                      <label class="form-check-label" for="sektorKosmetik"
-                        >Toko Kosmetik</label
                       >
                     </div>
                   </div>
@@ -607,7 +607,10 @@
                     id="nomorktpNPWP"
                     class="form-control"
                     placeholder="Masukkan Nomor NPWP / KTP"
+                    minlength="15"
                     required
+                    oninvalid="this.setCustomValidity('Nomor NPWP / KTP minimal 15 digit')"
+                    oninput="this.setCustomValidity('')"
                   />
                 </div>
                 <div class="col-md-6 mt-3">
@@ -813,12 +816,8 @@
                         <form id="produkForm">
                           <div class="mb-3">
                             <label class="form-label">Pilih Produk</label>
-                            <select
-                              id="selectProduk"
-                              name="selectProduk"
-                              placeholder="Cari atau pilih produk..."
-                            >
-                              <option value="">-- Pilih Produk --</option>
+                            <select id="selectProduk" name="selectProduk">
+                              <option value=""></option>
                             </select>
                           </div>
 
@@ -994,7 +993,7 @@
                 <div class="col-md-6 mt-3">
                   <label class="form-label">Nomor Rekening</label>
                   <input
-                    type="text"
+                    type="number"
                     id="nomorRekening"
                     class="form-control"
                     placeholder="Masukkan Nomor Rekening"
@@ -1225,9 +1224,22 @@
       });
 
       // 🔹 Logout
+      // Tambahkan tombol logout jika mau
       function logout() {
-        localStorage.removeItem("userData");
-        window.location.href = "../login.html";
+        Swal.fire({
+          title: "Konfirmasi Keluar",
+          text: "Apakah Anda yakin ingin keluar?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Keluar",
+          cancelButtonText: "Batal",
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("userData");
+            window.location.href = "../login.html";
+          }
+        });
       }
 
       // 🔹 Loader fade-out
@@ -1343,7 +1355,7 @@
                 field.placeholder || field.options?.[0]?.text || ""
               );
               if (field.tagName === "SELECT") {
-                field.selectedIndex = -1; // hilangkan pilihan dropdown
+                field.selectedIndex = -1; // kosongkan dropdown
               } else {
                 field.placeholder = ""; // kosongkan hint input
               }
@@ -1351,7 +1363,12 @@
               field.disabled = true;
             } else {
               field.disabled = false;
-              if (field.tagName !== "SELECT") {
+              if (field.tagName === "SELECT") {
+                // restore default option
+                if (field.options.length > 0) {
+                  field.selectedIndex = 0; // balik ke "Pilih Tipe NPWP"
+                }
+              } else {
                 field.placeholder =
                   field.getAttribute("data-placeholder") || "";
               }
@@ -1360,6 +1377,7 @@
           });
         });
       });
+
       // 🔹 List subdist berlaku untuk semua distributor
       const subDistList = [
         "Tidak Melalui Subdist",
@@ -1407,8 +1425,6 @@
       // Fungsi isi dropdown produk sesuai PT
       function loadProdukByPT(pt) {
         tomSelectProduk.clearOptions(); // hapus semua option
-        tomSelectProduk.addOption({ value: "", text: "-- Pilih Produk --" });
-
         produkData
           .filter((p) => p.costCenter === pt)
           .forEach((p) => {
@@ -1555,6 +1571,16 @@
           return;
         }
 
+        const optionEl = tomSelectProduk.getOption(procode);
+        if (optionEl) {
+          optionEl.setAttribute("disabled", "disabled");
+          tomSelectProduk.updateOption(procode, {
+            value: procode,
+            text: optionEl.textContent,
+            disabled: true,
+          });
+        }
+
         const itname = document.getElementById("itname").value;
         const costCenter = document.getElementById("costCenter").value;
         const listingFeeRaw = document
@@ -1615,6 +1641,7 @@
         selectProduk.value = "";
         document.getElementById("qtyListing").value = "";
         document.getElementById("totalQty").value = "";
+        tomSelectProduk.clear();
 
         // tutup modal
         const modalEl = document.getElementById("produkModal");
@@ -1624,6 +1651,17 @@
         // hitung ulang
         hitungRingkasan();
       });
+
+      function enableAllProdukOptions() {
+        const options = tomSelectProduk.options;
+        for (let key in options) {
+          tomSelectProduk.updateOption(key, {
+            value: options[key].value,
+            text: options[key].text,
+            disabled: false, // aktifkan lagi
+          });
+        }
+      }
 
       document.getElementById("dcFee").addEventListener("input", () => {
         hitungRingkasan();
@@ -1962,6 +2000,14 @@
         .addEventListener("submit", async (e) => {
           e.preventDefault();
 
+          // 🚀 Swal Loading duluan
+          Swal.fire({
+            title: "Mengirim data...",
+            text: "Mohon tunggu sebentar :)",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
           // ambil produkList dari tabel
           const produkList = [];
           document.querySelectorAll("#produkTable tbody tr").forEach((row) => {
@@ -1979,6 +2025,7 @@
 
           // ✅ Cek apakah produkList kosong
           if (produkList.length === 0) {
+            Swal.close(); // tutup loading kalau gagal
             Swal.fire({
               icon: "error",
               title: "Daftar produk kosong",
@@ -2011,7 +2058,10 @@
             "suratKuasa",
           ]);
 
-          if (!mergedFileBase64) return;
+          if (!mergedFileBase64) {
+            Swal.close();
+            return;
+          }
 
           let kodeInput = document.getElementById("kodePi").value;
           let isPiMode = document.getElementById("piAda").checked;
@@ -2083,13 +2133,6 @@
           console.log("🚀 Payload dikirim ke Apps Script:", payload);
 
           try {
-            Swal.fire({
-              title: "Mengirim data...",
-              text: "Mohon tunggu sebentar :)",
-              allowOutsideClick: false,
-              didOpen: () => Swal.showLoading(),
-            });
-
             const res = await fetch(
               "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec",
               {
@@ -2117,6 +2160,7 @@
                   // ✅ Ya → reset hanya produk
                   tbody.innerHTML = "";
                   hitungRingkasan();
+                  enableAllProdukOptions();
                 } else {
                   // ❌ Tidak → reset seluruh form kecuali data diri sales
                   const nip = document.getElementById("nipMTI").value;
@@ -2134,6 +2178,7 @@
                   document.getElementById("namaMTI").value = nama;
                   document.getElementById("jabatanMTI").value = jabatan;
                   document.getElementById("divisiMTI").value = divisi;
+                  enableAllProdukOptions();
                 }
               });
             } else {

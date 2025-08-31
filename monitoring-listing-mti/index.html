@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Print & Upload SKP</title>
+    <title>monitoring-listing-mti</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Bootstrap, jQuery, SweetAlert2 -->
@@ -38,6 +38,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
     <style>
       body {
@@ -100,7 +105,7 @@
         border-top: 2px solid #dee2e6;
         margin: 1rem 0 1.5rem 0;
       }
-      #skpList {
+      #submissionList {
         margin-top: 1rem;
       }
       .list-group-item {
@@ -224,6 +229,44 @@
         color: #0b5ed7;
         border-color: #0b5ed7;
       }
+      /* Hilangkan kotak ganda Tom Select */
+      .ts-wrapper {
+        border: none !important;
+        box-shadow: none !important;
+        background: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* Samakan tampilan Tom Select dengan Bootstrap form-select */
+      .ts-control {
+        border-radius: 0.5rem !important;
+        padding: 0.45rem 0.9rem !important;
+        border: 1px solid #ced4da !important;
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        min-height: 38px;
+        background-color: #fff;
+        box-shadow: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .ts-control.focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .ts-dropdown {
+        border-radius: 0.5rem;
+        border: 1px solid #ced4da;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+        font-size: 0.95rem;
+      }
+
+      .ts-dropdown .option.active {
+        background-color: #0d6efd;
+        color: #fff;
+      }
     </style>
   </head>
 
@@ -313,12 +356,14 @@
         <div id="actionButtons" class="d-flex gap-2" style="width: 200px">
           <button
             class="btn btn-success fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+            onclick="bulkApprove()"
           >
             <i class="bi bi-check-circle me-1"></i>
             <span>Approve</span>
           </button>
           <button
             class="btn btn-danger fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+            onclick="bulkReject()"
           >
             <i class="bi bi-x-circle me-1"></i>
             <span>Reject</span>
@@ -343,8 +388,8 @@
 
       <hr />
 
-      <!-- SKP List -->
-      <div class="row" id="skpList"></div>
+      <!-- List Pengajuan -->
+      <div class="row" id="submissionList"></div>
     </div>
 
     <!-- Modal Filter Status -->
@@ -357,7 +402,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Filter Status SKP</h5>
+            <h5 class="modal-title">Filter Status Pengajuan Listing</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -373,26 +418,35 @@
               <select class="form-select" id="modalStatusSelect">
                 <option value="">Semua Status</option>
                 <option value="Need Approval">Need Approval</option>
-                <option value="On Process">On Process</option>
-                <option value="Processed">Processed</option>
-                <option value="On Confirmation">On Confirmation</option>
+                <option value="Approved">Approved</option>
+                <option value="Processed Payment">Processed Payment</option>
+                <option value="Paid">Paid</option>
                 <option value="Done">Done</option>
-                <option value="Cancelled">Cancelled</option>
                 <option value="Rejected">Rejected</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
             </div>
 
-            <!-- Label + Dropdown Tambahan (hidden default) -->
+            <!-- Label + Dropdown Approval -->
             <div class="mb-3" id="approvalContainer" style="display: none">
               <label for="approvalSelect" class="form-label fw-bold"
                 >Approval</label
               >
               <select class="form-select" id="approvalSelect">
                 <option value="">-- Pilih Approval --</option>
-                <option value="Admin">Admin</option>
-                <option value="SM / NSM">SM / NSM</option>
-                <option value="NKAM">NKAM</option>
-                <option value="Trade">Trade</option>
+                <option value="sm / nsm">SM / NSM</option>
+                <option value="admin">Admin</option>
+                <option value="nkam">NKAM</option>
+                <option value="trade">Trade</option>
+              </select>
+            </div>
+            <!-- 🔹 Filter Nama Pengaju (hanya untuk non-Sales) -->
+            <div class="mb-3" id="pengajuContainer" style="display: none">
+              <label for="pengajuSelect" class="form-label fw-bold"
+                >Nama Pengaju</label
+              >
+              <select class="form-select" id="pengajuSelect">
+                <option value="">Semua Pengaju</option>
               </select>
             </div>
           </div>
@@ -417,6 +471,8 @@
     </div>
 
     <script>
+      const apiURL =
+        "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec";
       let userData = null;
 
       // Cek login
@@ -435,7 +491,7 @@
         // 🔹 Langsung tarik data sesuai nip user login
         if (userData.nip) {
           console.log("Mengambil data untuk NIP:", userData.nip);
-          getDataByNIP(userData.nip);
+          getDataByNIP(userData.nip, userData.roles);
         } else {
           Swal.fire({
             icon: "warning",
@@ -447,8 +503,20 @@
 
       // Tambahkan tombol logout jika mau
       function logout() {
-        localStorage.removeItem("userData");
-        window.location.href = "../login.html";
+        Swal.fire({
+          title: "Konfirmasi Keluar",
+          text: "Apakah Anda yakin ingin keluar?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Keluar",
+          cancelButtonText: "Batal",
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("userData");
+            window.location.href = "../login.html";
+          }
+        });
       }
 
       let allData = [];
@@ -479,9 +547,7 @@
         });
       }
 
-      function getDataByNIP(nip) {
-        const apiURL =
-          "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec"; // ganti dengan URL Apps Script
+      function getDataByNIP(nip, role) {
         Swal.fire({
           title: "Memuat data...",
           text: "Mohon Ditunggu sebentar :)",
@@ -489,7 +555,12 @@
           didOpen: () => Swal.showLoading(),
         });
 
-        fetch(apiURL)
+        // 🔹 Kirim nip & role ke API (doGet)
+        const url = `${apiURL}?nip=${encodeURIComponent(
+          nip
+        )}&role=${encodeURIComponent(role)}`;
+
+        fetch(url)
           .then((res) => res.json())
           .then((json) => {
             Swal.close();
@@ -502,12 +573,9 @@
               return;
             }
 
-            // Filter berdasarkan nip
-            const data = json.data.filter(
-              (d) => (d.nip || "").toLowerCase() === nip.toLowerCase()
-            );
+            const data = json.data;
 
-            if (!data.length) {
+            if (!data || !data.length) {
               Swal.fire({
                 icon: "info",
                 title: "Tidak ada data",
@@ -517,8 +585,78 @@
             }
 
             allData = data;
-            console.log("Data SKP:", allData);
-            renderSKPCards(allData);
+
+            if (userData.roles?.toLowerCase() !== "sales") {
+              // Kosongkan dulu option
+              const pengajuSelect = document.getElementById("pengajuSelect");
+              pengajuSelect.innerHTML =
+                '<option value="">Semua Pengaju</option>';
+
+              // Ambil nama unik dari data
+              const uniquePengaju = [
+                ...new Set(
+                  allData
+                    .map((d) => d.namaPengaju || d.namaSales)
+                    .filter(Boolean)
+                ),
+              ];
+
+              // Tambah option ke select
+              uniquePengaju.forEach((nama) => {
+                const opt = document.createElement("option");
+                opt.value = nama;
+                opt.textContent = nama;
+                pengajuSelect.appendChild(opt);
+              });
+
+              // 🔹 Inisialisasi Tom Select (hapus instance lama kalau ada)
+              if (window.pengajuTomSelect) {
+                window.pengajuTomSelect.destroy();
+              }
+              window.pengajuTomSelect = new TomSelect("#pengajuSelect", {
+                create: false,
+                sortField: { field: "text", direction: "asc" },
+                placeholder: "Pilih Nama Pengaju...",
+              });
+
+              // Tampilkan container
+              $("#pengajuContainer").show();
+            }
+
+            // 🔹 Auto set filter sesuai role
+            const role = (userData.roles || "").toLowerCase();
+
+            if (role !== "sales") {
+              // Set default filter status ke "Need Approval"
+              document.getElementById("modalStatusSelect").value =
+                "Need Approval";
+
+              // Tampilkan container approval
+              document.getElementById("approvalContainer").style.display =
+                "block";
+
+              if (role === "sm / nsm") {
+                approvalSelect.value = "sm / nsm";
+              } else if (role === "admin") {
+                approvalSelect.value = "admin";
+              } else if (role === "nkam") {
+                approvalSelect.value = "nkam";
+              } else if (role === "trade") {
+                approvalSelect.value = "trade";
+              } else {
+                approvalSelect.value = "";
+              }
+            } else {
+              // Role sales → kosongkan approval & sembunyikan container
+              approvalSelect.value = "";
+              document.getElementById("approvalContainer").style.display =
+                "none";
+            }
+
+            // 🔹 Panggil fungsi filter biar langsung render sesuai pilihan
+            applyFilters();
+
+            console.log("Data Pengajuan Listing:", allData);
           })
           .catch((err) => {
             Swal.close();
@@ -530,26 +668,38 @@
             });
           });
       }
+
       function applyFilters() {
         const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
         const approvalFilter = $("#approvalSelect").val()?.toLowerCase();
         const outletFilter = $("input[placeholder='Filter Nama Outlet...']")
           .val()
           .toLowerCase();
+        const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
 
         const filtered = allData.filter((item) => {
-          const statusMatch =
-            !statusFilter || (item.status || "").toLowerCase() === statusFilter;
+          const statusValue = (item.status || "").toLowerCase();
+          const approvalValue = (item.approval || "").toLowerCase();
+          const pengajuValue = (
+            item.namaPengaju ||
+            item.namaSales ||
+            ""
+          ).toLowerCase();
+
+          const statusMatch = !statusFilter || statusValue === statusFilter;
           const approvalMatch =
-            !approvalFilter ||
-            (item.approval || "").toLowerCase() === approvalFilter;
+            statusFilter === "need approval"
+              ? !approvalFilter || approvalValue === approvalFilter
+              : true;
           const outletMatch =
             !outletFilter ||
             (item.namaOutlet || "").toLowerCase().includes(outletFilter);
-          return statusMatch && approvalMatch && outletMatch;
+          const pengajuMatch = !pengajuFilter || pengajuValue === pengajuFilter;
+
+          return statusMatch && approvalMatch && outletMatch && pengajuMatch;
         });
 
-        renderSKPCards(filtered);
+        renderCards(filtered);
       }
 
       // Tombol buka modal
@@ -576,13 +726,13 @@
         return "Rp" + number.toLocaleString("id-ID");
       }
 
-      function renderSKPCards(dataArray) {
-        const skpList = $("#skpList");
-        skpList.empty();
+      function renderCards(dataArray) {
+        const submissionList = $("#submissionList");
+        submissionList.empty();
 
         if (!dataArray.length) {
-          skpList.append(
-            '<div class="col-12 text-center text-muted mt-3">Tidak ada data sesuai filter</div>'
+          submissionList.append(
+            '<div class="col-12 text-center text-muted mt-3">Tidak ada data</div>'
           );
           return;
         }
@@ -602,11 +752,23 @@
                 style="margin-top:0" 
                 value="${item.id}" 
               />
-              <p class="fw-semibold text-dark m-0">${item.id || "-"}</p>
+              <p class="fw-semibold text-dark m-0">
+                ${item.id || "-"} <span class="text-muted">| ${formatDate(
+            item.timeStamp
+          )}</span>
+              </p>
             </div>
-            <small class="text-muted d-flex align-items-center">${formatDate(
-              item.timeStamp
-            )}</small>
+            <div class="d-flex align-items-center gap-2">
+              ${
+                isSales && item.status === "Need Approval"
+                  ? `
+                      <button class="btn btn-outline-danger btn-sm" onclick="cancelListing('${item.id}')">
+                        <i class="fa fa-times"></i> Cancel Listing
+                      </button>
+                    `
+                  : ""
+              }
+            </div>
           </div>
 
           <!-- Body -->
@@ -636,15 +798,21 @@
                 </div>
               </div>
 
-              <!-- Status & Nama PT -->
+              <!-- Status & Approval -->
               <div class="row mt-1">
                 <div class="col-6">
                   <small class="text-secondary">Status</small>
-                  <p class="fw-bold m-0">${
-                    item.statusSKP || item.status || "-"
-                  }</p>
+                  <p class="fw-bold m-0">${item.status || "-"}</p>
                 </div>
                 <div class="col-6 ps-0">
+                  <small class="text-secondary">Oleh</small>
+                  <p class="fw-bold m-0">${item.approval || "-"}</p>
+                </div>
+              </div>
+
+              <!-- Nama PT -->
+              <div class="row mt-1">
+                <div class="col-12">
                   <small class="text-secondary">Nama PT</small>
                   <p class="fw-bold m-0">${item.namaPt || "-"}</p>
                 </div>
@@ -759,7 +927,61 @@
           }
         </div>
       </div>`;
-          skpList.append(card);
+          submissionList.append(card);
+        });
+      }
+
+      function cancelListing(id) {
+        Swal.fire({
+          title: "Yakin Batalkan?",
+          text: "Pengajuan listing akan dibatalkan dan tidak bisa dikembalikan.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Cancel",
+          cancelButtonText: "Batal",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const now = new Date();
+
+            // tampilkan loading
+            Swal.fire({
+              title: "Memproses...",
+              text: "Mohon tunggu sebentar",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            fetch(apiURL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "cancel",
+                id: id,
+                cancelTime: now.toISOString(),
+              }),
+            })
+              .then((res) => res.json())
+              .then((json) => {
+                if (json.result === "success") {
+                  Swal.fire(
+                    "Berhasil!",
+                    "Pengajuan Berhasil Dibatalkan",
+                    "success"
+                  ).then(() => location.reload());
+                } else {
+                  Swal.fire(
+                    "Error",
+                    json.message || "Gagal update data",
+                    "error"
+                  );
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                Swal.fire("Error", "Gagal update data", "error");
+              });
+          }
         });
       }
 
@@ -768,6 +990,216 @@
         loader.addClass("fade-out");
         setTimeout(() => loader.remove(), 500);
       });
+
+      function getSelectedIds() {
+        return [...document.querySelectorAll(".bulk-checkbox:checked")].map(
+          (cb) => cb.value
+        );
+      }
+      function bulkApprove() {
+        const ids = getSelectedIds();
+        if (!ids.length) {
+          Swal.fire("Info", "Pilih minimal 1 data untuk di-approve", "info");
+          return;
+        }
+        showSummaryModal(ids, "approve");
+      }
+
+      function bulkReject() {
+        const ids = getSelectedIds();
+        if (!ids.length) {
+          Swal.fire("Info", "Pilih minimal 1 data untuk di-reject", "info");
+          return;
+        }
+        showSummaryModal(ids, "reject");
+      }
+
+      function processBulk(ids, action, notes, nama) {
+        Swal.fire({
+          title: "Memproses...",
+          text: "Mohon tunggu sebentar",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        fetch(apiURL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: action,
+            ids: ids,
+            role: userData.roles,
+            notes: notes,
+            nama: nama,
+          }),
+        })
+          .then((res) => res.json())
+          .then((json) => {
+            Swal.close();
+
+            if (json.result === "success") {
+              let pesan = "";
+              if (action === "approve") {
+                pesan = `${json.successCount} berhasil di-approve, ${json.failCount} gagal di-approve.`;
+              } else if (action === "reject") {
+                pesan = `${json.successCount} berhasil di-reject, ${json.failCount} gagal di-reject.<br><br><b>Notes:</b> ${notes}`;
+              }
+
+              // kalau ada yang gagal → tambahkan pesan coba lagi
+              if (json.failCount > 0) {
+                pesan +=
+                  "<br><br><i>Silahkan coba lagi untuk data yang gagal.</i>";
+              }
+
+              Swal.fire({
+                icon: json.failCount > 0 ? "warning" : "success", // ✅ kalau ada gagal → warning
+                title:
+                  "Mengirim Data untuk " +
+                  (action === "approve" ? "Approval" : "Rejection") +
+                  (json.failCount > 0 ? " (Sebagian Gagal)" : " Berhasil"),
+                html: pesan, // ✅ kasih spasi sebelum pesan
+              }).then(() => location.reload());
+            } else {
+              Swal.fire(
+                "Error",
+                json.message ||
+                  "Terjadi Kesalahan Pada Proses Approval atau Rejection",
+                "error"
+              );
+            }
+          })
+          .catch((err) => {
+            Swal.close();
+            console.error(err);
+            Swal.fire("Error", "Terjadi kesalahan saat memproses", "error");
+          });
+      }
+
+      function showSummaryModal(ids, action) {
+        // ambil data dari allData sesuai ID
+        const selectedData = allData.filter((d) => ids.includes(d.id));
+
+        // validasi role per item
+        let allowed = true;
+        let blocked = [];
+
+        selectedData.forEach((item) => {
+          const approvalStr = String(item.approval || "").toLowerCase();
+          const userRole = String(userData.roles || "").toLowerCase();
+
+          console.log(
+            "Validasi item:",
+            item.id,
+            "Approval:",
+            approvalStr,
+            "UserRole:",
+            userRole
+          );
+
+          if (!approvalStr.includes(userRole)) {
+            allowed = false;
+            blocked.push(`${item.namaOutlet} (butuh role ${item.approval})`);
+          }
+        });
+
+        if (!allowed) {
+          const actionText = action.charAt(0).toUpperCase() + action.slice(1); // "approve" → "Approve"
+          Swal.fire({
+            icon: "error",
+            title: "Tidak Data Melakukan Aksi " + actionText,
+            html: `
+              <div style="text-align: left;">
+                Terdapat data yang tidak sesuai role dan tidak dapat diproses:<br>
+                <ul>
+                  ${blocked.map((b) => `<li>${b}</li>`).join("")}
+                </ul>
+                Silakan hapus data tersebut dari pilihan untuk melanjutkan.
+              </div>
+            `,
+          });
+          return; // stop proses bulk
+        }
+
+        // lanjut render table seperti biasa
+        let tableHtml = `
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>No</th>
+            <th>Nama Outlet</th>
+            <th>Total PO</th>
+            <th>Biaya Listing / Produk</th>
+            <th>DC Fee</th>
+            <th>Total Bayar</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+        selectedData.forEach((item, index) => {
+          let biayaListing = "-";
+          try {
+            let produkArr = [];
+            if (typeof item.produkList === "string") {
+              produkArr = JSON.parse(item.produkList);
+            } else if (Array.isArray(item.produkList)) {
+              produkArr = item.produkList;
+            }
+            if (produkArr.length)
+              biayaListing = formatRupiah(produkArr[0].listingFee || 0);
+          } catch (e) {
+            biayaListing = "-";
+          }
+
+          tableHtml += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${item.namaOutlet || "-"}</td>
+        <td>${formatRupiah(item.totalValuePO)}</td>
+        <td>${biayaListing}</td>
+        <td>${formatRupiah(item.dcFee)}</td>
+        <td>${formatRupiah(item.totalBayar)}</td>
+      </tr>
+    `;
+        });
+
+        tableHtml += `</tbody></table></div>`;
+
+        const notesLabel =
+          action === "approve" ? "Catatan (Opsional)" : "Catatan (Wajib diisi)";
+        const notesPlaceholder =
+          action === "approve"
+            ? "Tambahkan catatan (boleh kosong)"
+            : "Isi alasan reject...";
+
+        Swal.fire({
+          title:
+            action === "approve" ? "Konfirmasi Approve" : "Konfirmasi Reject",
+          html: `
+      ${tableHtml}
+      <div class="form-group text-start mt-3">
+        <label class="form-label fw-semibold">${notesLabel}</label>
+        <textarea id="swal-notes" class="form-control" rows="3" placeholder="${notesPlaceholder}"></textarea>
+      </div>
+    `,
+          width: "800px",
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: action === "approve" ? "Approve" : "Reject",
+          preConfirm: () => {
+            const notes = document.getElementById("swal-notes").value.trim();
+            if (action === "reject" && !notes) {
+              Swal.showValidationMessage("Catatan wajib diisi untuk reject!");
+              return false;
+            }
+            return notes;
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            processBulk(ids, action, result.value, userData.nama);
+          }
+        });
+      }
     </script>
   </body>
 </html>
