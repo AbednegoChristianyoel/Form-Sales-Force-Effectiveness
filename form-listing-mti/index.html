@@ -2023,32 +2023,34 @@
             });
           });
 
-          // ✅ Cek apakah produkList kosong
           if (produkList.length === 0) {
-            Swal.close(); // tutup loading kalau gagal
-            Swal.fire({
-              icon: "error",
-              title: "Daftar produk kosong",
-              text: "Silakan tambahkan setidaknya satu produk.",
-              allowOutsideClick: false,
-              didClose: () => {
-                // scroll ke tabel produk
-                const produkTable = document.querySelector("#produkTable");
-                if (produkTable) {
-                  produkTable.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-                  // opsional: highlight tabel sementara
-                  produkTable.style.transition = "background 0.5s";
-                  produkTable.style.backgroundColor = "#ffdddd";
-                  setTimeout(() => {
-                    produkTable.style.backgroundColor = "";
-                  }, 1000);
-                }
-              },
-            });
-            return; // hentikan submit
+            Swal.close(); // pastikan loading ditutup dulu
+
+            setTimeout(() => {
+              // kasih jeda kecil biar swal benar-benar tertutup
+              Swal.fire({
+                icon: "error",
+                title: "Daftar produk kosong",
+                text: "Silakan tambahkan setidaknya satu produk.",
+                allowOutsideClick: false,
+                didClose: () => {
+                  const produkTable = document.querySelector("#produkTable");
+                  if (produkTable) {
+                    produkTable.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                    produkTable.style.transition = "background 0.5s";
+                    produkTable.style.backgroundColor = "#ffdddd";
+                    setTimeout(
+                      () => (produkTable.style.backgroundColor = ""),
+                      1000
+                    );
+                  }
+                },
+              });
+            }, 200); // jeda 200ms supaya swal lama benar-benar hilang
+            return;
           }
 
           const mergedFileBase64 = await mergeFilesToBase64([
@@ -2125,6 +2127,7 @@
             noRekening: document.getElementById("nomorRekening")?.value || "",
             namaPemilikRekening:
               document.getElementById("namaPemilikRekening")?.value || "",
+            namaBank: document.getElementById("namaBank")?.value || "",
             kcpBank: document.getElementById("kcpBank")?.value || "",
             mergedFile: mergedFileBase64,
           };

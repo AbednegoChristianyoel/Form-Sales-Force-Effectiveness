@@ -901,8 +901,8 @@
                       class="btn w-100 ${btnClass} mt-1"
                       style="${btnStyle}" 
                       ${disabled}
-                      onclick="generateSkp('${item.program}','${item.id}')">
-                      Detail Outlet
+                      onclick="generateSkp('${item.id}')">
+                      Generate SKP
                     </button>
                   `;
                 })()}
@@ -1199,6 +1199,44 @@
             processBulk(ids, action, result.value, userData.nama);
           }
         });
+      }
+      function generateSkp(id) {
+        console.log("Generate SKP untuk ID:", id);
+
+        // tampilkan loading
+        Swal.fire({
+          title: "Memproses SKP...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        fetch(
+          `https://script.google.com/macros/s/AKfycbxioIs2Is4tjybHa76LkP2EmyUzwoHtnG-MIuHQbj5HyaHWfRJUq2UELUGmmes0klbS/exec?id=${encodeURIComponent(
+            id
+          )}`
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            Swal.close(); // tutup loading
+            if (result.success) {
+              // Tampilkan notifikasi saja
+              Swal.fire({
+                icon: "success",
+                title: "SKP berhasil dibuat",
+                html: `PDF sudah tersedia: <a href="${result.pdfUrl}" target="_blank">Download PDF</a>`,
+              });
+            } else {
+              Swal.fire("Error", result.error || "Gagal generate SKP", "error");
+            }
+          })
+          .catch((error) => {
+            Swal.close(); // tutup loading
+            console.error("Error generate SKP:", error);
+            Swal.fire("Error", "Terjadi kesalahan saat generate SKP.", "error");
+          });
       }
     </script>
   </body>
