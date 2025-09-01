@@ -491,11 +491,7 @@
             <input type="hidden" id="orItemId" />
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick="submitOrCode()"
-            >
+            <button type="button" class="btn btn-primary" onclick="submitOr()">
               Simpan
             </button>
           </div>
@@ -1324,33 +1320,70 @@
       function submitOr() {
         const id = document.getElementById("orItemId").value;
         const kodeOr = document.getElementById("kodeOrInput").value.trim();
+        const role = userData.roles;
+
+        console.log("Submit OR untuk ID:", id, "Kode OR:", kodeOr);
 
         if (!kodeOr) {
-          alert("Kode OR wajib diisi");
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Kode OR wajib diisi",
+          });
           return;
         }
+
+        // tampilkan loading
+        Swal.fire({
+          title: "Menyimpan...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
         // panggil API processedPayment
         fetch(apiURL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ids: [id],
+            id: id,
             action: "processedPayment",
             kodeOr: kodeOr,
+            role: role,
           }),
         })
           .then((res) => res.json())
           .then((res) => {
-            alert("Kode OR berhasil disimpan!");
-            bootstrap.Modal.getInstance(
-              document.getElementById("orModal")
-            ).hide();
-            // reload data kalau perlu
+            Swal.close(); // tutup loading
+
+            if (res.result === "success") {
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: `Kode OR ${res.kodeOr} berhasil disimpan (ID: ${res.id})`,
+              }).then(() => {
+                bootstrap.Modal.getInstance(
+                  document.getElementById("orModal")
+                ).hide();
+                // reload data kalau perlu
+              });
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "Perhatian",
+                text: "Respon tidak valid dari server.",
+              });
+            }
           })
           .catch((err) => {
             console.error(err);
-            alert("Gagal menyimpan Kode OR.");
+            Swal.close(); // tutup loading
+            Swal.fire({
+              icon: "error",
+              title: "Gagal",
+              text: "Gagal menyimpan Kode OR.",
+            });
           });
       }
     </script>
