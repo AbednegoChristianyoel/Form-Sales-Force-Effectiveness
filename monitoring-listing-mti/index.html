@@ -880,6 +880,37 @@
             </div>
           </div>
 
+          <!-- Link SKP & Dokumen Pendukung -->
+          ${
+            item.linkDokumenPendukung
+              ? `
+          <div class="row mt-1">
+            <div class="col-6">
+              <small class="text-secondary">Dokumen Pendukung</small><br>
+              <a href="${item.linkDokumenPendukung}" target="_blank" class="fw-bold text-success">
+                Buka Dokumen
+              </a>
+            </div>
+          </div>
+          `
+              : ""
+          }
+
+          ${
+            item.linkSkp
+              ? `
+          <div class="row mt-1">
+            <div class="col-6">
+              <small class="text-secondary">Link File SKP</small><br>
+              <a href="${item.linkSkp}" target="_blank" class="fw-bold text-primary">
+                Buka SKP
+              </a>
+            </div>
+          </div>
+          `
+              : ""
+          }
+
           <!-- Footer -->
           ${
             userData.roles?.toLowerCase() === "admin" &&
