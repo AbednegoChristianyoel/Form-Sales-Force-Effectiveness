@@ -879,11 +879,14 @@
               </div>
             </div>
 
-            <!-- Link Dokumen Pendukung -->
+            <!-- Link Dokumen & SKP -->
             ${
-              item.linkDokumenPendukung
+              item.linkDokumenPendukung || item.linkSkp
                 ? `
             <div class="row mt-1">
+              ${
+                item.linkDokumenPendukung
+                  ? `
               <div class="col-6">
                 <small class="text-secondary">Link File Dokumen Pendukung</small>
                 <p class="fw-bold m-0">
@@ -892,16 +895,13 @@
                   </a>
                 </p>
               </div>
-            </div>
-            `
-                : ""
-            }
+                  `
+                  : ""
+              }
 
-            <!-- Link SKP -->
-            ${
-              item.linkSkp
-                ? `
-            <div class="row mt-1">
+              ${
+                item.linkSkp
+                  ? `
               <div class="col-6">
                 <small class="text-secondary">Link File SKP</small>
                 <p class="fw-bold m-0">
@@ -910,8 +910,11 @@
                   </a>
                 </p>
               </div>
+                  `
+                  : ""
+              }
             </div>
-            `
+                `
                 : ""
             }
           </div>
