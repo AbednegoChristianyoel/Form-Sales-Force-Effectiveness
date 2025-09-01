@@ -470,6 +470,39 @@
       </div>
     </div>
 
+    <div class="modal fade" id="orModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title">Masukkan Kode OR</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input
+              type="text"
+              id="kodeOrInput"
+              class="form-control"
+              placeholder="Masukkan Kode OR"
+            />
+            <input type="hidden" id="orItemId" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="submitOrCode()"
+            >
+              Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec";
@@ -881,7 +914,7 @@
               </div>
             </div>
 
-            <!-- Link Dokumen & SKP -->
+            <!-- Link Dokumen Pendukung & SKP -->
             ${
               item.linkDokumenPendukung || item.linkSkp
                 ? `
@@ -889,37 +922,47 @@
               ${
                 item.linkDokumenPendukung
                   ? `
-              <div class="col-6">
-                <small class="text-secondary">Link File Dokumen Pendukung</small>
-                <p class="fw-bold m-0">
-                  <a href="${item.linkDokumenPendukung}" target="_blank" class="text-success">
-                    Link Fike Dokumen Pendukung
-                  </a>
-                </p>
-              </div>
-                  `
+                <div class="col-6">
+                  <small class="text-secondary">Link File Dokumen Pendukung</small>
+                  <p class="fw-bold m-0">
+                    <a href="${item.linkDokumenPendukung}" target="_blank" class="text-success">
+                      Buka Dokumen
+                    </a>
+                  </p>
+                </div>
+                `
                   : ""
               }
-
               ${
                 item.linkSkp
                   ? `
-              <div class="col-6 ps-0">
-                <small class="text-secondary">Link File SKP</small>
-                <p class="fw-bold m-0">
-                  <a href="${item.linkSkp}" target="_blank" class="text-primary">
-                    Buka SKP
-                  </a>
-                </p>
-              </div>
-                  `
+                <div class="col-6 ps-0">
+                  <small class="text-secondary">Link File SKP</small>
+                  <p class="fw-bold m-0">
+                    <a href="${item.linkSkp}" target="_blank" class="text-primary">
+                      Buka SKP
+                    </a>
+                  </p>
+                </div>
+                `
                   : ""
               }
             </div>
-                `
+            `
                 : ""
             }
-          </div>
+
+            <!-- No OR -->
+            ${
+              item.noOr
+                ? `
+            <div class="mt-1">
+              <small class="text-secondary">No. OR</small>
+              <p class="fw-bold m-0">${item.noOr}</p>
+            </div>
+            `
+                : ""
+            }
 
           <!-- Footer -->
           ${
@@ -927,16 +970,35 @@
             (item.status || "").toLowerCase() === "approved" &&
             !item.linkSkp
               ? `
-            <div class="card-footer bg-white border-0 pt-2">
-              <div class="d-flex flex-column gap-2">
-                <button 
-                  type="button" 
-                  class="btn btn-primary w-100"
-                  onclick="generateSkp('${item.id}')">
-                  Generate SKP
-                </button>
-              </div>
-            </div>`
+              <div class="card-footer bg-white border-0 pt-2">
+                <div class="d-flex flex-column gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary w-100"
+                    onclick="generateSkp('${item.id}')">
+                    Generate SKP
+                  </button>
+                </div>
+              </div>`
+              : ""
+          }
+
+          ${
+            userData.roles?.toLowerCase() === "admin" &&
+            (item.status || "").toLowerCase() === "approved" &&
+            item.linkSkp &&
+            !item.noOr
+              ? `
+              <div class="card-footer bg-white border-0 pt-2">
+                <div class="d-flex flex-column gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-warning w-100"
+                    onclick="inputNoOr('${item.id}')">
+                    Masukkan No OR
+                  </button>
+                </div>
+              </div>`
               : ""
           }
         </div>
