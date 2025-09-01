@@ -1058,6 +1058,19 @@
 
                 <div class="col-md-12 mt-3">
                   <label class="form-label fw-bold"
+                    >First PO <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="file"
+                    id="firstPO"
+                    class="form-control"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <label class="form-label fw-bold"
                     >Fotokopi / Scan NPWP / KTP Penanggung Jawab
                     <span class="text-danger">*</span></label
                   >
@@ -1902,6 +1915,7 @@
             required: true,
             label: "Form Listing Store",
           },
+          { id: "firstPO", required: true, label: "First PO" },
           { id: "dokumenNPWPKTP", required: true, label: "NPWP/KTP" },
           { id: "bukuTabungan", required: true, label: "Buku Tabungan" },
           { id: "suratKuasa", required: false, label: "Surat Kuasa" },
