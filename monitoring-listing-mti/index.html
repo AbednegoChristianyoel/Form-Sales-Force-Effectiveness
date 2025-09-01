@@ -995,7 +995,7 @@
                   <button 
                     type="button" 
                     class="btn btn-warning w-100"
-                    onclick="inputNoOr('${item.id}')">
+                    onclick="openOrModal('${item.id}')">
                     Masukkan No OR
                   </button>
                 </div>
@@ -1313,6 +1313,44 @@
             Swal.close(); // tutup loading
             console.error("Error generate SKP:", error);
             Swal.fire("Error", "Terjadi kesalahan saat generate SKP.", "error");
+          });
+      }
+      function openOrModal(itemId) {
+        document.getElementById("orItemId").value = itemId;
+        document.getElementById("kodeOrInput").value = "";
+        new bootstrap.Modal(document.getElementById("orModal")).show();
+      }
+
+      function submitOr() {
+        const id = document.getElementById("orItemId").value;
+        const kodeOr = document.getElementById("kodeOrInput").value.trim();
+
+        if (!kodeOr) {
+          alert("Kode OR wajib diisi");
+          return;
+        }
+
+        // panggil API processedPayment
+        fetch(apiURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ids: [id],
+            action: "processedPayment",
+            kodeOr: kodeOr,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            alert("Kode OR berhasil disimpan!");
+            bootstrap.Modal.getInstance(
+              document.getElementById("orModal")
+            ).hide();
+            // reload data kalau perlu
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Gagal menyimpan Kode OR.");
           });
       }
     </script>
