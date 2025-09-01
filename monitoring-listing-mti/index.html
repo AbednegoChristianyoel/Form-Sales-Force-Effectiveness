@@ -552,6 +552,65 @@
       </div>
     </div>
 
+    <!-- Modal Penyelesaian PUM -->
+    <div class="modal fade" id="pumModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="pumForm" onsubmit="submitPum(event)">
+            <div class="modal-header">
+              <h5 class="modal-title">Penyelesaian PUM</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="pumItemId" name="itemId" />
+
+              <div class="mb-3">
+                <label class="form-label"
+                  >Upload Kwitansi
+                  <span class="text-danger fw-bold">*</span></label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="kwitansiFile"
+                  accept="image/*,application/pdf"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label"
+                  >Kode PI <span class="text-danger fw-bold">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="kodePiInput"
+                  placeholder="Masukkan Kode PI"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec";
@@ -1022,7 +1081,7 @@
                       <div class="col-6 ps-0">
                         <small class="text-secondary">Link File Bukti Bayar</small>
                         <p class="fw-bold m-0">
-                          <a href="${item.linkBuktiBayar}" target="_blank" class="text-danger">
+                          <a href="${item.linkBuktiBayar}" target="_blank" class="text-warning">
                             Link File Bukti Bayar
                           </a>
                         </p>
@@ -1088,6 +1147,25 @@
                     class="btn btn-success w-100"
                     onclick="openUploadBukti('${item.id}')">
                     Upload Bukti Bayar
+                  </button>
+                </div>
+              </div>`
+              : ""
+          }
+
+          ${
+            userData.roles?.toLowerCase() === "sales" &&
+            (item.status || "").toLowerCase() === "paid" &&
+            (item.approval || "").toLowerCase() === "admin" &&
+            item.linkBuktiBayar
+              ? `
+              <div class="card-footer bg-white border-0 pt-2">
+                <div class="d-flex flex-column gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary w-100"
+                    onclick="openPumModal('${item.id}')">
+                    Penyelesaian PUM
                   </button>
                 </div>
               </div>`
@@ -1624,6 +1702,12 @@
           };
           reader.readAsDataURL(pdfFile); // 🔹 baca hasil konversi (bukan file asli)
         });
+      }
+      function openPumModal(itemId) {
+        document.getElementById("pumItemId").value = itemId;
+        document.getElementById("kwitansiFile").value = "";
+        document.getElementById("kodePiInput").value = "";
+        new bootstrap.Modal(document.getElementById("pumModal")).show();
       }
     </script>
   </body>
