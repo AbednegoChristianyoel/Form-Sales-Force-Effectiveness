@@ -561,7 +561,7 @@
               <h5 class="modal-title">Penyelesaian PUM</h5>
               <button
                 type="button"
-                class="btn-close"
+                class="btn-close btn-close-white"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -569,11 +569,12 @@
             <div class="modal-body">
               <input type="hidden" id="pumItemId" name="itemId" />
 
+              <!-- Upload Kwitansi -->
               <div class="mb-3">
-                <label class="form-label"
-                  >Upload Kwitansi
-                  <span class="text-danger fw-bold">*</span></label
-                >
+                <label class="form-label fw-bold">
+                  Upload Kwitansi
+                  <span class="text-danger fw-bold">*</span>
+                </label>
                 <input
                   type="file"
                   class="form-control"
@@ -583,10 +584,26 @@
                 />
               </div>
 
+              <!-- Upload Resi Pengiriman Kwitansi ke HO -->
               <div class="mb-3">
-                <label class="form-label"
-                  >Kode PI <span class="text-danger fw-bold">*</span></label
-                >
+                <label class="form-label fw-bold">
+                  Upload Resi Pengiriman Kwitansi ke HO
+                  <span class="text-danger fw-bold">*</span>
+                </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="resiKwitansiFile"
+                  accept="image/*,application/pdf"
+                  required
+                />
+              </div>
+
+              <!-- Kode PI -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">
+                  Kode PI <span class="text-danger fw-bold">*</span>
+                </label>
                 <input
                   type="text"
                   class="form-control"
