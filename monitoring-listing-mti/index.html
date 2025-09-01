@@ -878,38 +878,43 @@
                 <p class="fw-bold m-0">${formatRupiah(item.totalBayar)}</p>
               </div>
             </div>
-          </div>
 
-          <!-- Link SKP & Dokumen Pendukung -->
-          ${
-            item.linkDokumenPendukung
-              ? `
-          <div class="row mt-1">
-            <div class="col-6">
-              <small class="text-secondary">Dokumen Pendukung</small><br>
-              <a href="${item.linkDokumenPendukung}" target="_blank" class="fw-bold text-success">
-                Buka Dokumen
-              </a>
+            <!-- Link Dokumen Pendukung -->
+            ${
+              item.linkDokumenPendukung
+                ? `
+            <div class="row mt-1">
+              <div class="col-6">
+                <small class="text-secondary">Link File Dokumen Pendukung</small>
+                <p class="fw-bold m-0">
+                  <a href="${item.linkDokumenPendukung}" target="_blank" class="text-success">
+                    Buka Dokumen
+                  </a>
+                </p>
+              </div>
             </div>
-          </div>
-          `
-              : ""
-          }
+            `
+                : ""
+            }
 
-          ${
-            item.linkSkp
-              ? `
-          <div class="row mt-1">
-            <div class="col-6">
-              <small class="text-secondary">Link File SKP</small><br>
-              <a href="${item.linkSkp}" target="_blank" class="fw-bold text-primary">
-                Buka SKP
-              </a>
+            <!-- Link SKP -->
+            ${
+              item.linkSkp
+                ? `
+            <div class="row mt-1">
+              <div class="col-6">
+                <small class="text-secondary">Link File SKP</small>
+                <p class="fw-bold m-0">
+                  <a href="${item.linkSkp}" target="_blank" class="text-primary">
+                    Buka SKP
+                  </a>
+                </p>
+              </div>
             </div>
+            `
+                : ""
+            }
           </div>
-          `
-              : ""
-          }
 
           <!-- Footer -->
           ${
