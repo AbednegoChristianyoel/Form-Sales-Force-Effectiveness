@@ -924,7 +924,8 @@
           <!-- Footer -->
           ${
             userData.roles?.toLowerCase() === "admin" &&
-            (item.status || "").toLowerCase() === "approved"
+            (item.status || "").toLowerCase() === "approved" &&
+            !item.linkSkp
               ? `
             <div class="card-footer bg-white border-0 pt-2">
               <div class="d-flex flex-column gap-2">
