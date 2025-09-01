@@ -1979,12 +1979,26 @@
               image = await mergedPdf.embedPng(arrayBuffer);
             }
 
-            const page = mergedPdf.addPage([image.width, image.height]);
+            // Ukuran halaman A4 (dalam pt)
+            const a4Width = 595.28; // ~210mm
+            const a4Height = 841.89; // ~297mm
+
+            // Hitung skala agar gambar muat ke halaman A4 tanpa crop
+            const ratio = Math.min(
+              a4Width / image.width,
+              a4Height / image.height,
+              1
+            );
+
+            const pageWidth = image.width * ratio;
+            const pageHeight = image.height * ratio;
+
+            const page = mergedPdf.addPage([pageWidth, pageHeight]);
             page.drawImage(image, {
               x: 0,
               y: 0,
-              width: image.width,
-              height: image.height,
+              width: pageWidth,
+              height: pageHeight,
             });
           } else {
             Swal.fire({

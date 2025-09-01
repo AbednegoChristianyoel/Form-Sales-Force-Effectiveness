@@ -43,6 +43,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
       body {
@@ -474,7 +475,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
           <div class="modal-header">
-            <h5 class="modal-title">Masukkan Kode OR</h5>
+            <h5 class="modal-title fw-bold">Masukkan Kode OR</h5>
             <button
               type="button"
               class="btn-close"
@@ -493,6 +494,58 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="submitOr()">
               Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Upload Bukti Bayar -->
+    <div
+      class="modal fade"
+      id="uploadBuktiModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Bukti Bayar</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="buktiItemId" />
+            <div class="mb-3">
+              <label for="buktiFile" class="form-label fw-bold"
+                >Pilih File Bukti (PDF/JPG/PNG, max 3MB)</label
+              >
+              <input
+                type="file"
+                class="form-control"
+                id="buktiFile"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              onclick="submitBuktiBayar()"
+            >
+              Upload
             </button>
           </div>
         </div>
@@ -948,15 +1001,37 @@
                 : ""
             }
 
-            <!-- No OR -->
+            <!-- No OR + Link Bukti Bayar -->
             ${
-              item.noOr
+              item.noOr || item.linkBuktiBayar
                 ? `
-            <div class="mt-1">
-              <small class="text-secondary">No. OR</small>
-              <p class="fw-bold m-0">${item.noOr}</p>
-            </div>
-            `
+                <div class="row mt-1">
+                  ${
+                    item.noOr
+                      ? `
+                      <div class="col-6">
+                        <small class="text-secondary">No. OR</small>
+                        <p class="fw-bold m-0">${item.noOr}</p>
+                      </div>
+                      `
+                      : ""
+                  }
+                  ${
+                    item.linkBuktiBayar
+                      ? `
+                      <div class="col-6 ps-0">
+                        <small class="text-secondary">Link File Bukti Bayar</small>
+                        <p class="fw-bold m-0">
+                          <a href="${item.linkBuktiBayar}" target="_blank" class="text-danger">
+                            Link File Bukti Bayar
+                          </a>
+                        </p>
+                      </div>
+                      `
+                      : ""
+                  }
+                </div>
+                `
                 : ""
             }
           </div>
@@ -993,6 +1068,26 @@
                     class="btn btn-warning w-100"
                     onclick="openOrModal('${item.id}')">
                     Masukkan No OR
+                  </button>
+                </div>
+              </div>`
+              : ""
+          }
+
+          ${
+            userData.roles?.toLowerCase() === "admin" &&
+            (item.status || "").toLowerCase() === "processed payment" &&
+            (item.approval || "").toLowerCase() === "admin" &&
+            item.noOr &&
+            !item.linkBuktiBayar
+              ? `
+              <div class="card-footer bg-white border-0 pt-2">
+                <div class="d-flex flex-column gap-2">
+                  <button 
+                    type="button" 
+                    class="btn btn-success w-100"
+                    onclick="openUploadBukti('${item.id}')">
+                    Upload Bukti Bayar
                   </button>
                 </div>
               </div>`
@@ -1385,6 +1480,150 @@
               text: "Gagal menyimpan Kode OR.",
             });
           });
+      }
+
+      function openUploadBukti(itemId) {
+        document.getElementById("buktiItemId").value = itemId;
+        document.getElementById("buktiFile").value = "";
+        new bootstrap.Modal(document.getElementById("uploadBuktiModal")).show();
+      }
+
+      function convertToPdf(file, callback) {
+        // Kalau sudah PDF langsung kembalikan
+        if (file.type === "application/pdf") {
+          callback(file);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const imgData = e.target.result;
+
+          const img = new Image();
+          img.onload = function () {
+            // Ambil ukuran asli gambar
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+
+            // Buat PDF dengan ukuran halaman sama dengan ukuran gambar (dalam pt)
+            // 1 px ~ 0.75 pt (approx)
+            const pdf = new window.jspdf.jsPDF({
+              orientation: imgWidth > imgHeight ? "landscape" : "portrait",
+              unit: "pt",
+              format: [imgWidth * 0.75, imgHeight * 0.75],
+            });
+
+            pdf.addImage(img, "JPEG", 0, 0, imgWidth * 0.75, imgHeight * 0.75);
+
+            const pdfBlob = pdf.output("blob");
+            const pdfFile = new File(
+              [pdfBlob],
+              file.name.replace(/\.[^/.]+$/, "") + ".pdf",
+              { type: "application/pdf" }
+            );
+
+            callback(pdfFile);
+          };
+
+          img.src = imgData;
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      function submitBuktiBayar() {
+        const id = document.getElementById("buktiItemId").value;
+        const fileInput = document.getElementById("buktiFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "File bukti bayar wajib dipilih!",
+          });
+          return;
+        }
+
+        // Validasi file
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire("Error", "File harus PDF/JPG/PNG", "error");
+          return;
+        }
+        if (file.size > 3 * 1024 * 1024) {
+          Swal.fire("Error", "Ukuran file maksimal 3MB", "error");
+          return;
+        }
+
+        // tampilkan loading
+        Swal.fire({
+          title: "Mengupload...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        // 🔹 convert file dulu baru upload
+        convertToPdf(file, function (pdfFile) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const base64File = e.target.result.split(",")[1];
+
+            fetch(apiURL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "uploadBuktiBayar",
+                id: id,
+                file: {
+                  mimeType: "application/pdf",
+                  base64: base64File,
+                },
+                role: userData.roles,
+              }),
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                Swal.close();
+
+                if (res.result === "success") {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    html: `
+                    Bukti bayar berhasil diupload!<br><br>
+                    <a href="${res.fileUrl}" target="_blank" class="btn btn-primary">
+                      Lihat File
+                    </a>
+                  `,
+                  }).then(() => {
+                    bootstrap.Modal.getInstance(
+                      document.getElementById("uploadBuktiModal")
+                    ).hide();
+                    location.reload();
+                  });
+                } else {
+                  Swal.fire(
+                    "Error",
+                    res.message || "Gagal upload bukti bayar",
+                    "error"
+                  );
+                }
+              })
+              .catch((err) => {
+                Swal.close();
+                console.error(err);
+                Swal.fire(
+                  "Error",
+                  "Terjadi kesalahan saat upload bukti bayar",
+                  "error"
+                );
+              });
+          };
+          reader.readAsDataURL(pdfFile); // 🔹 baca hasil konversi (bukan file asli)
+        });
       }
     </script>
   </body>
