@@ -600,7 +600,7 @@
               </div>
 
               <!-- Kode PI -->
-              <div class="mb-3">
+              <div class="mb-3" id="kodePiDiv">
                 <label class="form-label fw-bold">
                   Kode PI <span class="text-danger fw-bold">*</span>
                 </label>
@@ -1181,7 +1181,14 @@
                   <button 
                     type="button" 
                     class="btn btn-primary w-100"
-                    onclick="openPumModal('${item.id}')">
+                    <button 
+                      type="button" 
+                      class="btn btn-info w-100"
+                      onclick="openPumModal('${item.id}', '${
+                  item.kodePI || ""
+                }')">
+                      Penyelesaian PUM
+                    </button>
                     Penyelesaian PUM
                   </button>
                 </div>
@@ -1720,10 +1727,24 @@
           reader.readAsDataURL(pdfFile); // 🔹 baca hasil konversi (bukan file asli)
         });
       }
-      function openPumModal(itemId) {
+      function openPumModal(itemId, itemKodePI) {
+        console.log("Open PUM Modal for ID:", itemId, "Kode PI:", itemKodePI);
         document.getElementById("pumItemId").value = itemId;
         document.getElementById("kwitansiFile").value = "";
-        document.getElementById("kodePiInput").value = "";
+        const kodePiInput = document.getElementById("kodePiInput");
+        const kodePiDiv = document.getElementById("kodePiDiv");
+
+        if (itemKodePI && itemKodePI.trim() !== "") {
+          // Jika Kode PI sudah ada → sembunyikan field dan hapus required
+          kodePiDiv.style.display = "none";
+          kodePiInput.required = false;
+        } else {
+          // Jika belum ada → tampilkan field dan jadikan required
+          kodePiDiv.style.display = "block";
+          kodePiInput.required = true;
+          kodePiInput.value = "";
+        }
+
         new bootstrap.Modal(document.getElementById("pumModal")).show();
       }
     </script>
