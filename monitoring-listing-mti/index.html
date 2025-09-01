@@ -1226,7 +1226,7 @@
               Swal.fire({
                 icon: "success",
                 title: "SKP berhasil dibuat",
-                html: `PDF sudah tersedia: <a href="${result.pdfUrl}" target="_blank">Download PDF</a>`,
+                html: `PDF sudah tersedia:<br> <a href="${result.pdfUrl}" target="_blank">Download PDF</a>`,
               });
             } else {
               Swal.fire("Error", result.error || "Gagal generate SKP", "error");
