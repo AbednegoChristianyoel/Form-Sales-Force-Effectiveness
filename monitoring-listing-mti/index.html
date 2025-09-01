@@ -882,47 +882,19 @@
 
           <!-- Footer -->
           ${
-            isSales
+            userData.roles?.toLowerCase() === "admin" &&
+            (item.approval || "").toLowerCase() === "approved"
               ? `
-          <div class="card-footer bg-white border-0 pt-0">
-            <div class="d-flex justify-content-between mt-2 gap-2">
-              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
-                ${(() => {
-                  const disabled = item.generateSkp ? "disabled" : "";
-                  const btnClass = item.generateSkp
-                    ? "btn-secondary"
-                    : "text-white";
-                  const btnStyle = item.generateSkp
-                    ? ""
-                    : "background-color: var(--bs-primary);";
-                  return `
-                    <button 
-                      type="button" 
-                      class="btn w-100 ${btnClass} mt-1"
-                      style="${btnStyle}" 
-                      ${disabled}
-                      onclick="generateSkp('${item.id}')">
-                      Generate SKP
-                    </button>
-                  `;
-                })()}
-              </div>
-              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
-                <input type="file" id="uploadInput-${
-                  item.id
-                }" hidden accept=".pdf,image/png,image/jpeg" />
+            <div class="card-footer bg-white border-0 pt-2">
+              <div class="d-flex flex-column gap-2">
                 <button 
                   type="button" 
-                  class="btn w-100 text-white mt-1"
-                  style="background-color: #009045;" 
-                  onclick="openUploadModal('${item.program}','${
-                  item.namaOutlet
-                }','${item.id}')">
-                  Detail Biaya Listing
+                  class="btn btn-primary w-100"
+                  onclick="generateSkp('${item.id}')">
+                  Generate SKP
                 </button>
               </div>
-            </div>
-          </div>`
+            </div>`
               : ""
           }
         </div>
