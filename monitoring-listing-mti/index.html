@@ -832,7 +832,9 @@
                           produkArr = item.produkList;
                         }
                         if (!produkArr.length) return "-";
-                        return produkArr.map((p) => `- ${p.itname}`).join(", ");
+                        return produkArr
+                          .map((p) => `- ${p.itname}`)
+                          .join("<br>");
                       } catch (e) {
                         return "-";
                       }
@@ -902,7 +904,7 @@
               ${
                 item.linkSkp
                   ? `
-              <div class="col-6">
+              <div class="col-6 ps-0">
                 <small class="text-secondary">Link File SKP</small>
                 <p class="fw-bold m-0">
                   <a href="${item.linkSkp}" target="_blank" class="text-primary">
