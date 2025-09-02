@@ -447,7 +447,7 @@
                 >Nama Pengaju</label
               >
               <select class="form-select" id="pengajuSelect">
-                <option value="">Semua Pengaju</option>
+                <option value="all">Semua Pengaju</option>
               </select>
             </div>
           </div>
@@ -654,7 +654,7 @@
         // 🔹 Langsung tarik data sesuai nip user login
         if (userData.nip) {
           console.log("Mengambil data untuk NIP:", userData.nip);
-          getDataByNIP(userData.nip, userData.roles);
+          getDataByNIP(userData.nip, userData.roles, userData.nama);
         } else {
           Swal.fire({
             icon: "warning",
@@ -710,7 +710,7 @@
         });
       }
 
-      function getDataByNIP(nip, role) {
+      function getDataByNIP(nip, role, namaNsm) {
         Swal.fire({
           title: "Memuat data...",
           text: "Mohon Ditunggu sebentar :)",
@@ -721,7 +721,9 @@
         // 🔹 Kirim nip & role ke API (doGet)
         const url = `${apiURL}?nip=${encodeURIComponent(
           nip
-        )}&role=${encodeURIComponent(role)}`;
+        )}&role=${encodeURIComponent(role)}&namaNsm=${encodeURIComponent(
+          namaNsm
+        )}`;
 
         fetch(url)
           .then((res) => res.json())
@@ -750,12 +752,17 @@
             allData = data;
 
             if (userData.roles?.toLowerCase() !== "sales") {
-              // Kosongkan dulu option
               const pengajuSelect = document.getElementById("pengajuSelect");
-              pengajuSelect.innerHTML =
-                '<option value="">Semua Pengaju</option>';
+              pengajuSelect.innerHTML = ""; // kosongkan dulu
 
-              // Ambil nama unik dari data
+              // ⏫ Tambahkan "Semua Pengaju" & tandai sebagai pinned
+              const optAll = document.createElement("option");
+              optAll.value = "all";
+              optAll.textContent = "Semua Pengaju";
+              optAll.setAttribute("data-pinned", "1"); // <-- kunci biar di atas
+              pengajuSelect.appendChild(optAll);
+
+              // Ambil nama unik
               const uniquePengaju = [
                 ...new Set(
                   allData
@@ -764,25 +771,35 @@
                 ),
               ];
 
-              // Tambah option ke select
+              // Urutkan abjad
+              uniquePengaju.sort((a, b) =>
+                a.localeCompare(b, "id", { sensitivity: "base" })
+              );
+
+              // Tambahkan opsi lain (pinned = 0)
               uniquePengaju.forEach((nama) => {
                 const opt = document.createElement("option");
                 opt.value = nama;
                 opt.textContent = nama;
+                opt.setAttribute("data-pinned", "0");
                 pengajuSelect.appendChild(opt);
               });
 
-              // 🔹 Inisialisasi Tom Select (hapus instance lama kalau ada)
-              if (window.pengajuTomSelect) {
-                window.pengajuTomSelect.destroy();
-              }
+              // Re-init TomSelect
+              if (window.pengajuTomSelect) window.pengajuTomSelect.destroy();
               window.pengajuTomSelect = new TomSelect("#pengajuSelect", {
                 create: false,
-                sortField: { field: "text", direction: "asc" },
                 placeholder: "Pilih Nama Pengaju...",
+                // Urutkan berdasarkan pinned dulu, baru text
+                sortField: [
+                  { field: "pinned", direction: "desc" },
+                  { field: "text", direction: "asc" },
+                ],
               });
 
-              // Tampilkan container
+              // (opsional) set default ke "Semua Pengaju"
+              window.pengajuTomSelect.setValue("all", true);
+
               $("#pengajuContainer").show();
             }
 
@@ -857,8 +874,10 @@
           const outletMatch =
             !outletFilter ||
             (item.namaOutlet || "").toLowerCase().includes(outletFilter);
-          const pengajuMatch = !pengajuFilter || pengajuValue === pengajuFilter;
-
+          const pengajuMatch =
+            pengajuFilter === "all" ||
+            !pengajuFilter ||
+            pengajuValue === pengajuFilter.toLowerCase();
           return statusMatch && approvalMatch && outletMatch && pengajuMatch;
         });
 
@@ -1166,7 +1185,7 @@
                       class="btn btn-info w-100"
                       onclick="openPumModal('${item.id}', '${
                   item.kodePI || ""
-                }')">
+                }','${item.subDistributor}')">
                       Penyelesaian PUM
                     </button>
                   </button>
@@ -1292,11 +1311,11 @@
               } else if (action === "reject") {
                 pesan = `${json.successCount} berhasil di-reject, ${json.failCount} gagal di-reject.<br><br><b>Notes:</b> ${notes}`;
               }
-
-              // kalau ada yang gagal → tambahkan pesan coba lagi
-              if (json.failCount > 0) {
-                pesan +=
-                  "<br><br><i>Silahkan coba lagi untuk data yang gagal.</i>";
+              if (json.errors && json.errors.length > 0) {
+                pesan += `<br><br><b>Detail Error:</b><br>`;
+                json.errors.forEach((err) => {
+                  pesan += `ID: ${err.id} → ${err.reason}<br>`;
+                });
               }
 
               Swal.fire({
@@ -1717,22 +1736,35 @@
           reader.readAsDataURL(pdfFile); // 🔹 baca hasil konversi (bukan file asli)
         });
       }
-      function openPumModal(itemId, itemKodePI) {
-        console.log("Open PUM Modal for ID:", itemId, "Kode PI:", itemKodePI);
+      function openPumModal(itemId, itemKodePI, itemSubDistributor) {
+        console.log(
+          "Open PUM Modal for ID:",
+          itemId,
+          "Kode PI:",
+          itemKodePI,
+          "Subdist:",
+          itemSubDistributor
+        );
+
         document.getElementById("pumItemId").value = itemId;
         document.getElementById("kwitansiFile").value = "";
+
         const kodePiInput = document.getElementById("kodePiInput");
         const kodePiDiv = document.getElementById("kodePiDiv");
 
-        if (itemKodePI && itemKodePI.trim() !== "") {
-          // Jika Kode PI sudah ada → sembunyikan field dan hapus required
-          kodePiDiv.style.display = "none";
-          kodePiInput.required = false;
-        } else {
-          // Jika belum ada → tampilkan field dan jadikan required
+        if (
+          (!itemKodePI || itemKodePI.trim() === "") &&
+          itemSubDistributor === "Tidak Melalui Subdist"
+        ) {
+          // Muncul & wajib diisi
           kodePiDiv.style.display = "block";
           kodePiInput.required = true;
           kodePiInput.value = "";
+        } else {
+          // Sembunyikan
+          kodePiDiv.style.display = "none";
+          kodePiInput.required = false;
+          kodePiInput.value = itemKodePI || "";
         }
 
         new bootstrap.Modal(document.getElementById("pumModal")).show();
