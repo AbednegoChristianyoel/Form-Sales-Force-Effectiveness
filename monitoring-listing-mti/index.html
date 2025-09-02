@@ -44,6 +44,8 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
     <style>
       body {
@@ -1072,7 +1074,10 @@
             <div class="row mt-1">
               <!-- Kolom Kiri: Semua Link -->
               ${
-                item.linkDokumenPendukung || item.linkSkp || item.linkBuktiBayar
+                item.linkDokumenPendukung ||
+                item.linkSkp ||
+                item.linkBuktiBayar ||
+                item.linkKuitansi
                   ? `<div class="col-6">
                       <small class="text-secondary">Link Dokumen Pendukung</small>
                       <p class="fw-bold m-0">
@@ -1089,6 +1094,11 @@
                         ${
                           item.linkBuktiBayar
                             ? `<a href="${item.linkBuktiBayar}" target="_blank" class="text-warning d-block">Link File Bukti Bayar</a>`
+                            : ""
+                        }
+                        ${
+                          item.linkKuitansi
+                            ? `<a href="${item.linkKuitansi}" target="_blank" class="text-info d-block">Link File Kuitansi</a>`
                             : ""
                         }
                       </p>
@@ -1777,6 +1787,170 @@
         }
 
         new bootstrap.Modal(document.getElementById("pumModal")).show();
+      }
+
+      async function mergeFilesToBase64(fileInputs) {
+        const mergedPdf = await PDFLib.PDFDocument.create();
+
+        for (let inputId of fileInputs) {
+          const input = document.getElementById(inputId);
+          if (!input || !input.files[0]) continue;
+
+          const file = input.files[0];
+          const arrayBuffer = await file.arrayBuffer();
+
+          if (file.type === "application/pdf") {
+            // === Jika PDF: copy semua page ===
+            const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+            const copiedPages = await mergedPdf.copyPages(
+              pdf,
+              pdf.getPageIndices()
+            );
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+          } else if (file.type === "image/jpeg" || file.type === "image/png") {
+            // === Jika Gambar: convert jadi 1 halaman PDF ===
+            let image;
+            if (file.type === "image/jpeg") {
+              image = await mergedPdf.embedJpg(arrayBuffer);
+            } else {
+              image = await mergedPdf.embedPng(arrayBuffer);
+            }
+
+            const page = mergedPdf.addPage([image.width, image.height]);
+            page.drawImage(image, {
+              x: 0,
+              y: 0,
+              width: image.width,
+              height: image.height,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Format tidak didukung",
+              text: `${file.name} bukan PDF/JPG/PNG`,
+            });
+            return null;
+          }
+        }
+
+        // === Simpan hasil merge ===
+        const mergedBytes = await mergedPdf.save();
+        const base64String = btoa(
+          mergedBytes.reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ""
+          )
+        );
+        return base64String;
+      }
+
+      async function submitPum(event) {
+        event.preventDefault();
+        const id = document.getElementById("pumItemId").value;
+        const kwitansiFile = document.getElementById("kwitansiFile").files[0];
+        const resiFile = document.getElementById("resiKwitansiFile").files[0];
+        const kodePiInput = document.getElementById("kodePiInput").value.trim();
+
+        // 🔹 Validasi file wajib
+        if (!kwitansiFile || !resiFile) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "File kwitansi & resi wajib dipilih!",
+          });
+          return;
+        }
+
+        // 🔹 Validasi kode PI jika field ditampilkan
+        if (
+          document.getElementById("kodePiDiv").style.display !== "none" &&
+          !kodePiInput
+        ) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Kode PI wajib diisi!",
+          });
+          return;
+        }
+
+        // 🔹 Validasi format file
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (
+          !allowedTypes.includes(kwitansiFile.type) ||
+          !allowedTypes.includes(resiFile.type)
+        ) {
+          Swal.fire("Error", "File harus PDF/JPG/PNG", "error");
+          return;
+        }
+
+        // 🔹 Validasi ukuran
+        if (
+          kwitansiFile.size > 5 * 1024 * 1024 ||
+          resiFile.size > 5 * 1024 * 1024
+        ) {
+          Swal.fire("Error", "Ukuran file maksimal 5MB", "error");
+          return;
+        }
+
+        Swal.fire({
+          title: "Mengupload...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        try {
+          // 🔹 Merge file jadi 1 PDF Base64
+          const base64Merged = await mergeFilesToBase64([
+            "kwitansiFile",
+            "resiKwitansiFile",
+          ]);
+
+          if (!base64Merged) {
+            Swal.close();
+            return;
+          }
+
+          // 🔹 Kirim ke server
+          const res = await fetch(apiURL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "prosesPum",
+              id: id,
+              kodePi: kodePiInput,
+              file: { mimeType: "application/pdf", base64: base64Merged },
+              role: userData.roles,
+            }),
+          }).then((r) => r.json());
+
+          Swal.close();
+
+          if (res.result === "success") {
+            Swal.fire({
+              icon: "success",
+              title: "Berhasil",
+              html:
+                "Penyelesaian PUM berhasil diupload!<br><br>" +
+                '<a href="' +
+                res.fileUrl +
+                '" target="_blank" class="text-primary fw-bold">Lihat File PUM</a>',
+            }).then(() => {
+              bootstrap.Modal.getInstance(
+                document.getElementById("pumModal")
+              ).hide();
+              location.reload();
+            });
+          } else {
+            Swal.fire("Error", res.message || "Gagal upload PUM", "error");
+          }
+        } catch (err) {
+          Swal.close();
+          console.error(err);
+          Swal.fire("Error", "Terjadi kesalahan saat upload PUM", "error");
+        }
       }
     </script>
   </body>
