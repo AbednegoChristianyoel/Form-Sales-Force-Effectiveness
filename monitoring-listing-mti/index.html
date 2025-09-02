@@ -1362,51 +1362,73 @@
       }
 
       function showSummaryModal(ids, action) {
-        // ambil data dari allData sesuai ID
         const selectedData = allData.filter((d) => ids.includes(d.id));
 
-        // validasi role per item
         let allowed = true;
         let blocked = [];
+        const userRole = String(userData.roles || "").toLowerCase();
 
         selectedData.forEach((item) => {
           const approvalStr = String(item.approval || "").toLowerCase();
-          const userRole = String(userData.roles || "").toLowerCase();
+          const statusStr = String(item.status || "").toLowerCase();
 
           console.log(
             "Validasi item:",
             item.id,
             "Approval:",
             approvalStr,
+            "Status:",
+            statusStr,
             "UserRole:",
             userRole
           );
 
-          if (!approvalStr.includes(userRole)) {
-            allowed = false;
-            blocked.push(`${item.namaOutlet} (butuh role ${item.approval})`);
+          // 🔹 RULE REJECT
+          if (action === "reject") {
+            if (userRole !== "admin" && !approvalStr.includes(userRole)) {
+              allowed = false;
+              blocked.push(
+                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`
+              );
+            }
+          }
+
+          // 🔹 RULE APPROVE
+          if (action === "approve") {
+            if (statusStr !== "need approval") {
+              allowed = false;
+              blocked.push(
+                `${item.namaOutlet} (status saat ini: ${item.status})`
+              );
+            } else if (!approvalStr.includes(userRole)) {
+              // tetap cek role, walaupun status sudah Need Approval
+              allowed = false;
+              blocked.push(
+                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`
+              );
+            }
           }
         });
 
         if (!allowed) {
-          const actionText = action.charAt(0).toUpperCase() + action.slice(1); // "approve" → "Approve"
+          const actionText = action.charAt(0).toUpperCase() + action.slice(1);
           Swal.fire({
             icon: "error",
-            title: "Tidak Data Melakukan Aksi " + actionText,
+            title: "Tidak Dapat Melakukan Aksi " + actionText,
             html: `
-              <div style="text-align: left;">
-                Terdapat data yang tidak sesuai role dan tidak dapat diproses:<br>
-                <ul>
-                  ${blocked.map((b) => `<li>${b}</li>`).join("")}
-                </ul>
-                Silakan hapus data tersebut dari pilihan untuk melanjutkan.
-              </div>
-            `,
+        <div style="text-align: left;">
+          Terdapat data yang tidak bisa diproses:<br>
+          <ul>
+            ${blocked.map((b) => `<li>${b}</li>`).join("")}
+          </ul>
+          Silakan hapus data tersebut dari pilihan untuk melanjutkan.
+        </div>
+      `,
           });
-          return; // stop proses bulk
+          return;
         }
 
-        // lanjut render table seperti biasa
+        // 🔹 lanjut render table seperti sebelumnya ...
         let tableHtml = `
     <div class="table-responsive">
       <table class="table table-sm table-bordered">
@@ -1487,6 +1509,7 @@
           }
         });
       }
+
       function generateSkp(id) {
         console.log("Generate SKP untuk ID:", id);
 
