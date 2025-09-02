@@ -449,6 +449,40 @@
                   <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
                 </div>
 
+                <!-- Bagian Listing Berbayar -->
+                <div class="col-12 mt-3">
+                  <label class="form-label fw-bold"
+                    >Apakah Listing Ini Berbayar?</label
+                  >
+                  <div class="d-flex gap-4 mt-1">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="listingBerbayar"
+                        id="berbayarYa"
+                        value="ya"
+                        checked
+                      />
+                      <label class="form-check-label" for="berbayarYa"
+                        >Berbayar</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="listingBerbayar"
+                        id="berbayarTidak"
+                        value="tidak"
+                      />
+                      <label class="form-check-label" for="berbayarTidak"
+                        >Tidak Berbayar</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-12 mt-3">
                   <label class="form-label fw-bold">Sektor Outlet</label>
                   <div class="d-flex gap-4 mt-1">
@@ -607,10 +641,7 @@
                     id="nomorktpNPWP"
                     class="form-control"
                     placeholder="Masukkan Nomor NPWP / KTP"
-                    minlength="15"
                     required
-                    oninvalid="this.setCustomValidity('Nomor NPWP / KTP minimal 15 digit')"
-                    oninput="this.setCustomValidity('')"
                   />
                 </div>
                 <div class="col-md-6 mt-3">
@@ -1086,7 +1117,7 @@
                 <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold"
                     >Scan / Fotokopi Buku Tabungan
-                    <span class="text-danger">*</span></label
+                    <span class="text-danger requiredStar">*</span></label
                   >
                   <input
                     type="file"
@@ -1109,6 +1140,27 @@
                     class="form-control"
                     accept=".pdf,.jpg,.jpeg,.png"
                   />
+                </div>
+
+                <!-- Section Informasi Tambahan -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    INFORMASI TAMBAHAN
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+
+                  <div class="col-12 mb-3 mt-3">
+                    <label class="form-label fw-medium"
+                      >Catatan
+                      <small class="text-muted">(opsional)</small></label
+                    >
+                    <textarea
+                      id="catatan"
+                      class="form-control"
+                      placeholder="Tuliskan catatan tambahan di sini..."
+                      rows="2"
+                    ></textarea>
+                  </div>
                 </div>
 
                 <!-- Konfirmasi -->
@@ -1354,6 +1406,90 @@
           );
         }
       }
+
+      const fieldsToToggle = [
+        "statusPKP",
+        "grossUp",
+        "dcFee",
+        "jenisTransaksi",
+        "nomorRekening",
+        "namaPemilikRekening",
+        "namaBank",
+        "kcpBank",
+        "bukuTabungan",
+      ];
+
+      // Simpan opsi default dropdown & placeholder asli
+      const dropdownDefaults = {};
+      const inputPlaceholders = {};
+
+      fieldsToToggle.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (el.tagName.toLowerCase() === "select") {
+          dropdownDefaults[id] = el.innerHTML;
+        } else {
+          inputPlaceholders[id] = el.placeholder || "";
+        }
+      });
+
+      // Toggle bintang required untuk file dan input
+      function toggleFieldsBerbayar(isBerbayar) {
+        fieldsToToggle.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const tag = el.tagName.toLowerCase();
+          const type = el.type;
+
+          // Cari span bintang dalam label
+          const label = el.closest("div").querySelector("label .requiredStar");
+
+          if (tag === "select") {
+            if (isBerbayar) {
+              el.disabled = false;
+              el.innerHTML = dropdownDefaults[id];
+              el.selectedIndex = 0;
+            } else {
+              el.disabled = true;
+              el.innerHTML = '<option value=""></option>';
+              el.value = "";
+            }
+          } else if (type === "file") {
+            el.disabled = !isBerbayar;
+            if (!isBerbayar) el.value = "";
+
+            if (label) label.style.display = isBerbayar ? "inline" : "none"; // toggle bintang
+          } else {
+            if (isBerbayar) {
+              el.removeAttribute("readonly");
+              el.setAttribute("required", true);
+              el.style.backgroundColor = "";
+              el.placeholder = inputPlaceholders[id];
+            } else {
+              el.setAttribute("readonly", true);
+              el.removeAttribute("required");
+              el.style.backgroundColor = "#e9ecef";
+              el.value = "";
+              el.placeholder = "";
+            }
+          }
+        });
+        hitungRingkasan();
+      }
+
+      // Event listener radio button
+      document
+        .getElementById("berbayarYa")
+        .addEventListener("change", () => toggleFieldsBerbayar(true));
+      document
+        .getElementById("berbayarTidak")
+        .addEventListener("change", () => toggleFieldsBerbayar(false));
+
+      // Set initial state
+      toggleFieldsBerbayar(document.getElementById("berbayarYa").checked);
+
       // Event toggle NPWP
       document.querySelectorAll('input[name="punyaNPWP"]').forEach((radio) => {
         radio.addEventListener("change", () => {
@@ -1555,7 +1691,6 @@
           return;
         }
 
-        // 🔥 Validasi qtyListing minimal 1
         const qtyListing = parseInt(
           document.getElementById("qtyListing").value
         );
@@ -1571,7 +1706,6 @@
         const procode = document.getElementById("procode").value;
         const tbody = document.querySelector("#produkTable tbody");
 
-        // 🔥 Cek duplikat
         const sudahAda = Array.from(tbody.querySelectorAll("tr")).some(
           (row) => row.querySelector("td").textContent === procode
         );
@@ -1606,7 +1740,6 @@
 
         let listingFee = parseFloat(listingFeeRaw) || 0;
 
-        // 🔥 cek gross up
         const grossUpStatus = document.getElementById("grossUp").value;
         const punyaNPWP = document.getElementById("npwpYa")?.checked;
         const tipeNPWP = document.getElementById("tipeNPWP")?.value;
@@ -1621,48 +1754,66 @@
 
         const listingFeeDisplay = Math.round(listingFee);
 
-        const row = document.createElement("tr");
-        row.innerHTML = `
-    <td>${procode}</td>
-    <td>${itname}</td>
-    <td>${costCenter}</td>
-    <td data-fee="${listingFeeRaw}">Rp${formatRupiah(listingFeeDisplay)}</td>
-    <td>${qtyListing}</td>
-    <td>Rp${formatRupiah(hnaRaw)}</td>
-    <td>${valueEstimate}</td>
-    <td>
-      <button class="btn btn-danger btn-sm btn-action hapusProdukBtn">
-        <i class="bi bi-trash"></i> Hapus
-      </button>
-    </td>
-  `;
-        tbody.appendChild(row);
+        // 🔹 Tambahkan konfirmasi jika listingFee 0
+        const proceed = () => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+      <td>${procode}</td>
+      <td>${itname}</td>
+      <td>${costCenter}</td>
+      <td data-fee="${listingFeeRaw}">Rp${formatRupiah(listingFeeDisplay)}</td>
+      <td>${qtyListing}</td>
+      <td>Rp${formatRupiah(hnaRaw)}</td>
+      <td>${valueEstimate}</td>
+      <td>
+        <button class="btn btn-danger btn-sm btn-action hapusProdukBtn">
+          <i class="bi bi-trash"></i> Hapus
+        </button>
+      </td>
+    `;
+          tbody.appendChild(row);
 
-        // disable option produk
-        const option = selectProduk.querySelector(`option[value="${procode}"]`);
-        if (option) option.disabled = true;
+          const option = selectProduk.querySelector(
+            `option[value="${procode}"]`
+          );
+          if (option) option.disabled = true;
 
-        // reset form produk
-        [
-          "procode",
-          "itname",
-          "costCenter",
-          "listingFee",
-          "hna",
-          "valueEstimate",
-        ].forEach((id) => (document.getElementById(id).value = ""));
-        selectProduk.value = "";
-        document.getElementById("qtyListing").value = "";
-        document.getElementById("totalQty").value = "";
-        tomSelectProduk.clear();
+          [
+            "procode",
+            "itname",
+            "costCenter",
+            "listingFee",
+            "hna",
+            "valueEstimate",
+          ].forEach((id) => (document.getElementById(id).value = ""));
+          selectProduk.value = "";
+          document.getElementById("qtyListing").value = "";
+          document.getElementById("totalQty").value = "";
+          tomSelectProduk.clear();
 
-        // tutup modal
-        const modalEl = document.getElementById("produkModal");
-        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-        modal.hide();
+          const modalEl = document.getElementById("produkModal");
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modal.hide();
 
-        // hitung ulang
-        hitungRingkasan();
+          hitungRingkasan();
+        };
+
+        if (listingFeeDisplay === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Listing Fee Rp0 (Tidak Berbayar)",
+            text: "Apakah Anda yakin Listing Feenya Rp0?",
+            showCancelButton: true,
+            confirmButtonText: "Ya, lanjut",
+            cancelButtonText: "Batal",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              proceed();
+            }
+          });
+        } else {
+          proceed();
+        }
       });
 
       function enableAllProdukOptions() {
@@ -1909,6 +2060,11 @@
       });
 
       function validateFiles() {
+        // Misal ada flag isBerbayar (true/false)
+        const isBerbayar =
+          document.querySelector('input[name="listingBerbayar"]:checked')
+            ?.value === "berbayarYa";
+
         const fileRules = [
           {
             id: "formListingStore",
@@ -1917,7 +2073,11 @@
           },
           { id: "firstPO", required: true, label: "First PO" },
           { id: "dokumenNPWPKTP", required: true, label: "NPWP/KTP" },
-          { id: "bukuTabungan", required: true, label: "Buku Tabungan" },
+          {
+            id: "bukuTabungan",
+            required: isBerbayar, // wajib hanya kalau berbayar
+            label: "Buku Tabungan",
+          },
           { id: "suratKuasa", required: false, label: "Surat Kuasa" },
         ];
 
@@ -2021,6 +2181,28 @@
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading(),
           });
+
+          // Ambil value NPWP/KTP
+          const npwpInput = document
+            .getElementById("nomorktpNPWP")
+            .value.trim();
+          const npwpDigits = npwpInput.replace(/\D/g, ""); // hanya angka
+
+          if (npwpDigits.length < 15) {
+            Swal.close(); // pastikan loading ditutup dulu
+
+            // beri jeda sedikit supaya loading benar-benar hilang
+            setTimeout(() => {
+              Swal.fire({
+                icon: "error",
+                title: "Nomor NPWP / KTP tidak valid",
+                text: "Nomor NPWP / KTP harus minimal 15 digit angka.",
+                allowOutsideClick: false,
+              });
+            }, 200); // 200ms sudah cukup
+
+            return; // hentikan proses submit
+          }
 
           // ambil produkList dari tabel
           const produkList = [];
@@ -2145,6 +2327,7 @@
             namaBank: document.getElementById("namaBank")?.value || "",
             kcpBank: document.getElementById("kcpBank")?.value || "",
             mergedFile: mergedFileBase64,
+            catatan: document.getElementById("catatan")?.value || "",
           };
 
           // 🔎 DEBUG: log payload ke console
