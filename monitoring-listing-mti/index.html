@@ -435,7 +435,7 @@
               >
               <select class="form-select" id="approvalSelect">
                 <option value="">-- Pilih Approval --</option>
-                <option value="sm / nsm">SM / NSM</option>
+                <option value="nsm">NSM</option>
                 <option value="admin">Admin</option>
                 <option value="nkam">NKAM</option>
                 <option value="trade">Trade</option>
@@ -490,6 +490,11 @@
               placeholder="Masukkan Kode OR"
             />
             <input type="hidden" id="orItemId" />
+            <input
+              type="hidden"
+              id="orMetodePembayaran"
+              name="itemMetodePembayaran"
+            />
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="submitOr()">
@@ -793,8 +798,8 @@
               document.getElementById("approvalContainer").style.display =
                 "block";
 
-              if (role === "sm / nsm") {
-                approvalSelect.value = "sm / nsm";
+              if (role === "nsm") {
+                approvalSelect.value = "nsm";
               } else if (role === "admin") {
                 approvalSelect.value = "admin";
               } else if (role === "nkam") {
@@ -968,11 +973,17 @@
                 </div>
               </div>
 
-              <!-- Nama PT -->
+              <!-- Nama PT & Jenis Pembayaran -->
               <div class="row mt-1">
-                <div class="col-12">
+                <div class="col-6">
                   <small class="text-secondary">Nama PT</small>
                   <p class="fw-bold m-0">${item.namaPt || "-"}</p>
+                </div>
+                <div class="col-6 ps-0">
+                  <small class="text-secondary">Jenis Pembayaran</small>
+                  <p class="fw-bold m-0">${
+                    item.metodePembayaran || "Tidak Berbayar"
+                  }</p>
                 </div>
               </div>
 
@@ -1039,77 +1050,43 @@
               </div>
             </div>
 
-            <!-- Link Dokumen Pendukung & SKP -->
-            ${
-              item.linkDokumenPendukung || item.linkSkp
-                ? `
             <div class="row mt-1">
+              <!-- Kolom Kiri: Semua Link -->
               ${
-                item.linkDokumenPendukung
-                  ? `
-                <div class="col-6">
-                  <small class="text-secondary">Link Dokumen Pendukung</small>
-                  <p class="fw-bold m-0">
-                    <a href="${item.linkDokumenPendukung}" target="_blank" class="text-success">
-                      Link File Dokumen Pendukung
-                    </a>
-                  </p>
-                </div>
-                `
+                item.linkDokumenPendukung || item.linkSkp || item.linkBuktiBayar
+                  ? `<div class="col-6">
+                      <small class="text-secondary">Link Dokumen Pendukung</small>
+                      <p class="fw-bold m-0">
+                        ${
+                          item.linkDokumenPendukung
+                            ? `<a href="${item.linkDokumenPendukung}" target="_blank" class="text-success d-block">Link File Dokumen Pendukung</a>`
+                            : ""
+                        }
+                        ${
+                          item.linkSkp
+                            ? `<a href="${item.linkSkp}" target="_blank" class="text-primary d-block">Link File SKP</a>`
+                            : ""
+                        }
+                        ${
+                          item.linkBuktiBayar
+                            ? `<a href="${item.linkBuktiBayar}" target="_blank" class="text-warning d-block">Link File Bukti Bayar</a>`
+                            : ""
+                        }
+                      </p>
+                    </div>`
                   : ""
               }
+
+              <!-- Kolom Kanan: No OR -->
               ${
-                item.linkSkp
-                  ? `
-                <div class="col-6 ps-0">
-                  <small class="text-secondary">Link SKP</small>
-                  <p class="fw-bold m-0">
-                    <a href="${item.linkSkp}" target="_blank" class="text-primary">
-                      Link File SKP 
-                    </a>
-                  </p>
-                </div>
-                `
+                item.noOr
+                  ? `<div class="col-6 ps-0">
+                      <small class="text-secondary">No. OR</small>
+                      <p class="fw-bold m-0">${item.noOr}</p>
+                    </div>`
                   : ""
               }
             </div>
-            `
-                : ""
-            }
-
-            <!-- No OR + Link Bukti Bayar -->
-            ${
-              item.noOr || item.linkBuktiBayar
-                ? `
-                <div class="row mt-1">
-                  ${
-                    item.noOr
-                      ? `
-                      <div class="col-6">
-                        <small class="text-secondary">No. OR</small>
-                        <p class="fw-bold m-0">${item.noOr}</p>
-                      </div>
-                      `
-                      : ""
-                  }
-                  ${
-                    item.linkBuktiBayar
-                      ? `
-                      <div class="col-6 ps-0">
-                        <small class="text-secondary">Link Bukti Bayar</small>
-                        <p class="fw-bold m-0">
-                          <a href="${item.linkBuktiBayar}" target="_blank" class="text-warning">
-                            Link File Bukti Bayar
-                          </a>
-                        </p>
-                      </div>
-                      `
-                      : ""
-                  }
-                </div>
-                `
-                : ""
-            }
           </div>
 
           <!-- Footer -->
@@ -1142,7 +1119,10 @@
                   <button 
                     type="button" 
                     class="btn btn-warning w-100"
-                    onclick="openOrModal('${item.id}')">
+                    onclick="openOrModal('${item.id}', '${
+                  item.metodePembayaran || ""
+                }')"
+>
                     Masukkan No OR
                   </button>
                 </div>
@@ -1189,7 +1169,6 @@
                 }')">
                       Penyelesaian PUM
                     </button>
-                    Penyelesaian PUM
                   </button>
                 </div>
               </div>`
@@ -1508,8 +1487,16 @@
             Swal.fire("Error", "Terjadi kesalahan saat generate SKP.", "error");
           });
       }
-      function openOrModal(itemId) {
+      function openOrModal(itemId, itemMetodePembayaran) {
+        console.log(
+          "Buka modal No OR untuk ID:",
+          itemId,
+          "Metode Pembayaran:",
+          itemMetodePembayaran
+        );
         document.getElementById("orItemId").value = itemId;
+        document.getElementById("orMetodePembayaran").value =
+          itemMetodePembayaran || "Tidak Berbayar";
         document.getElementById("kodeOrInput").value = "";
         new bootstrap.Modal(document.getElementById("orModal")).show();
       }
@@ -1518,6 +1505,8 @@
         const id = document.getElementById("orItemId").value;
         const kodeOr = document.getElementById("kodeOrInput").value.trim();
         const role = userData.roles;
+        const metodePembayaran =
+          document.getElementById("orMetodePembayaran").value;
 
         console.log("Submit OR untuk ID:", id, "Kode OR:", kodeOr);
 
@@ -1548,6 +1537,7 @@
             action: "processedPayment",
             kodeOr: kodeOr,
             role: role,
+            metodePembayaran: metodePembayaran,
           }),
         })
           .then((res) => res.json())
@@ -1558,7 +1548,7 @@
               Swal.fire({
                 icon: "success",
                 title: "Berhasil",
-                text: `Kode OR ${res.kodeOr} berhasil disimpan (ID: ${res.id})`,
+                text: `Kode OR: ${res.kodeOr} berhasil disimpan untuk ID: ${res.id}`,
               }).then(() => {
                 bootstrap.Modal.getInstance(
                   document.getElementById("orModal")
@@ -1569,7 +1559,7 @@
               Swal.fire({
                 icon: "warning",
                 title: "Perhatian",
-                text: "Respon tidak valid dari server.",
+                text: res.message || "Respon tidak valid dari server.",
               });
             }
           })
@@ -1579,7 +1569,7 @@
             Swal.fire({
               icon: "error",
               title: "Gagal",
-              text: "Gagal menyimpan Kode OR.",
+              text: err.message || "Gagal menyimpan Kode OR.",
             });
           });
       }
