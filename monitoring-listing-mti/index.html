@@ -1443,7 +1443,7 @@
                   <button 
                     type="button" 
                     class="btn btn-primary w-100"
-                    onclick="generateSkp('${item.id}')">
+                    onclick="generateSkp('${item.id}', '${userData.nama}')">
                     Generate SKP
                   </button>
                 </div>
@@ -1840,7 +1840,7 @@
         });
       }
 
-      function generateSkp(id) {
+      function generateSkp(id, userName) {
         console.log("Generate SKP untuk ID:", id);
 
         // tampilkan loading
@@ -1856,7 +1856,7 @@
         fetch(
           `https://script.google.com/macros/s/AKfycbxioIs2Is4tjybHa76LkP2EmyUzwoHtnG-MIuHQbj5HyaHWfRJUq2UELUGmmes0klbS/exec?id=${encodeURIComponent(
             id
-          )}`
+          )}&user=${encodeURIComponent(userName)}`
         )
           .then((response) => response.json())
           .then((result) => {
