@@ -2072,7 +2072,7 @@
         ];
 
         const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
-        const maxSize = 3 * 1024 * 1024; // 3MB
+        const maxSize = 5 * 1024 * 1024; // 5MB
         let errors = [];
 
         fileRules.forEach((rule) => {
@@ -2086,7 +2086,7 @@
               errors.push(`${rule.label} harus berupa PDF, JPG, atau PNG.`);
             }
             if (file.size > maxSize) {
-              errors.push(`${rule.label} maksimal 3MB.`);
+              errors.push(`${rule.label} maksimal 5MB.`);
             }
           }
         });

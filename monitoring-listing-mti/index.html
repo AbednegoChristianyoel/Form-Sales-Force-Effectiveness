@@ -567,7 +567,7 @@
             <input type="hidden" id="buktiItemId" />
             <div class="mb-3">
               <label for="buktiFile" class="form-label fw-bold"
-                >Pilih File Bukti (PDF/JPG/PNG, max 3MB)</label
+                >Pilih File Bukti (PDF/JPG/PNG, max 5MB)</label
               >
               <input
                 type="file"
@@ -613,6 +613,21 @@
             </div>
             <div class="modal-body">
               <input type="hidden" id="pumItemId" name="itemId" />
+
+              <!-- Upload First PO -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">
+                  Upload First PO
+                  <span class="text-danger fw-bold">*</span>
+                </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="firstPoFile"
+                  accept="image/*,application/pdf"
+                  required
+                />
+              </div>
 
               <!-- Upload Kwitansi -->
               <div class="mb-3">
@@ -2019,8 +2034,8 @@
           Swal.fire("Error", "File harus PDF/JPG/PNG", "error");
           return;
         }
-        if (file.size > 3 * 1024 * 1024) {
-          Swal.fire("Error", "Ukuran file maksimal 3MB", "error");
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire("Error", "Ukuran file maksimal 5MB", "error");
           return;
         }
 
@@ -2190,7 +2205,7 @@
         const kodePiInput = document.getElementById("kodePiInput").value.trim();
 
         // 🔹 Validasi file wajib
-        if (!kwitansiFile || !resiFile) {
+        if (!firstPoFile || !kwitansiFile || !resiFile) {
           Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -2243,6 +2258,7 @@
         try {
           // 🔹 Merge file jadi 1 PDF Base64
           const base64Merged = await mergeFilesToBase64([
+            "firstPoFile",
             "kwitansiFile",
             "resiKwitansiFile",
           ]);
