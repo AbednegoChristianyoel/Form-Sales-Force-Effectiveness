@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Monitoring Listing MTI & TKOS</title>
+    <title>MONITORING LISTING MTI & TKOS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Bootstrap, jQuery, SweetAlert2 -->
@@ -46,6 +46,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
     <style>
       body {
@@ -270,6 +274,40 @@
         background-color: #0d6efd;
         color: #fff;
       }
+      #detailProdukList,
+      table.table-bordered th,
+      table.table-bordered td {
+        vertical-align: middle !important;
+      }
+      table.table-bordered thead th {
+        background-color: #ffd700 !important; /* kuning */
+        color: #000 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+      }
+      /* Footer khusus TOTAL BAYAR */
+      table.table-bordered tfoot tr:last-child {
+        background-color: #ffd700 !important;
+        font-weight: bold !important;
+      }
+      table.table-bordered,
+      table.table-bordered th,
+      table.table-bordered td {
+        border: 2px solid #000000 !important; /* tebal 2px, warna biru */
+      }
+      #headerListingFee,
+      table.table-bordered td:nth-child(4) {
+        max-width: 150px; /* lebar maksimum */
+        white-space: normal; /* biar bisa wrap ke baris baru */
+        word-wrap: break-word; /* pecah kata panjang */
+      }
+      /* Batasi lebar kolom VALUE ESTIMATE */
+      table.table-bordered th:nth-child(7),
+      table.table-bordered td:nth-child(7) {
+        max-width: 120px; /* lebar maksimum */
+        white-space: normal; /* teks bisa wrap */
+        word-wrap: break-word; /* pecah kata panjang */
+      }
     </style>
   </head>
 
@@ -337,7 +375,7 @@
               <a
                 class="nav-link text-white fw-bold"
                 href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
-                >Monitoring Listing MTI & TKOS</a
+                >MONITORING LISTING MTI & TKOS</a
               >
             </li>
           </ul>
@@ -351,7 +389,7 @@
     </nav>
 
     <div class="container-md px-3">
-      <h4 class="mb-3 mt-4 text-primary">Monitoring Listing MTI & TKOS</h4>
+      <h4 class="mb-3 mt-4 text-primary">MONITORING LISTING MTI & TKOS</h4>
 
       <div
         class="d-flex flex-wrap align-items-center justify-content-between gap-2"
@@ -635,6 +673,257 @@
       </div>
     </div>
 
+    <!-- 🔹 Modal Show Detail -->
+    <div
+      class="modal fade"
+      id="detailModal"
+      tabindex="-1"
+      aria-labelledby="detailModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content rounded-3 shadow border-primary">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="detailModalLabel">
+              DETAIL PENGAJUAN LISTING
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <!-- 🔹 Detail Pengaju -->
+              <h6 style="color: #0d6efd; font-size: 18px; font-weight: bold">
+                DETAIL PENGAJU
+              </h6>
+              <div class="row gy-1 mb-1">
+                <div class="col-md-6">
+                  <small class="text-muted">Nama Pengaju</small>
+                  <p class="fw-bold m-0" id="detailNamaPengaju"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">NIP</small>
+                  <p class="fw-bold m-0" id="detailNIP"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Jabatan</small>
+                  <p class="fw-bold m-0" id="detailJabatan"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nama NSM</small>
+                  <p class="fw-bold m-0" id="detailNSM"></p>
+                </div>
+              </div>
+
+              <hr />
+
+              <!-- 🔹 Informasi Outlet -->
+              <h6 style="color: #0d6efd; font-size: 18px; font-weight: bold">
+                INFORMASI OUTLET
+              </h6>
+              <div class="row gy-1 mb-1">
+                <div class="col-md-6">
+                  <small class="text-muted">Nama Outlet</small>
+                  <p class="fw-bold m-0" id="detailNamaOutlet"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Kode Outlet</small>
+                  <p class="fw-bold m-0" id="detailKodeOutlet"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Kota Outlet</small>
+                  <p class="fw-bold m-0" id="detailKotaOutlet"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Alamat Outlet</small>
+                  <p class="fw-bold m-0" id="detailAlamatOutlet"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Jumlah Outlet</small>
+                  <p class="fw-bold m-0" id="detailJumlahOutlet"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nomor KTP / NPWP</small>
+                  <p class="fw-bold m-0" id="detailNPWP"></p>
+                </div>
+                <div class="col-md-6" id="divNamaNPWP" style="display: none">
+                  <small class="text-muted">Nama NPWP</small>
+                  <p class="fw-bold m-0" id="detailNamaNPWP"></p>
+                </div>
+                <div class="col-md-6" id="divTipeNPWP" style="display: none">
+                  <small class="text-muted">Tipe NPWP</small>
+                  <p class="fw-bold m-0" id="detailTipeNPWP"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Distributor Coverage</small>
+                  <p class="fw-bold m-0" id="detailDistributorCoverage"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Sub Distributor Coverage</small>
+                  <p class="fw-bold m-0" id="detailSubDistributorCoverage"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">PKP / NON PKP</small>
+                  <p class="fw-bold m-0" id="detailPKP"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Gross Up / Non Gross Up</small>
+                  <p class="fw-bold m-0" id="detailGrossUp"></p>
+                </div>
+              </div>
+
+              <hr />
+
+              <!-- 🔹 Item Listing -->
+              <h6 style="color: #0d6efd; font-size: 18px; font-weight: bold">
+                ITEM LISTING
+              </h6>
+              <div class="table-responsive mb-1 mt-1">
+                <table class="table table-sm table-bordered">
+                  <thead
+                    style="
+                      background-color: yellow;
+                      font-weight: bold;
+                      text-align: center;
+                    "
+                  >
+                    <tr>
+                      <th style="text-align: center">PROCODE</th>
+                      <th>ITEM NAME</th>
+                      <th>COST CENTER COVERAGE</th>
+                      <th id="headerListingFee">
+                        Listing Fee / Item (DPP, EXC PPN)
+                      </th>
+                      <th style="text-align: center">QTY PO</th>
+                      <th>HNA</th>
+                      <th>VALUE ESTIMATE (RUPIAH)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detailProdukList">
+                    <!-- JS akan inject row produk di sini -->
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3" style="text-align: right">DC FEE</td>
+                      <td id="dcFee" style="text-align: right"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="text-align: right">TOTAL FEE</td>
+                      <td id="totalListingFee" style="text-align: right"></td>
+                      <td style="text-align: center" id="totalQty"></td>
+                      <td></td>
+                      <td id="totalValuePo" style="text-align: right"></td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="text-align: right">
+                        PPN / VAT IN
+                      </td>
+                      <td id="ppn" style="text-align: right"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="text-align: right">
+                        TOTAL FEE + PPN
+                      </td>
+                      <td id="feePlusPpn" style="text-align: right"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" style="text-align: right">PPh</td>
+                      <td id="pph" style="text-align: right"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr
+                      style="
+                        background-color: yellow !important;
+                        font-weight: bold;
+                      "
+                    >
+                      <td colspan="3" style="text-align: right">TOTAL BAYAR</td>
+                      <td id="totalBayar" style="text-align: right"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <hr />
+
+              <!-- 🔹 Metode Pembayaran -->
+              <h6 style="color: #0d6efd; font-size: 18px; font-weight: bold">
+                METODE PEMBAYARAN
+              </h6>
+              <div class="row gy-1 mb-1">
+                <div class="col-md-6">
+                  <small class="text-muted">Jenis Transaksi</small>
+                  <p class="fw-bold m-0" id="detailJenisTransaksi"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nomor Rekening</small>
+                  <p class="fw-bold m-0" id="detailNoRekening"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nama Pemilik Rekening</small>
+                  <p class="fw-bold m-0" id="detailNamaRekening"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nama Bank</small>
+                  <p class="fw-bold m-0" id="detailNamaBank"></p>
+                </div>
+                <div class="col-md-6">
+                  <small class="text-muted">Nama Kcp</small>
+                  <p class="fw-bold m-0" id="detailKcp"></p>
+                </div>
+              </div>
+
+              <hr />
+
+              <!-- 🔹 Informasi Tambahan -->
+              <div
+                class="row gy-1 mb-1"
+                id="sectionInformasiTambahan"
+                style="display: none"
+              >
+                <h6 style="color: #0d6efd; font-size: 18px; font-weight: bold">
+                  INFORMASI TAMBAHAN
+                </h6>
+                <div class="col-12">
+                  <small class="text-muted">Catatan</small>
+                  <p class="fw-bold m-0" id="detailCatatan"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec";
@@ -903,7 +1192,7 @@
       });
 
       function formatRupiah(value) {
-        if (!value) return "-";
+        if (!value) return "Rp0";
         // pastikan number
         let number = Number(value.toString().replace(/\D/g, ""));
         if (isNaN(number)) return value;
@@ -926,9 +1215,10 @@
 
           const card = `
       <div class="col-md-6 mb-4">
-        <div class="card card-modern h-100 shadow-sm border-0">
+        <div 
+          class="card card-modern h-100 shadow-sm border-0">          
           <!-- Header -->
-          <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <div class="card-header bg-light d-flex justify-content-between align-items-center border-primary">
             <div class="d-flex align-items-center gap-2">
               <input 
                 type="checkbox" 
@@ -946,9 +1236,9 @@
               ${
                 isSales && item.status === "Need Approval"
                   ? `
-                      <button class="btn btn-outline-danger btn-sm" onclick="cancelListing('${item.id}')">
-                        <i class="fa fa-times"></i> Cancel Listing
-                      </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="cancelListing('${item.id}')">
+                      Cancel Listing <i class="fas fa-times ms-1"></i>
+                    </button>
                     `
                   : ""
               }
@@ -1212,6 +1502,14 @@
               </div>`
               : ""
           }
+          <!-- Header di luar card -->
+          <div 
+            class="bg-white border border-primary rounded-bottom shadow-sm px-3 py-2 mt-1 text-center"
+            style="cursor:pointer"
+            onclick='openDetailModal(${JSON.stringify(item)})'
+          >
+            <span class="text-primary fw-semibold">Show Detail</span>
+          </div>
         </div>
       </div>`;
           submissionList.append(card);
@@ -1974,6 +2272,135 @@
           console.error(err);
           Swal.fire("Error", "Terjadi kesalahan saat upload PUM", "error");
         }
+      }
+      function openDetailModal(item) {
+        // 🔹 Detail Pengaju
+        document.getElementById("detailNamaPengaju").textContent =
+          item.namaSales || "-";
+        document.getElementById("detailNIP").textContent = item.nip || "-";
+        document.getElementById("detailJabatan").textContent =
+          item.jabatan || "-";
+        document.getElementById("detailNSM").textContent = item.namaNsm || "-";
+
+        // 🔹 Informasi Outlet
+        document.getElementById("detailNamaOutlet").textContent =
+          item.namaOutlet || "-";
+        document.getElementById("detailKodeOutlet").textContent =
+          item.kodePI || item.kodeDistributor || "-";
+        document.getElementById("detailKotaOutlet").textContent =
+          item.kota || "-";
+        document.getElementById("detailAlamatOutlet").textContent =
+          item.alamat || "-";
+        document.getElementById("detailJumlahOutlet").textContent =
+          item.jumlahOutlet || "-";
+        document.getElementById("detailNPWP").textContent =
+          item.nomorKtp || "-";
+        if (item.tipeNpwp) {
+          document.getElementById("divTipeNPWP").style.display = "block";
+          document.getElementById("detailTipeNPWP").textContent = item.tipeNpwp;
+        } else {
+          document.getElementById("divTipeNPWP").style.display = "none";
+        }
+        if (item.namaNpwp) {
+          document.getElementById("divNamaNPWP").style.display = "block";
+          document.getElementById("detailNamaNPWP").textContent = item.namaNpwp;
+        } else {
+          document.getElementById("divNamaNPWP").style.display = "none";
+        }
+        document.getElementById("detailDistributorCoverage").textContent =
+          item.distributor || "-";
+        document.getElementById("detailSubDistributorCoverage").textContent =
+          item.subDistributor || "-";
+        document.getElementById("detailPKP").textContent = item.pkp || "-";
+        document.getElementById("detailGrossUp").textContent =
+          item.grossUp || "-";
+
+        // 🔹 Item Listing
+        let produkHtml = "";
+        try {
+          let produkArr = [];
+          if (typeof item.produkList === "string") {
+            produkArr = JSON.parse(item.produkList);
+          } else if (Array.isArray(item.produkList)) {
+            produkArr = item.produkList;
+          }
+          produkArr.forEach((p, idx) => {
+            produkHtml += `
+        <tr>
+          <td class="text-center">${p.procode || "-"}</td>
+          <td>${p.itname || "-"}</td>
+          <td>${p.costCenter || "-"}</td>
+          <td style="text-align: right;">${formatRupiah(p.listingFee)}</td>
+          <td class="text-center">${p.qty || "-"}</td>
+          <td style="text-align: right;">${formatRupiah(p.hna)}</td>
+          <td style="text-align: right;">${formatRupiah(p.valueEstimate)}</td>
+        </tr>
+      `;
+          });
+        } catch (e) {
+          produkHtml = `<tr><td colspan="7" class="text-center">Tidak ada data produk</td></tr>`;
+        }
+        document.getElementById("detailProdukList").innerHTML = produkHtml;
+
+        // 🔹 Metode Pembayaran
+        document.getElementById("detailJenisTransaksi").textContent =
+          item.metodePembayaran || "-";
+        document.getElementById("detailNoRekening").textContent =
+          item.noRekening || "-";
+        document.getElementById("detailNamaRekening").textContent =
+          item.namaPemilikRekening || "-";
+        document.getElementById("detailNamaBank").textContent =
+          item.namaBank || "-";
+        document.getElementById("detailKcp").textContent = item.kcpBank || "-";
+
+        document.getElementById("dcFee").textContent = formatRupiah(
+          item.dcFee || 0
+        );
+        const totalListingFeeValue =
+          (Number(item.totalListingFee) || 0) + (Number(item.dcFee) || 0);
+
+        document.getElementById("totalListingFee").textContent =
+          formatRupiah(totalListingFeeValue);
+        document.getElementById("totalQty").textContent = item.totalQtyPO || 0;
+        document.getElementById("totalValuePo").textContent = formatRupiah(
+          item.totalValuePO || 0
+        );
+        document.getElementById("ppn").textContent = formatRupiah(
+          item.ppn || 0
+        );
+        document.getElementById("feePlusPpn").textContent = formatRupiah(
+          item.feePlusPpn || 0
+        );
+        document.getElementById("pph").textContent = formatRupiah(
+          item.pph || 0
+        );
+        document.getElementById("totalBayar").textContent = formatRupiah(
+          item.totalBayar || 0
+        );
+        if (item.grossUp === "Gross Up") {
+          document.getElementById("headerListingFee").textContent =
+            "Listing Fee / Item (DPP, EXC PPN) [Gross Up]";
+        } else {
+          document.getElementById("headerListingFee").textContent =
+            "Listing Fee / Item (DPP, EXC PPN)";
+        }
+
+        // 🔹 Informasi Tambahan
+        const sectionTambahan = document.getElementById(
+          "sectionInformasiTambahan"
+        );
+        const detailCatatan = document.getElementById("detailCatatan");
+
+        if (item.catatan && item.catatan.trim() !== "") {
+          sectionTambahan.style.display = "block"; // tampilkan section
+          detailCatatan.textContent = item.catatan; // isi catatan
+        } else {
+          sectionTambahan.style.display = "none"; // sembunyikan jika kosong
+          detailCatatan.textContent = "";
+        }
+
+        // 🔹 Buka modal
+        new bootstrap.Modal(document.getElementById("detailModal")).show();
       }
     </script>
   </body>
