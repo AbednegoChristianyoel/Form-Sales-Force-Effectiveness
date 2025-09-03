@@ -1699,7 +1699,6 @@
                 `${item.namaOutlet} (status saat ini: ${item.status})`
               );
             } else if (!approvalStr.includes(userRole)) {
-              // tetap cek role, walaupun status sudah Need Approval
               allowed = false;
               blocked.push(
                 `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`
@@ -1714,34 +1713,37 @@
             icon: "error",
             title: "Tidak Dapat Melakukan Aksi " + actionText,
             html: `
-        <div style="text-align: left;">
-          Terdapat data yang tidak bisa diproses:<br>
-          <ul>
-            ${blocked.map((b) => `<li>${b}</li>`).join("")}
-          </ul>
-          Silakan hapus data tersebut dari pilihan untuk melanjutkan.
-        </div>
-      `,
+    <div style="text-align: left;">
+      Terdapat data yang tidak bisa diproses:<br>
+      <ul>
+        ${blocked.map((b) => `<li>${b}</li>`).join("")}
+      </ul>
+      Silakan hapus data tersebut dari pilihan untuk melanjutkan.
+    </div>
+  `,
           });
           return;
         }
 
-        // 🔹 lanjut render table seperti sebelumnya ...
+        // 🔹 lanjut render table
         let tableHtml = `
-    <div class="table-responsive">
-      <table class="table table-sm table-bordered">
-        <thead class="table-light">
-          <tr>
-            <th>No</th>
-            <th>Nama Outlet</th>
-            <th>Total PO</th>
-            <th>Biaya Listing / Produk</th>
-            <th>DC Fee</th>
-            <th>Total Bayar</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
+          <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="table table-sm table-bordered w-100" style="min-width: 800px;">
+              <thead class="table-warning text-center fw-bold">
+                <tr>
+                  <th>No</th>
+                  <th>Nama Outlet</th>
+                  <th>Total PO</th>
+                  <th>Biaya Listing / Produk</th>
+                  <th>Jumlah SKU</th>
+                  <th>DC Fee</th>
+                  <th>Total Bayar</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        let totalBayarSum = 0;
 
         selectedData.forEach((item, index) => {
           let biayaListing = "-";
@@ -1754,23 +1756,38 @@
             }
             if (produkArr.length)
               biayaListing = formatRupiah(produkArr[0].listingFee || 0);
+            jumlahSKU = produkArr.length; // jumlah item/produk
           } catch (e) {
             biayaListing = "-";
           }
 
           tableHtml += `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${item.namaOutlet || "-"}</td>
-        <td>${formatRupiah(item.totalValuePO)}</td>
-        <td>${biayaListing}</td>
-        <td>${formatRupiah(item.dcFee)}</td>
-        <td>${formatRupiah(item.totalBayar)}</td>
-      </tr>
-    `;
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.namaOutlet || "-"}</td>
+            <td>${formatRupiah(item.totalValuePO)}</td>
+            <td>${biayaListing}</td>
+            <td>${jumlahSKU}</td>
+            <td>${formatRupiah(item.dcFee)}</td>
+            <td>${formatRupiah(item.totalBayar)}</td>
+          </tr>
+        `;
+
+          totalBayarSum += Number(item.totalBayar || 0);
         });
 
-        tableHtml += `</tbody></table></div>`;
+        tableHtml += `
+            </tbody>
+          </table>
+        </div>
+        `;
+
+        // 🔹 Tambahkan summary total di bawah tabel
+        tableHtml += `
+        <h5 class="fw-bold text-primary mt-2 text-start">
+          Total Bayar: ${formatRupiah(totalBayarSum)}
+        </h5>
+        `;
 
         const notesLabel =
           action === "approve" ? "Catatan (Opsional)" : "Catatan (Wajib diisi)";
@@ -1783,13 +1800,13 @@
           title:
             action === "approve" ? "Konfirmasi Approve" : "Konfirmasi Reject",
           html: `
-      ${tableHtml}
-      <div class="form-group text-start mt-3">
-        <label class="form-label fw-semibold">${notesLabel}</label>
-        <textarea id="swal-notes" class="form-control" rows="3" placeholder="${notesPlaceholder}"></textarea>
-      </div>
-    `,
-          width: "800px",
+          ${tableHtml}
+          <div class="form-group text-start mt-3">
+            <label class="form-label fw-semibold">${notesLabel}</label>
+            <textarea id="swal-notes" class="form-control" rows="3" placeholder="${notesPlaceholder}"></textarea>
+          </div>
+        `,
+          width: "1000px",
           focusConfirm: false,
           showCancelButton: true,
           confirmButtonText: action === "approve" ? "Approve" : "Reject",
