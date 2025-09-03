@@ -1713,14 +1713,14 @@
             icon: "error",
             title: "Tidak Dapat Melakukan Aksi " + actionText,
             html: `
-    <div style="text-align: left;">
-      Terdapat data yang tidak bisa diproses:<br>
-      <ul>
-        ${blocked.map((b) => `<li>${b}</li>`).join("")}
-      </ul>
-      Silakan hapus data tersebut dari pilihan untuk melanjutkan.
-    </div>
-  `,
+            <div style="text-align: left;">
+              Terdapat data yang tidak bisa diproses:<br>
+              <ul>
+                ${blocked.map((b) => `<li>${b}</li>`).join("")}
+              </ul>
+              Silakan hapus data tersebut dari pilihan untuk melanjutkan.
+            </div>
+          `,
           });
           return;
         }
