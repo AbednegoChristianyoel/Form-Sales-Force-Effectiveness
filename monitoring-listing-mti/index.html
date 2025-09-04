@@ -1287,8 +1287,24 @@
           return;
         }
 
+        const countMap = {};
+
+        // 🔹 loop semua data
+        dataArray.forEach((d) => {
+          const outletKey = d.kodePI || d.namaOutlet || "-"; // kunci per outlet
+          const userKey = `${d.nip || ""}_${d.nomorKtp || ""}`; // identitas unik pengaju
+
+          if (!countMap[outletKey]) {
+            countMap[outletKey] = new Set(); // pakai Set biar unik
+          }
+          countMap[outletKey].add(userKey);
+        });
+
         dataArray.forEach((item) => {
           const isSales = userData.roles?.toLowerCase() === "sales";
+
+          const outletKey = item.kodePI || item.namaOutlet || "-";
+          const jumlahPengajuan = countMap[outletKey]?.size || 0; // ambil size dari Set
 
           const card = `
       <div class="col-md-6 mb-4">
@@ -1324,15 +1340,28 @@
 
           <!-- Body -->
           <div class="card-body py-3">
-            <!-- Outlet -->
-            <div class="mb-2">
-              <small class="text-secondary">Nama Outlet</small>
-              <p class="fw-bold fs-5 text-primary mb-1">${
-                item.namaOutlet || "-"
-              }</p>
-              <p class="text-muted m-0"><strong>${
-                item.kodePI || "-"
-              }</strong> | ${item.kota || "-"}</p>
+          <!-- Outlet -->
+          <div class="card-body py-3">
+            <!-- Outlet & Jumlah Pengajuan -->
+            <div class="row mb-2">
+              <div class="col-8">
+                <small class="text-secondary">Nama Outlet</small>
+                <p class="fw-bold fs-5 text-primary mb-1">${
+                  item.namaOutlet || "-"
+                }</p>
+                <p class="text-muted m-0"><strong>${
+                  item.kodePI || "-"
+                }</strong> | ${item.kota || "-"}</p>
+              </div>
+              <div class="col-4 text-end">
+                <small class="text-secondary">Jumlah Pengajuan</small>
+                <p 
+                  class="fw-bold m-0 d-flex align-items-center justify-content-center gap-2 text-primary"
+                  style="border:3px solid #0d6efd; border-radius:6px; padding:4px 8px; color:#0d6efd; background:#fff;"
+                >
+                  ${jumlahPengajuan} Kali
+                </p>
+              </div>
             </div>
 
             <!-- Pengaju & Jabatan -->
