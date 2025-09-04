@@ -2239,6 +2239,50 @@
             return;
           }
 
+          nip = document.getElementById("nipMTI").value.trim();
+          npwp = document.getElementById("nomorktpNPWP").value.trim();
+
+          try {
+            const res = await fetch(
+              `https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec?action=produk&nip=${nip}&npwp=${npwpDigits}`
+            );
+            const result = await res.json();
+
+            if (result.result === "success") {
+              console.log("Cek produk berhasil:", result.data);
+              // Data produk yang sudah ada dengan nip+npwp tsb
+              const existingProduk = result.data.map((p) => p["namaProduk"]);
+
+              // cek bentrok
+              const duplikat = produkList
+                .map((p) => p.itname)
+                .filter((p) => existingProduk.includes(p));
+              if (duplikat.length > 0) {
+                Swal.close();
+                Swal.fire({
+                  icon: "error",
+                  title: "Produk Sudah Pernah Diajukan Listing",
+                  html: `
+                    Produk di bawah ini sudah pernah diajukan untuk NPWP <b>(${npwpDigits} | ${nip})</b>:
+                    <br>
+                    <pre style="text-align:center; margin:0; font-family:inherit;">
+                    ${duplikat.map((p) => `- ${p}`).join("\n")}
+                    </pre>
+                  `,
+                });
+                return; // stop submit
+              }
+            }
+          } catch (err) {
+            Swal.close();
+            Swal.fire({
+              icon: "error",
+              title: "Gagal Cek Produk",
+              text: err.message,
+            });
+            return;
+          }
+
           const mergedFileBase64 = await mergeFilesToBase64([
             "formListingStore",
             "dokumenNPWPKTP",
