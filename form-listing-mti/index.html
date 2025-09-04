@@ -1455,12 +1455,16 @@
           } else {
             if (isBerbayar) {
               el.removeAttribute("readonly");
-              el.setAttribute("required", true);
+              if (id !== "dcFee") {
+                el.setAttribute("required", true);
+              }
               el.style.backgroundColor = "";
               el.placeholder = inputPlaceholders[id];
             } else {
               el.setAttribute("readonly", true);
-              el.removeAttribute("required");
+              if (id !== "dcFee") {
+                el.removeAttribute("required");
+              }
               el.style.backgroundColor = "#e9ecef";
               el.value = "";
               el.placeholder = "";
