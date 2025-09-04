@@ -311,6 +311,16 @@
       #logContainer hr {
         margin: 12px 0;
       }
+      .text-orange-dark {
+        color: #ff8c00 !important; /* Dark Orange */
+      }
+      .text-red-dark {
+        color: #c10000 !important; /* merah lebih pekat */
+      }
+
+      .text-green-dark {
+        color: #007400 !important; /* hijau lebih pekat */
+      }
     </style>
   </head>
 
@@ -1247,6 +1257,25 @@
         return "Rp" + number.toLocaleString("id-ID");
       }
 
+      function getStatusClass(status) {
+        if (!status) return "";
+        switch (status) {
+          case "Rejected":
+            return "bg-danger bg-opacity-25 text-red-dark";
+          case "Cancelled":
+            return "bg-danger bg-opacity-25 text-red-dark";
+          case "Need Approval":
+            return "bg-warning bg-opacity-25 text-orange-dark";
+          case "Done":
+            return "bg-success bg-opacity-25 text-green-dark";
+          case "Approved":
+          case "Processed Payment":
+          case "Paid":
+            return "bg-primary bg-opacity-25 text-primary"; // biru muda bg, teks biru
+          default:
+            return "bg-secondary bg-opacity-25 text-secondary";
+        }
+      }
       function renderCards(dataArray) {
         const submissionList = $("#submissionList");
         submissionList.empty();
@@ -1324,7 +1353,13 @@
               <div class="row mt-1">
                 <div class="col-6">
                   <small class="text-secondary">Status</small>
-                  <p class="fw-bold m-0">${item.status || "-"}</p>
+                  <p class="fw-bold m-0 d-flex align-items-center justify-content-center gap-2 ${getStatusClass(
+                    item.status
+                  )}"
+                    style="border-radius:6px; padding:4px 8px; width:80%; text-align:center;">
+                    <i class="bi bi-info-circle"></i>  <!-- 🔹 1 ikon tetap -->
+                    ${item.status || "-"}
+                  </p>
                 </div>
                 <div class="col-6 ps-0">
                   <small class="text-secondary">Oleh</small>
