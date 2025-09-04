@@ -2469,7 +2469,7 @@
           container.appendChild(row);
 
           // notes jika ada
-          if (log.notes && log.notes.trim() !== "") {
+          if (log.notes !== "") {
             const notesRow = document.createElement("div");
             notesRow.className = "row mb-2";
             notesRow.innerHTML = `<div class="col-12"><small class="text-muted">Notes:</small> ${log.notes}</div>`;
