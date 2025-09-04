@@ -133,14 +133,14 @@
                 icon: "success",
                 title: "Login Berhasil",
                 text: `Selamat datang, ${data.nama}`,
-              }).then(
-                () => (window.location.href = "form-listing-mti/index.html")
-              );
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Login Gagal",
-                text: data.message,
+              }).then(() => {
+                if (data.roles && data.roles.toLowerCase() === "sales") {
+                  // kalau role = Sales → ke form
+                  window.location.href = "form-listing-mti/index.html";
+                } else {
+                  // selain Sales → ke monitoring
+                  window.location.href = "monitoring/index.html";
+                }
               });
             }
           })
