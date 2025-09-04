@@ -87,8 +87,12 @@
       // Cek apakah user sudah login
       const storedUser = localStorage.getItem("userData");
       if (storedUser) {
-        // Jika ada data login, redirect ke dashboard/index
-        window.location.href = "form-listing-mti/index.html"; // ganti dengan halaman utama
+        const user = JSON.parse(storedUser);
+        if (user.roles && user.roles.toLowerCase() === "sales") {
+          window.location.href = "form-listing-mti/index.html";
+        } else {
+          window.location.href = "monitoring/index.html";
+        }
       }
 
       const SCRIPT_URL =
