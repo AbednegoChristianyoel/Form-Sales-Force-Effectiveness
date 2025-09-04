@@ -2270,7 +2270,7 @@
                     Produk di bawah ini sudah pernah diajukan untuk NPWP <b>(${npwpDigits} | ${nip})</b>:
                     <br>
                     <pre style="text-align:center; margin:0; font-family:inherit;">
-                    ${duplikat.map((p) => `- ${p}`).join("\n")}
+                    ${duplikat.map((p) => `- ${p}`).join("<br>")}
                     </pre>
                   `,
                 });
