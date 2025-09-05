@@ -8,6 +8,7 @@
       rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       html,
@@ -26,11 +27,11 @@
       }
       .login-card {
         background: #fff;
-        padding: 2.5rem; /* sedikit lebih tebal */
+        padding: 2.5rem;
         border-radius: 1rem;
         box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
         width: 100%;
-        max-width: 420px; /* sedikit lebih lebar */
+        max-width: 420px;
       }
       .login-card h4 {
         color: #0d6efd;
@@ -39,19 +40,25 @@
         font-weight: bold;
       }
       .form-control {
-        font-size: 1.1rem; /* input lebih besar */
-        padding: 0.75rem; /* padding lebih nyaman */
+        font-size: 1.1rem;
+        padding: 0.75rem;
       }
       .btn-login {
         background-color: #0d6efd;
         color: #fff;
         width: 100%;
         font-weight: bold;
-        font-size: 1.1rem; /* tombol lebih besar */
-        padding: 0.75rem; /* tombol lebih tinggi */
+        font-size: 1.1rem;
+        padding: 0.75rem;
       }
       .btn-login:hover {
         background-color: #0b5ed7;
+      }
+      .otp-inputs .form-control {
+        width: 45px;
+        height: 50px;
+        font-size: 1.5rem;
+        margin: 0 3px;
       }
     </style>
   </head>
@@ -79,84 +86,253 @@
             placeholder="Masukkan NIP"
           />
         </div>
-        <button type="submit" class="btn btn-login">Login</button>
+        <button
+          type="submit"
+          class="btn btn-login d-flex align-items-center justify-content-center"
+          id="loginBtn"
+        >
+          <span class="btn-text">Login</span>
+          <span
+            class="spinner-border spinner-border-sm text-primary ms-2"
+            id="loginSpinner"
+            style="display: none"
+          ></span>
+        </button>
       </form>
     </div>
 
-    <script>
-      // Cek apakah user sudah login
-      const storedUser = localStorage.getItem("userData");
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        if (user.roles && user.roles.toLowerCase() === "sales") {
-          window.location.href = "form-listing-mti/index.html";
-        } else {
-          window.location.href = "monitoring/index.html";
-        }
-      }
+    <!-- Modal OTP -->
+    <div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Verifikasi OTP</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">
+              <strong>Kami telah mengirimkan kode OTP ke email Anda.</strong
+              ><br />
+              Silakan masukkan kode di bawah ini:
+            </p>
+            <div class="d-flex justify-content-between otp-inputs">
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+              <input
+                type="text"
+                maxlength="1"
+                class="form-control otp-char text-center"
+              />
+            </div>
+            <div id="otpError" class="text-danger mt-2" style="display: none">
+              OTP salah atau sudah kadaluarsa.
+            </div>
+          </div>
 
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="verifyOtpBtn">
+              <span class="btn-text">Verifikasi</span>
+              <span
+                class="spinner-border spinner-border-sm ms-2"
+                id="otpSpinner"
+                style="display: none"
+              ></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
       const SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbwtIwsdxpIT-X_o4yAh7Aci2tcDAlf8ew0B5exC1doTro5Qi36RniBS9F4djCtu3jiIqA/exec";
 
+      // Cek apakah user sudah login
+      const storedUser = localStorage.getItem("userData");
+      if (storedUser) {
+        window.location.href = "form-listing-mti/index.html";
+      }
+
+      let currentNip = "";
+      let currentEmail = "";
+      const otpModal = new bootstrap.Modal(
+        document.getElementById("otpModal"),
+        {
+          backdrop: "static", // tidak bisa close dengan klik luar
+          keyboard: false, // tidak bisa close dengan ESC
+        }
+      );
+      // Submit Login Form
       $("#loginForm").on("submit", function (e) {
         e.preventDefault();
-        const nip = $("#nip").val().trim();
-        const email = $("#email").val().trim();
+        currentNip = $("#nip").val().trim();
+        currentEmail = $("#email").val().trim();
 
-        if (!nip || !email) {
+        if (!currentNip || !currentEmail) {
           Swal.fire({
             icon: "warning",
-            title: "Perhatian",
+            title: "Oops...",
             text: "NIP dan Email wajib diisi!",
           });
           return;
         }
 
-        Swal.fire({
-          title: "Mencoba Login...",
-          text: "Mohon Ditunggu Sebentar :)",
-          didOpen: () => Swal.showLoading(),
-          allowOutsideClick: false,
-        });
-
-        const payload = { nip, email };
+        $("#loginBtn").prop("disabled", true);
+        $("#loginSpinner").show();
 
         fetch(SCRIPT_URL, {
           method: "POST",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({
+            action: "requestOtp",
+            nip: currentNip,
+            email: currentEmail,
+          }),
         })
           .then((res) => res.json())
           .then((data) => {
-            Swal.close();
             if (data.success) {
-              // Simpan data login ke localStorage agar persistent
-              localStorage.setItem("userData", JSON.stringify(data));
-
+              otpModal.show();
+            } else {
               Swal.fire({
-                icon: "success",
-                title: "Login Berhasil",
-                text: `Selamat datang, ${data.nama}`,
-              }).then(() => {
-                if (data.roles && data.roles.toLowerCase() === "sales") {
-                  // kalau role = Sales → ke form
-                  window.location.href = "form-listing-mti/index.html";
-                } else {
-                  // selain Sales → ke monitoring
-                  window.location.href = "monitoring-listing-mti/index.html";
-                }
+                icon: "error",
+                title: "Login gagal",
+                text: data.message,
               });
             }
           })
-          .catch((err) => {
-            Swal.close();
-            console.error(err);
+          .catch(() => {
             Swal.fire({
               icon: "error",
-              title: "Error",
+              title: "Kesalahan Server",
               text: "Terjadi kesalahan. Coba lagi.",
             });
+          })
+          .finally(() => {
+            $("#loginBtn").prop("disabled", false);
+            $("#loginSpinner").hide();
           });
+      });
+
+      // 🔹 Handle input OTP kotak per kotak
+      $(document).on("input", ".otp-char", function () {
+        if (this.value.length === 1) {
+          $(this).next(".otp-char").focus(); // otomatis ke kotak berikutnya
+        }
+      });
+
+      $(document).on("keydown", ".otp-char", function (e) {
+        if (e.key === "Backspace" && this.value === "") {
+          $(this).prev(".otp-char").focus(); // backspace mundur
+        }
+      });
+
+      // 🔹 Ambil OTP gabungan saat verifikasi
+      $("#verifyOtpBtn").on("click", function () {
+        const otp = $(".otp-char")
+          .map(function () {
+            return $(this).val();
+          })
+          .get()
+          .join("");
+
+        if (otp.length < 6) {
+          $("#otpError").text("OTP wajib 6 digit!").show();
+          return;
+        }
+
+        $("#verifyOtpBtn").prop("disabled", true);
+        $("#otpSpinner").show();
+
+        fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "verifyOtp",
+            nip: currentNip,
+            email: currentEmail,
+            otp,
+          }),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            if (result.success) {
+              localStorage.setItem("userData", JSON.stringify(result));
+              otpModal.hide();
+              Swal.fire({
+                icon: "success",
+                title: "Login Berhasil!",
+                html: "Selamat datang, <b>" + result.nama + "</b>",
+                confirmButtonText: "OK", // munculkan tombol OK
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+              }).then(() => {
+                if (result.roles && result.roles.toLowerCase() === "sales") {
+                  window.location.href = "form-listing-mti/index.html";
+                } else {
+                  window.location.href = "monitoring-listing-mti/index.html";
+                }
+              });
+            } else {
+              $("#otpError").text(result.message).show();
+            }
+          })
+          .catch(() => {
+            $("#otpError").text("Terjadi kesalahan.").show();
+          })
+          .finally(() => {
+            $("#verifyOtpBtn").prop("disabled", false);
+            $("#otpSpinner").hide();
+          });
+      });
+      // 🔹 Support paste langsung 6 digit
+      $(document).on("paste", ".otp-char", function (e) {
+        e.preventDefault();
+        const pasteData = (e.originalEvent || e).clipboardData
+          .getData("text")
+          .trim();
+
+        if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+          $(".otp-char").each(function (i) {
+            $(this).val(pasteData[i]);
+          });
+          $(".otp-char").last().focus(); // fokus terakhir
+        }
       });
     </script>
   </body>
