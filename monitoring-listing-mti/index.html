@@ -401,8 +401,13 @@
       </div>
     </nav>
 
+    <!-- Sapaan Selamat Datang -->
+    <div class="container-md px-3 mt-3">
+      <h6 id="welcomeText" class="fw-bold text-dark"></h6>
+    </div>
+
     <div class="container-md px-3">
-      <h4 class="mb-3 mt-4 text-primary">MONITORING LISTING MTI & TKOS</h4>
+      <h4 class="mb-3 mt-3">MONITORING LISTING MTI & TKOS</h4>
 
       <div
         class="d-flex flex-wrap align-items-center justify-content-between gap-2"
@@ -971,6 +976,11 @@
       } else {
         userData = JSON.parse(storedUser);
         console.log("User sudah login:", userData);
+
+        // Tampilkan ucapan selamat datang
+        document.getElementById(
+          "welcomeText"
+        ).textContent = `Selamat Datang, ${userData.nama}`;
 
         // Jika role = Sales, hide tombol Approve & Reject
         if (userData.roles?.toLowerCase() === "sales") {
