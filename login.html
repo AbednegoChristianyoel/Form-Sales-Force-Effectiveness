@@ -299,8 +299,6 @@
                 title: "Login Berhasil!",
                 html: "Selamat datang, <b>" + result.nama + "</b>",
                 confirmButtonText: "OK", // munculkan tombol OK
-                allowOutsideClick: false,
-                allowEscapeKey: false,
               }).then(() => {
                 if (result.roles && result.roles.toLowerCase() === "sales") {
                   window.location.href = "form-listing-mti/index.html";
