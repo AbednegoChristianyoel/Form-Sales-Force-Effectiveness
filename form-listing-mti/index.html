@@ -1471,6 +1471,18 @@
             }
           }
         });
+        if (!isBerbayar) {
+          // kalau tidak berbayar → otomatis NPWP Tidak
+          document.getElementById("npwpTidak").checked = true;
+        } else {
+          // kalau berbayar → otomatis NPWP Ya
+          document.getElementById("npwpYa").checked = true;
+        }
+
+        // 🔹 trigger event change biar script NPWP jalan
+        document
+          .querySelectorAll('input[name="punyaNPWP"]')
+          .forEach((radio) => radio.dispatchEvent(new Event("change")));
         hitungRingkasan();
       }
 
