@@ -691,6 +691,20 @@
                 />
               </div>
 
+              <!-- Upload Faktur Pajak -->
+              <div class="mb-3" id="fakturPajakDiv" style="display: none">
+                <label class="form-label fw-bold">
+                  Upload Faktur Pajak
+                  <span class="text-danger fw-bold">*</span>
+                </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="fakturPajakFile"
+                  accept="image/*,application/pdf"
+                />
+              </div>
+
               <!-- Kode PI -->
               <div class="mb-3" id="kodePiDiv">
                 <label class="form-label fw-bold">
@@ -2248,7 +2262,9 @@
           "Kode PI:",
           itemKodePI,
           "Subdist:",
-          itemSubDistributor
+          itemSubDistributor,
+          "PKP:",
+          itemPkp
         );
 
         document.getElementById("pumItemId").value = itemId;
@@ -2256,6 +2272,8 @@
 
         const kodePiInput = document.getElementById("kodePiInput");
         const kodePiDiv = document.getElementById("kodePiDiv");
+        const fakturPajakDiv = document.getElementById("fakturPajakDiv");
+        const fakturPajakFile = document.getElementById("fakturPajakFile");
 
         if (
           (!itemKodePI || itemKodePI.trim() === "") &&
@@ -2270,6 +2288,17 @@
           kodePiDiv.style.display = "none";
           kodePiInput.required = false;
           kodePiInput.value = itemKodePI || "";
+        }
+
+        // --- Logika tampil/sembunyi Faktur Pajak ---
+        if (itemPkp === "Release Faktur Pajak") {
+          fakturPajakDiv.style.display = "block";
+          fakturPajakFile.required = true;
+          fakturPajakFile.value = "";
+        } else {
+          fakturPajakDiv.style.display = "none";
+          fakturPajakFile.required = false;
+          fakturPajakFile.value = "";
         }
 
         new bootstrap.Modal(document.getElementById("pumModal")).show();
@@ -2332,9 +2361,14 @@
 
       async function submitPum(event) {
         event.preventDefault();
+
         const id = document.getElementById("pumItemId").value;
+        const firstPoFile = document.getElementById("firstPoFile").files[0];
         const kwitansiFile = document.getElementById("kwitansiFile").files[0];
         const resiFile = document.getElementById("resiKwitansiFile").files[0];
+        const fakturPajakDiv = document.getElementById("fakturPajakDiv");
+        const fakturPajakFile =
+          document.getElementById("fakturPajakFile")?.files[0];
         const kodePiInput = document.getElementById("kodePiInput").value.trim();
 
         // 🔹 Validasi file wajib
@@ -2342,7 +2376,17 @@
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "File kwitansi & resi wajib dipilih!",
+            text: "File First PO, Kwitansi, dan Resi wajib dipilih!",
+          });
+          return;
+        }
+
+        // 🔹 Validasi Faktur Pajak jika tampil
+        if (fakturPajakDiv.style.display !== "none" && !fakturPajakFile) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "File Faktur Pajak wajib diupload!",
           });
           return;
         }
@@ -2360,23 +2404,22 @@
           return;
         }
 
-        // 🔹 Validasi format file
+        // 🔹 Validasi format & ukuran file
         const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
-        if (
-          !allowedTypes.includes(kwitansiFile.type) ||
-          !allowedTypes.includes(resiFile.type)
-        ) {
-          Swal.fire("Error", "File harus PDF/JPG/PNG", "error");
-          return;
+        const allFiles = [firstPoFile, kwitansiFile, resiFile];
+        if (fakturPajakDiv.style.display !== "none" && fakturPajakFile) {
+          allFiles.push(fakturPajakFile);
         }
 
-        // 🔹 Validasi ukuran
-        if (
-          kwitansiFile.size > 5 * 1024 * 1024 ||
-          resiFile.size > 5 * 1024 * 1024
-        ) {
-          Swal.fire("Error", "Ukuran file maksimal 5MB", "error");
-          return;
+        for (const file of allFiles) {
+          if (!allowedTypes.includes(file.type)) {
+            Swal.fire("Error", `${file.name} harus PDF/JPG/PNG`, "error");
+            return;
+          }
+          if (file.size > 5 * 1024 * 1024) {
+            Swal.fire("Error", `${file.name} melebihi 5MB`, "error");
+            return;
+          }
         }
 
         Swal.fire({
@@ -2390,11 +2433,12 @@
 
         try {
           // 🔹 Merge file jadi 1 PDF Base64
-          const base64Merged = await mergeFilesToBase64([
-            "firstPoFile",
-            "kwitansiFile",
-            "resiKwitansiFile",
-          ]);
+          const mergeIds = ["firstPoFile", "kwitansiFile", "resiKwitansiFile"];
+          if (fakturPajakDiv.style.display !== "none" && fakturPajakFile) {
+            mergeIds.push("fakturPajakFile");
+          }
+
+          const base64Merged = await mergeFilesToBase64(mergeIds);
 
           if (!base64Merged) {
             Swal.close();
