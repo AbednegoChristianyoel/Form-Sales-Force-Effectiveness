@@ -372,6 +372,7 @@
               Presentasi Produk Neuro Pain Metabolic
             </option>
             <option>Insentif Mod & Rozgra</option>
+            <option>Insentif SC Metabolic</option>
             <option>POP</option>
             <option>PGD</option>
           </select>
@@ -539,6 +540,10 @@
                   program: "Presentasi Produk Neuro Pain Metabolic",
                 })
               ),
+              ...(data["Insentif SC Metabolic"] || []).map((item) => ({
+                ...item,
+                program: "Insentif SC Metabolic",
+              })),
             ];
 
             renderSKPCards(allSKPData);

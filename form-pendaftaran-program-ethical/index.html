@@ -503,6 +503,9 @@
                     <option value="Insentif SC Modafil & Rozgra">
                       Insentif SC Modafil & Rozgra
                     </option>
+                    <option value="Insentif SC Metabolic">
+                      Insentif SC Metabolic
+                    </option>
                     <option value="POP">POP</option>
                     <option value="PGD">PGD</option>
                     <option value="PK to PBF">PK to PBF</option>
@@ -614,46 +617,102 @@
                   </div>
                 </div>
 
-                <!-- Detail Transfer Bank -->
-                <div id="bankFields" class="col-12 d-none">
+                <!-- 🔹 Field Nama Owner/Apotek untuk Insentif SC Metabolic -->
+                <div id="ownerFieldsMetabolic" class="col-12 d-none">
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label class="form-label">Nama Bank</label>
+                      <label class="form-label">Nama Owner / Apotek</label>
                       <input
                         type="text"
-                        id="namaBank"
                         class="form-control"
-                        placeholder="Masukkan Nama Bank"
+                        id="namaOwnerInsentifMetabolic"
+                        placeholder="Masukkan Nama Owner / Apoteker"
                       />
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label class="form-label">No. Rekening</label>
+                      <label class="form-label">No. Telp / WA</label>
                       <input
-                        type="text"
-                        id="noRek"
+                        type="tel"
                         class="form-control"
-                        placeholder="Masukkan Nomor Rekening"
-                        pattern="[0-9]{8,20}"
-                        oninvalid="this.setCustomValidity('Nomor harus terdiri dari 8-20 digit angka')"
+                        id="telpOwnerInsentifMetabolic"
+                        placeholder="Contoh: 0878213512311"
+                        pattern="08[0-9]{8,13}"
+                        maxlength="15"
+                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
                         oninput="this.setCustomValidity('')"
                       />
                     </div>
+                  </div>
+
+                  <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label class="form-label">Nama Akun Bank</label>
+                      <label class="form-label"
+                        >Persentase Insentif ke Owner</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="persenOwnerMetabolic"
+                          placeholder="Masukkan persentase untuk Owner"
+                          min="0"
+                          max="100"
+                        />
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label"
+                        >Persentase Insentif ke SC</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="persenSCMetabolic"
+                          placeholder="Masukkan persentase untuk SC"
+                          min="0"
+                          max="100"
+                        />
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 🔹 Detail E-Wallet untuk Insentif SC Metabolic -->
+                <div id="ewalletFieldsMetabolic" class="col-12 d-none mt-0">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Jenis E-Wallet</label>
+                      <select id="jenisEwalletMetabolic" class="form-select">
+                        <option value="">Pilih E-Wallet</option>
+                        <option value="Dana">Dana</option>
+                        <option value="Gopay">Gopay</option>
+                        <option value="Ovo">Ovo</option>
+                        <option value="ShopeePay">ShopeePay</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">No. Akun E-Wallet</label>
                       <input
-                        type="text"
-                        id="namaAkunBank"
+                        type="tel"
+                        id="noTelpEwalletMetabolic"
                         class="form-control"
-                        placeholder="Masukkan Nama Akun Bank"
+                        placeholder="Contoh: 0878213512311"
+                        pattern="08[0-9]{8,13}"
+                        maxlength="15"
+                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
+                        oninput="this.setCustomValidity('')"
                       />
                     </div>
-                    <div class="col-md-6">
-                      <label class="form-label">Cabang Bank</label>
+                    <div class="col-12 mb-3">
+                      <label class="form-label">Nama Akun E-Wallet</label>
                       <input
                         type="text"
-                        id="cabangBank"
+                        id="namaAkunEwalletMetabolic"
                         class="form-control"
-                        placeholder="Masukkan Cabang Bank"
+                        placeholder="Contoh: abednegoefra"
                       />
                     </div>
                   </div>
@@ -1272,10 +1331,6 @@
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
-          "#namaBank",
-          "#noRek",
-          "#namaAkunBank",
-          "#cabangBank",
           "#tanggalRealisasiPop",
           "#tanggalRealisasiPgd",
           "#jumlahPesertaPop",
@@ -1303,7 +1358,6 @@
         $("#programEthical").val(null).trigger("change");
         $("#confirmCheck").prop("checked", false);
         $("#ewalletFields").addClass("d-none");
-        $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
@@ -1315,10 +1369,6 @@
           "#jenisEwallet",
           "#noTelpEwallet",
           "#namaAkunEwallet",
-          "#namaBank",
-          "#noRek",
-          "#namaAkunBank",
-          "#cabangBank",
           "#tanggalRealisasiPop",
           "#tanggalRealisasiPgd",
           "#jumlahPesertaPop",
@@ -1423,6 +1473,7 @@
             <option value="">Pilih Program</option>
             <option value="Boost Metabolic">Boost Metabolic</option>
             <option value="Presentasi Produk Neuro Pain Metabolic">Presentasi Produk Neuro Pain Metabolic</option>
+            <option value="Insentif SC Metabolic">Insentif SC Metabolic</option>
             <option value="Insentif SC Modafil & Rozgra">Insentif SC Modafil & Rozgra</option>
             <option value="POP">POP</option>
             <option value="PGD">PGD</option>
@@ -1601,6 +1652,21 @@
               document.getElementById("noTelpEwallet").value || "";
             baseData.namaAkunEwallet =
               document.getElementById("namaAkunEwallet").value || "";
+          } else if (program === "Insentif SC Metabolic") {
+            baseData.namaOwner =
+              document.getElementById("namaOwnerInsentifMetabolic").value || "";
+            baseData.telpOwner =
+              document.getElementById("telpOwnerInsentifMetabolic").value || "";
+            baseData.jenisEwallet =
+              document.getElementById("jenisEwalletMetabolic").value || "";
+            baseData.noTelpEwallet =
+              document.getElementById("noTelpEwalletMetabolic").value || "";
+            baseData.namaAkunEwallet =
+              document.getElementById("namaAkunEwalletMetabolic").value || "";
+            baseData.persenSC =
+              document.getElementById("persenSCMetabolic").value || "";
+            baseData.persenOwner =
+              document.getElementById("persenOwnerMetabolic").value || "";
           } else if (program === "POP") {
             baseData.tanggalRealisasi = document.getElementById(
               "tanggalRealisasiPop"
@@ -1737,10 +1803,6 @@
               $("#jenisEwallet").val("");
               $("#noTelpEwallet").val("");
               $("#namaAkunEwallet").val("");
-              $("#namaBank").val("");
-              $("#noRek").val("");
-              $("#namaAkunBank").val("");
-              $("#cabangBank").val("");
               $("#tanggalRealisasiPop").val("");
               $("#tanggalRealisasiPgd").val("");
               $("#jumlahPesertaPop").val("");
@@ -1752,6 +1814,12 @@
               $("#tanggalPK").val("");
               $("#namaOwnerInsentif").val("");
               $("#telpOwnerInsentif").val("");
+              $("#namaOwnerInsentifMetabolic").val("");
+              $("#telpOwnerInsentifMetabolic").val("");
+              $("#jenisHadiahInsentifMetabolic").val("");
+              $("#jenisEwalletMetabolic").val("");
+              $("#noTelpEwalletMetabolic").val("");
+              $("#namaAkunEwalletMetabolic").val("");
               $("#totalSalesProgram").val("");
               $("#avgSalesProgram").val("");
               $("#tempatPelaksanaan").val("");
@@ -1761,6 +1829,9 @@
               $("#jumlahPesertaPK").val("");
               $("#tanggalRealisasiPop").val("");
               $("#tanggalRealisasiPgd").val("");
+              $("#persenOwnerMetabolic").val("");
+              $("#persenSCMetabolic").val("");
+
               document
                 .querySelectorAll('input[type="date"]')
                 .forEach((el) => (el.value = ""));
@@ -1781,7 +1852,6 @@
 
               // Sembunyikan field dinamis kembali
               $("#ewalletFields").addClass("d-none");
-              $("#bankFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
               $("#boostMetabolicFields").addClass("d-none");
               $("#produkSwitchWrapper").addClass("d-none");
@@ -1792,6 +1862,10 @@
               $("#produkNeuroWrapper").addClass("d-none");
               $("#tanggalRealisasiPgdWrapper").addClass("d-none");
               $("#tanggalRealisasiPopWrapper").addClass("d-none");
+              $("#ownerFieldsInsentif").addClass("d-none");
+              $("#ownerFieldsMetabolic").addClass("d-none");
+              $("#ewalletFieldsMetabolic").addClass("d-none");
+              // Reset semua switch produk
 
               document
                 .querySelectorAll(".produkPediatrikSwitch")
@@ -1801,10 +1875,6 @@
               setFieldRequired("#jenisEwallet", false);
               setFieldRequired("#noTelpEwallet", false);
               setFieldRequired("#namaAkunEwallet", false);
-              setFieldRequired("#namaBank", false);
-              setFieldRequired("#noRek", false);
-              setFieldRequired("#namaAkunBank", false);
-              setFieldRequired("#cabangBank", false);
               setFieldRequired("#tanggalRealisasiPop", false);
               setFieldRequired("#tanggalRealisasiPgd", false);
               setFieldRequired("#jumlahPesertaPop", false);
@@ -1817,6 +1887,15 @@
               setFieldRequired("#jumlahPesertaNeuro", false);
               setFieldRequired("#jumlahPesertaPK", false);
               setFieldRequired("#tempatPelaksanaan", false);
+              setFieldRequired("#namaOwnerInsentif", false);
+              setFieldRequired("#telpOwnerInsentif", false);
+              setFieldRequired("#namaOwnerInsentifMetabolic", false);
+              setFieldRequired("#telpOwnerInsentifMetabolic", false);
+              setFieldRequired("#jenisEwalletMetabolic", false);
+              setFieldRequired("#noTelpEwalletMetabolic", false);
+              setFieldRequired("#namaAkunEwalletMetabolic", false);
+              setFieldRequired("#persenOwnerMetabolic", false);
+              setFieldRequired("#persenSCMetabolic", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
@@ -1873,7 +1952,6 @@
         const selected = $(this).val();
 
         $("#ewalletFields").addClass("d-none");
-        $("#bankFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
         $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
@@ -1888,14 +1966,13 @@
         $("#pesertaPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPopWrapper").addClass("d-none");
+        $("#ewalletFieldsMetabolic").addClass("d-none");
+        $("#ownerFieldsMetabolic").addClass("d-none");
+        // Hapus semua required dynamic
 
         setFieldRequired("#jenisEwallet", false);
         setFieldRequired("#noTelpEwallet", false);
         setFieldRequired("#namaAkunEwallet", false);
-        setFieldRequired("#namaBank", false);
-        setFieldRequired("#noRek", false);
-        setFieldRequired("#namaAkunBank", false);
-        setFieldRequired("#cabangBank", false);
         setFieldRequired("#tanggalRealisasiPop", false);
         setFieldRequired("#tanggalRealisasiPgd", false);
         setFieldRequired("#jumlahPesertaPop", false);
@@ -1911,6 +1988,12 @@
         setFieldRequired("#jumlahPesertaNeuro", false);
         setFieldRequired("#jumlahPesertaPK", false);
         setFieldRequired("#tanggalPK", false);
+        setFieldRequired("#tempatPelaksanaan", false);
+        setFieldRequired("#jenisEwalletMetabolic", true);
+        setFieldRequired("#noTelpEwalletMetabolic", true);
+        setFieldRequired("#namaAkunEwalletMetabolic", true);
+        setFieldRequired("#namaOwnerInsentifMetabolic", true);
+        setFieldRequired("#telpOwnerInsentifMetabolic", true);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#ownerFieldsInsentif").removeClass("d-none");
@@ -1963,6 +2046,16 @@
           $("#presentasiNeuroFields").removeClass("d-none");
           setFieldRequired("#tanggalPresentasiNeuro", true);
           setFieldRequired("#jumlahPesertaNeuro", true);
+        } else if (selected === "Insentif SC Metabolic") {
+          $("#ownerFieldsMetabolic").removeClass("d-none");
+          $("#ewalletFieldsMetabolic").removeClass("d-none");
+          setFieldRequired("#jenisEwalletMetabolic", true);
+          setFieldRequired("#noTelpEwalletMetabolic", true);
+          setFieldRequired("#namaAkunEwalletMetabolic", true);
+          setFieldRequired("#namaOwnerInsentifMetabolic", true);
+          setFieldRequired("#telpOwnerInsentifMetabolic", true);
+          setFieldRequired("#persenOwnerMetabolic", true);
+          setFieldRequired("#persenSCMetabolic", true);
         } else {
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
@@ -2111,6 +2204,24 @@
         if (window.produkNeuroTom) {
           window.produkNeuroTom.clear();
         }
+      });
+      const ownerInput = document.getElementById("persenOwnerMetabolic");
+      const scInput = document.getElementById("persenSCMetabolic");
+
+      ownerInput.addEventListener("input", function () {
+        let val = parseInt(this.value) || 0;
+        if (val < 0) val = 0;
+        if (val > 100) val = 100;
+        this.value = val;
+        scInput.value = 100 - val;
+      });
+
+      scInput.addEventListener("input", function () {
+        let val = parseInt(this.value) || 0;
+        if (val < 0) val = 0;
+        if (val > 100) val = 100;
+        this.value = val;
+        ownerInput.value = 100 - val;
       });
     </script>
   </body>
