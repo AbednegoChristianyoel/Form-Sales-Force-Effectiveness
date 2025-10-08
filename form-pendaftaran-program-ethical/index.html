@@ -1989,11 +1989,11 @@
         setFieldRequired("#jumlahPesertaPK", false);
         setFieldRequired("#tanggalPK", false);
         setFieldRequired("#tempatPelaksanaan", false);
-        setFieldRequired("#jenisEwalletMetabolic", true);
-        setFieldRequired("#noTelpEwalletMetabolic", true);
-        setFieldRequired("#namaAkunEwalletMetabolic", true);
-        setFieldRequired("#namaOwnerInsentifMetabolic", true);
-        setFieldRequired("#telpOwnerInsentifMetabolic", true);
+        setFieldRequired("#jenisEwalletMetabolic", false);
+        setFieldRequired("#noTelpEwalletMetabolic", false);
+        setFieldRequired("#namaAkunEwalletMetabolic", false);
+        setFieldRequired("#namaOwnerInsentifMetabolic", false);
+        setFieldRequired("#telpOwnerInsentifMetabolic", false);
 
         if (selected === "Insentif SC Modafil & Rozgra") {
           $("#ownerFieldsInsentif").removeClass("d-none");
