@@ -548,7 +548,7 @@
               // Buat opsi dropdown
               const opt = document.createElement("option");
               opt.value = item.kodePi; // hanya simpan kode
-              opt.textContent = `${item.kodePi}`; // label tampilan user
+              opt.textContent = `${item.kodePi} - ${item.namaOutlet}`; // label tampilan user
               kodePiSelect.appendChild(opt);
             });
 
