@@ -616,6 +616,7 @@
                     id="jumlahOutlet"
                     class="form-control"
                     placeholder="Masukkan Jumlah Outlet"
+                    min="1"
                     required
                   />
                 </div>
@@ -795,11 +796,11 @@
                           class="form-check-input"
                           type="radio"
                           name="ptListing"
-                          id="ptPerintis"
-                          value="PERINTIS PELAYANAN PARIPURNA"
+                          id="ptSaruaSubur"
+                          value="PT. SARUA SUBUR"
                         />
-                        <label class="form-check-label" for="ptPerintis"
-                          >PERINTIS PELAYANAN PARIPURNA</label
+                        <label class="form-check-label" for="ptSaruaSubur"
+                          >PT. SARUA SUBUR</label
                         >
                       </div>
                     </div>
@@ -1021,6 +1022,11 @@
                     <div>TOTAL BAYAR:</div>
                     <div id="totalBayar">Rp0</div>
                   </div>
+
+                  <div class="d-flex justify-content-between fs-6 mt-2 fw-bold">
+                    <div>Biaya Listing per Item/Outlet</div>
+                    <div id="itemperoutlet">Rp0</div>
+                  </div>
                 </div>
 
                 <!-- Bagian Metode Pembayaran -->
@@ -1097,7 +1103,7 @@
                 <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold"
                     >Form Listing dari Store
-                    <span class="text-danger">*</span></label
+                    <small class="text-danger fst-italic">*wajib</small></label
                   >
                   <input
                     type="file"
@@ -1111,7 +1117,7 @@
                 <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold"
                     >Fotokopi / Scan NPWP / KTP Penanggung Jawab
-                    <span class="text-danger">*</span></label
+                    <small class="text-danger fst-italic">*wajib</small></label
                   >
                   <input
                     type="file"
@@ -1125,7 +1131,7 @@
                 <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold"
                     >Scan / Fotokopi Buku Tabungan
-                    <span class="text-danger requiredStar">*</span></label
+                    <small class="text-danger fst-italic">*wajib</small></label
                   >
                   <input
                     type="file"
@@ -1134,6 +1140,30 @@
                     accept=".pdf,.jpg,.jpeg,.png"
                     required
                   />
+                </div>
+
+                <!-- Tambahkan di bawah bagian upload file lainnya (misal setelah Surat Kuasa) -->
+                <div class="col-md-12 mt-2">
+                  <label class="form-label fw-bold">
+                    Pipeline 12 Bulan
+                    <small class="text-muted">(opsional)</small>
+                  </label>
+                  <br />
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/191UiWRASfdN7hQ2qYfcDuRNsLxC45pnHQo1WQ0gBKEw/edit?gid=0#gid=0"
+                    target="_blank"
+                    class="fw-bold text-primary text-decoration-underline small"
+                  >
+                    *Link Template Pipeline 12 Bulan
+                  </a>
+                  <div class="mt-2">
+                    <input
+                      type="file"
+                      id="pipeline12Bulan"
+                      class="form-control"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    />
+                  </div>
                 </div>
 
                 <div class="col-md-12 mt-2">
@@ -1206,6 +1236,35 @@
     <script src="produkData.js"></script>
 
     <script>
+      const jumlahOutletInput = document.getElementById("jumlahOutlet");
+
+      // Blok karakter non-angka & 0 di depan saat ketik
+      jumlahOutletInput.addEventListener("keypress", function (e) {
+        const key = e.key;
+        const currentValue = this.value;
+
+        // Hanya izinkan angka
+        if (!/[0-9]/.test(key)) {
+          e.preventDefault();
+          return;
+        }
+
+        // Kalau posisi pertama dan user ketik "0" → blok
+        if (currentValue.length === 0 && key === "0") {
+          e.preventDefault();
+        }
+      });
+
+      // Blok paste teks yang tidak valid
+      jumlahOutletInput.addEventListener("paste", function (e) {
+        const paste = (e.clipboardData || window.clipboardData).getData("text");
+
+        // Hanya izinkan angka murni & tidak diawali 0
+        if (!/^[1-9][0-9]*$/.test(paste)) {
+          e.preventDefault();
+        }
+      });
+
       let userData = null;
       let globalOutletData = {};
       let tomOutletSelect;
@@ -1864,11 +1923,16 @@
             const row = e.target.closest("tr");
             const procode = row.querySelector("td").textContent;
 
-            // Aktifkan kembali option produk di dropdown
-            const option = selectProduk.querySelector(
-              `option[value="${procode}"]`
-            );
-            if (option) option.disabled = false;
+            // Aktifkan kembali option produk di dropdown TomSelect
+            const optionEl = tomSelectProduk.getOption(procode);
+            if (optionEl) {
+              optionEl.removeAttribute("disabled");
+              tomSelectProduk.updateOption(procode, {
+                value: procode,
+                text: optionEl.textContent,
+                disabled: false,
+              });
+            }
 
             row.remove();
             hitungRingkasan();
@@ -1889,6 +1953,7 @@
         let totalValueEstimate = 0; // total PO
         let totalListingFee = 0; // total fee listing
         let totalQty = 0; //  total qty
+        let jmlhItem = 0;
 
         tbody.querySelectorAll("tr").forEach((row) => {
           const valueEstimateText = row.children[6].textContent;
@@ -1902,6 +1967,7 @@
 
           const qty = parseInt(row.children[4].textContent) || 0;
           totalQty += qty;
+          jmlhItem += 1;
         });
 
         // 🔥 Terapkan gross up kalau dipilih
@@ -1958,6 +2024,11 @@
 
         totalListingFee = Math.round(totalListingFee);
 
+        jumlahOutlet = document.getElementById("jumlahOutlet")?.value || 1;
+        if (jmlhItem === 0) jmlhItem = 1;
+        listingfeeperitemperoutlet = totalBayar / jmlhItem / jumlahOutlet;
+        listingfeeperitemperoutlet = Math.round(listingfeeperitemperoutlet);
+
         // ✅ Tampilkan hasil
         document.getElementById("totalFeePO").textContent =
           "Rp" + formatRupiah(totalValueEstimate);
@@ -1974,7 +2045,34 @@
           "Rp" + formatRupiah(totalFeePlusPpn);
         document.getElementById("totalBayar").textContent =
           "Rp" + formatRupiah(totalBayar);
+        document.getElementById("itemperoutlet").textContent =
+          "Rp" + formatRupiah(listingfeeperitemperoutlet);
+
+        const pipelineInput = document.getElementById("pipeline12Bulan");
+        const pipelineLabel = pipelineInput
+          ? pipelineInput.closest(".col-md-12").querySelector("label")
+          : null;
+        const opsionalText = pipelineLabel?.querySelector("small");
+
+        if (listingfeeperitemperoutlet > 300000) {
+          pipelineInput.setAttribute("required", "required");
+          if (opsionalText) {
+            opsionalText.innerHTML =
+              '<span class="text-danger fst-italic">*wajib</span>';
+          }
+        } else {
+          pipelineInput.removeAttribute("required");
+          if (opsionalText) {
+            opsionalText.innerHTML = "(opsional)";
+          }
+        }
       }
+
+      document
+        .getElementById("jumlahOutlet")
+        .addEventListener("change", function () {
+          hitungRingkasan(); // panggil fungsi A saat nilai berubah
+        });
 
       // Trigger perubahan NPWP, GrossUp, Release Faktur Pajak
       ["npwpYa", "npwpTidak", "tipeNPWP", "grossUp", "statusPKP"].forEach(
@@ -2103,6 +2201,11 @@
             label: "Buku Tabungan",
           },
           { id: "suratKuasa", required: false, label: "Surat Kuasa" },
+          {
+            id: "pipeline12Bulan",
+            required: false,
+            label: "Pipeline 12 Bulan",
+          },
         ];
 
         const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
@@ -2322,6 +2425,7 @@
             "dokumenNPWPKTP",
             "bukuTabungan",
             "suratKuasa",
+            "pipeline12Bulan",
           ]);
 
           if (!mergedFileBase64) {
