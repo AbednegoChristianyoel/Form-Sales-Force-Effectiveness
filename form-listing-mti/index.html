@@ -1145,7 +1145,7 @@
                 <!-- Tambahkan di bawah bagian upload file lainnya (misal setelah Surat Kuasa) -->
                 <div class="col-md-12 mt-2">
                   <label class="form-label fw-bold">
-                    Pipeline 12 Bulan
+                    Pipeline 24 Bulan
                     <small class="text-muted">(opsional)</small>
                   </label>
                   <br />
@@ -1154,12 +1154,12 @@
                     target="_blank"
                     class="fw-bold text-primary text-decoration-underline small"
                   >
-                    *Link Template Pipeline 12 Bulan
+                    *Link Template Pipeline 24 Bulan
                   </a>
                   <div class="mt-2">
                     <input
                       type="file"
-                      id="pipeline12Bulan"
+                      id="pipeline24Bulan"
                       class="form-control"
                       accept=".pdf,.jpg,.jpeg,.png"
                     />
@@ -2048,7 +2048,7 @@
         document.getElementById("itemperoutlet").textContent =
           "Rp" + formatRupiah(listingfeeperitemperoutlet);
 
-        const pipelineInput = document.getElementById("pipeline12Bulan");
+        const pipelineInput = document.getElementById("pipeline24Bulan");
         const pipelineLabel = pipelineInput
           ? pipelineInput.closest(".col-md-12").querySelector("label")
           : null;
@@ -2058,7 +2058,7 @@
           pipelineInput.setAttribute("required", "required");
           if (opsionalText) {
             opsionalText.innerHTML =
-              '<span class="text-danger fst-italic">*wajib</span>';
+              '<span class="text-danger fst-italic">*wajib karena biaya listing per item/outlet > Rp300.000</span>';
           }
         } else {
           pipelineInput.removeAttribute("required");
@@ -2202,9 +2202,9 @@
           },
           { id: "suratKuasa", required: false, label: "Surat Kuasa" },
           {
-            id: "pipeline12Bulan",
+            id: "pipeline24Bulan",
             required: false,
-            label: "Pipeline 12 Bulan",
+            label: "Pipeline 24 Bulan",
           },
         ];
 
@@ -2425,7 +2425,7 @@
             "dokumenNPWPKTP",
             "bukuTabungan",
             "suratKuasa",
-            "pipeline12Bulan",
+            "pipeline24Bulan",
           ]);
 
           if (!mergedFileBase64) {
