@@ -1588,7 +1588,8 @@
                 item.linkDokumenPendukung ||
                 item.linkSkp ||
                 item.linkBuktiBayar ||
-                item.linkKuitansi
+                item.linkKuitansi ||
+                item.linkFileLainnya
                   ? `<div class="col-6">
                       <small class="text-secondary">Link Dokumen Pendukung</small>
                       <p class="fw-bold m-0">
@@ -1610,6 +1611,11 @@
                         ${
                           item.linkKuitansi
                             ? `<a href="${item.linkKuitansi}" target="_blank" class="text-info d-block">Link File Kuitansi</a>`
+                            : ""
+                        }
+                        ${
+                          item.linkFileLainnya
+                            ? `<a href="${item.linkFileLainnya}" target="_blank" class="text-secondary d-block">Link File Lainnya</a>`
                             : ""
                         }
                       </p>
