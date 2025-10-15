@@ -1480,11 +1480,11 @@
                 </div>
               </div>
 
-            <!-- Biaya Listing per Item & Total PO -->
-            <div class="row mt-1">
-              <div class="col-6">
-                <small class="text-secondary">Biaya Listing / Item</small>
-                <p class="fw-bold m-0">
+              <!-- Jumlah Produk & Jumlah Outlet -->
+              <div class="row mt-1">
+                <div class="col-6">
+                  <small class="text-secondary">Jumlah Produk</small>
+                  <p class="fw-bold m-0">
                     ${(() => {
                       try {
                         let produkArr = [];
@@ -1493,18 +1493,25 @@
                         } else if (Array.isArray(item.produkList)) {
                           produkArr = item.produkList;
                         }
-                        if (!produkArr.length) return "-";
-                        return formatRupiah(produkArr[0].listingFee || 0);
+                        return produkArr && produkArr.length > 0
+                          ? produkArr.length
+                          : 1;
                       } catch (e) {
-                        return "-";
+                        return 1;
                       }
-                    })()}                             
+                    })()}
+                  </p>
+                </div>
+                <div class="col-6 ps-0">
+                  <small class="text-secondary">Jumlah Outlet</small>
+                  <p class="fw-bold m-0">
+                    ${(() => {
+                      const jumlahOutlet = parseInt(item.jumlahOutlet) || 1;
+                      return jumlahOutlet;
+                    })()}
+                  </p>
+                </div>
               </div>
-              <div class="col-6 ps-0">
-                <small class="text-secondary">Total PO</small>
-                <p class="fw-bold m-0">${formatRupiah(item.totalValuePO)}</p>
-              </div>
-            </div>
 
             <!-- DC Fee & Total Bayar -->
             <div class="row mt-1">
@@ -1515,6 +1522,63 @@
               <div class="col-6 ps-0">
                 <small class="text-secondary">Total Bayar</small>
                 <p class="fw-bold m-0">${formatRupiah(item.totalBayar)}</p>
+              </div>
+            </div>
+
+            <!-- Biaya Listing per Item & Total PO -->
+            <div class="row mt-1">
+              <div class="col-6">
+                <small class="text-secondary">Total PO</small>
+                <p class="fw-bold m-0">${formatRupiah(item.totalValuePO)}</p>
+              </div>
+              <div class="col-6 ps-0">
+                <small class="text-secondary">Biaya Listing per Item/Outlet</small>
+                <p class="fw-bold m-0">
+                    ${(() => {
+                      try {
+                        let produkArr = [];
+                        if (typeof item.produkList === "string") {
+                          produkArr = JSON.parse(item.produkList);
+                        } else if (Array.isArray(item.produkList)) {
+                          produkArr = item.produkList;
+                        }
+
+                        // Tentukan jumlah produk (default 1 jika kosong)
+                        const jumlahProduk =
+                          produkArr && produkArr.length > 0
+                            ? produkArr.length
+                            : 1;
+
+                        // ✅ Bersihkan & ubah jumlahOutlet ke integer (default 1)
+                        const jumlahOutlet = item.jumlahOutlet
+                          ? parseInt(
+                              String(item.jumlahOutlet).replace(/[^\d]/g, ""),
+                              10
+                            ) || 1
+                          : 1;
+
+                        console.log("Jumlah Produk:", jumlahProduk);
+                        console.log("Jumlah Outlet:", jumlahOutlet);
+
+                        // ✅ Bersihkan & ubah totalBayar ke integer
+                        const totalBayar = item.totalBayar
+                          ? parseInt(
+                              String(item.totalBayar).replace(/[^\d]/g, ""),
+                              10
+                            )
+                          : 0;
+
+                        console.log("Jumlah Produk:", jumlahProduk);
+                        console.log("Jumlah Outlet:", jumlahOutlet);
+                        console.log("Jumlah totalBayar:", totalBayar);
+
+                        const hasil =
+                          totalBayar / (jumlahProduk * jumlahOutlet);
+                        return formatRupiah(String(Math.round(hasil)));
+                      } catch (e) {
+                        return "-";
+                      }
+                    })()}                             
               </div>
             </div>
 
