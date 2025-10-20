@@ -596,20 +596,35 @@
         }
 
         dataArray.forEach((item) => {
+          const isRejected =
+            (item.statusSKP || "").toLowerCase() === "rejected";
+
           // 🔹 Link jika ada
           const downloadLink = item.generateSkp
             ? `<a href="${item.generateSkp}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">
-         Download SKP
-       </a>`
+          Download SKP
+        </a>`
             : "";
 
           const uploadedLink = item.uploadSkp
             ? `<a href="${item.uploadSkp}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">
-         Uploaded SKP
-       </a>`
+          Uploaded SKP
+        </a>`
             : "";
 
-          // 🔹 Card Template
+          const generateDisabled = isRejected || item.generateSkp;
+          const generateBtnClass = item.generateSkp
+            ? "btn-secondary"
+            : isRejected
+            ? "btn-secondary"
+            : "text-white";
+          const generateBtnStyle =
+            !item.generateSkp && !isRejected
+              ? "background-color: var(--bs-primary);"
+              : "";
+
+          const uploadDisabled = isRejected ? "disabled" : "";
+
           const card = `
       <div class="col-md-6 mb-4">
         <div class="card card-modern h-100 shadow-sm border-0">
@@ -656,35 +671,22 @@
             <div class="d-flex justify-content-between mt-2 gap-2">
               <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
                 ${downloadLink}
-                ${(() => {
-                  const disabled = item.generateSkp ? "disabled" : "";
-                  const btnClass = item.generateSkp
-                    ? "btn-secondary"
-                    : "text-white";
-                  const btnStyle = item.generateSkp
-                    ? ""
-                    : "background-color: var(--bs-primary);";
-                  return `
-                    <button 
-                      type="button" 
-                      class="btn w-100 ${btnClass} mt-1"
-                      style="${btnStyle}" 
-                      ${disabled}
-                      onclick="generateSkp('${item.program}','${item.id}')">
-                      Generate SKP
-                    </button>
-                  `;
-                })()}
+                <button 
+                  type="button" 
+                  class="btn w-100 ${generateBtnClass} mt-1"
+                  style="${generateBtnStyle}" 
+                  ${generateDisabled ? "disabled" : ""}
+                  onclick="generateSkp('${item.program}','${item.id}')">
+                  Generate SKP
+                </button>
               </div>
               <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
                 ${uploadedLink}
-                <input type="file" id="uploadInput-${
-                  item.id
-                }" hidden accept=".pdf,image/png,image/jpeg" />
                 <button 
                   type="button" 
                   class="btn w-100 text-white mt-1"
                   style="background-color: #009045;" 
+                  ${uploadDisabled}
                   onclick="openUploadModal('${item.program}','${
             item.namaOutlet
           }','${item.id}')">
@@ -696,15 +698,8 @@
         </div>
       </div>
     `;
-          skpList.append(card);
 
-          // 🔹 Event listener untuk file input
-          $(`#uploadInput-${item.id}`).on("change", function (event) {
-            const file = event.target.files[0];
-            if (file) {
-              uploadSkp(item.program, item.namaOutlet, item.id, file);
-            }
-          });
+          skpList.append(card);
         });
       }
 
