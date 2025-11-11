@@ -996,6 +996,63 @@
       </div>
     </div>
 
+    <div class="modal fade" id="inputKodePiModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Input Kode PI</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <!-- FORM START -->
+          <form id="formInputKodePI" onsubmit="submitKodePI(event)">
+            <div class="modal-body">
+              <input type="hidden" id="inputKodePiItemId" />
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Kode PI</label>
+                <input
+                  type="text"
+                  id="kodePiOnlyInput"
+                  class="form-control"
+                  placeholder="Masukkan 8 karakter Kode PI"
+                  required
+                  minlength="8"
+                  maxlength="8"
+                  pattern=".{8}"
+                  oninvalid="this.setCustomValidity('Kode PI harus tepat 8 karakter.')"
+                  oninput="
+    if (this.value.length !== 8) {
+      this.setCustomValidity('Kode PI harus tepat 8 karakter.');
+    } else {
+      this.setCustomValidity('');
+    }
+  "
+                />
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+          <!-- FORM END -->
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec";
@@ -1738,6 +1795,25 @@
               </div>`
               : ""
           }
+
+          ${
+            userData.roles?.toLowerCase() === "sales" &&
+            (item.status || "").toLowerCase() === "done" &&
+            !(item.kodePI && item.kodePI.trim())
+              ? `
+          <div class="card-footer bg-white border-0 pt-2">
+            <div class="d-flex flex-column gap-2">
+              <button 
+                type="button" 
+                class="btn btn-primary w-100"
+                onclick="openInputKodePiModal('${item.id}')">
+                Input Kode PI
+              </button>
+            </div>
+          </div>`
+              : ""
+          }
+
           <!-- Header di luar card -->
           <div 
             class="bg-white border border-primary rounded-bottom shadow-sm px-3 py-2 mt-1 text-center"
@@ -2764,6 +2840,85 @@
 
         // 🔹 Buka modal
         new bootstrap.Modal(document.getElementById("detailModal")).show();
+      }
+
+      function openInputKodePiModal(itemId) {
+        console.log("Open Input Kode PI Modal for ID:", itemId);
+
+        document.getElementById("inputKodePiItemId").value = itemId;
+
+        const kodePiOnlyInput = document.getElementById("kodePiOnlyInput");
+        kodePiOnlyInput.value = "";
+        kodePiOnlyInput.required = true;
+
+        new bootstrap.Modal(document.getElementById("inputKodePiModal")).show();
+      }
+      async function submitKodePI(event) {
+        event.preventDefault();
+
+        const id = document.getElementById("inputKodePiItemId").value;
+        const kodePI = document.getElementById("kodePiOnlyInput").value.trim();
+
+        // 🔹 Validasi Kode PI wajib diisi
+        if (!kodePI) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Kode PI wajib diisi!",
+          });
+          return;
+        }
+
+        Swal.fire({
+          title: "Menyimpan...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        try {
+          // 🔹 Kirim request ke Apps Script
+          const res = await fetch(apiURL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "updateKodePI",
+              id: id,
+              kodePi: kodePI,
+              role: userData.roles,
+              nama: userData.nama,
+            }),
+          }).then((r) => r.json());
+
+          Swal.close();
+
+          if (res.result === "success") {
+            Swal.fire({
+              icon: "success",
+              title: "Berhasil",
+              text: "Kode PI berhasil disimpan!",
+            }).then(() => {
+              bootstrap.Modal.getInstance(
+                document.getElementById("inputKodePiModal")
+              ).hide();
+
+              location.reload(); // jika mau reload data
+            });
+          } else {
+            Swal.fire(
+              "Error",
+              res.message || "Gagal menyimpan Kode PI",
+              "error"
+            );
+          }
+        } catch (err) {
+          Swal.close();
+          console.error(err);
+          Swal.fire(
+            "Error",
+            "Terjadi kesalahan saat menyimpan Kode PI",
+            "error"
+          );
+        }
       }
     </script>
   </body>
