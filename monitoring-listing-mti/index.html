@@ -1675,6 +1675,11 @@
                             ? `<a href="${item.linkFileLainnya}" target="_blank" class="text-secondary d-block">Link File Lainnya</a>`
                             : ""
                         }
+                        ${
+                          item.linkTemplateKuitansi
+                            ? `<a href="${item.linkTemplateKuitansi}" target="_blank" style="color: #800080; font-weight: 600;" class="d-block">Link Template Kuitansi</a>`
+                            : ""
+                        }
                       </p>
                     </div>`
                   : ""
