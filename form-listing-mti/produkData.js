@@ -443,4 +443,28 @@ const produkData = [
     hna: 101351,
     costCenter: "PT. SARUA SUBUR",
   },
+  {
+    procode: "0516847",
+    itname: "NBC ACNE PLAST (COLOR POP ACNE PATCH)",
+    hna: 27000,
+    costCenter: "PT. SARUA SUBUR",
+  },
+  {
+    procode: "0516848",
+    itname: "NBC ACNE PLAST (FUN ACNE PATCH)",
+    hna: 28000,
+    costCenter: "PT. SARUA SUBUR",
+  },
+  {
+    procode: "0516849",
+    itname: "NBC ACNE PLAST (GLOW SHIELD ACNE PATCH)",
+    hna: 36000,
+    costCenter: "PT. SARUA SUBUR",
+  },
+    {
+    procode: "0516850",
+    itname: "NBC ACNE PLAST ( BRIGHTENING & SOOTHING)",
+    hna: 28000,
+    costCenter: "PT. SARUA SUBUR",
+  },
 ];
