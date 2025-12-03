@@ -1790,9 +1790,12 @@
                     <button 
                       type="button" 
                       class="btn btn-info w-100"
-                      onclick="openPumModal('${item.id}', '${
-                  item.kodePI || ""
-                }','${item.subDistributor}')">
+                      onclick="openPumModal(
+                      '${item.id}',
+                      '${item.kodePI || ""}',
+                      '${item.subDistributor}',
+                      '${item.pkp}'
+                    )">
                       Penyelesaian PUM
                     </button>
                   </button>

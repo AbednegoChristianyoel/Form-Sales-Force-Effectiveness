@@ -1037,6 +1037,116 @@
                   </div>
                 </div>
 
+                <!-- Program Support Listing -->
+                <div class="mt-3">
+                  <label class="form-label fw-bold"
+                    >Program Support Listing:</label
+                  >
+
+                  <div class="row">
+                    <!-- 1. Gondola -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="Gondola / End Gondola"
+                          id="cbGondola"
+                        />
+                        <label class="form-check-label" for="cbGondola">
+                          Gondola / End Gondola
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- 2. Rak -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="Rak"
+                          id="cbRak"
+                        />
+                        <label class="form-check-label" for="cbRak">Rak</label>
+                      </div>
+                    </div>
+
+                    <!-- 3. Backwall -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="Backwall"
+                          id="cbBackwall"
+                        />
+                        <label class="form-check-label" for="cbBackwall"
+                          >Backwall</label
+                        >
+                      </div>
+                    </div>
+
+                    <!-- 4. Mailer -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="Mailer"
+                          id="cbMailer"
+                        />
+                        <label class="form-check-label" for="cbMailer"
+                          >Mailer</label
+                        >
+                      </div>
+                    </div>
+
+                    <!-- 5. SPG -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="SPG"
+                          id="cbSPG"
+                        />
+                        <label class="form-check-label" for="cbSPG">SPG</label>
+                      </div>
+                    </div>
+
+                    <!-- 6. Social Media -->
+                    <div class="col-12 col-md-4">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input benefit-checkbox"
+                          type="checkbox"
+                          value="Social Media"
+                          id="cbSosmed"
+                        />
+                        <label class="form-check-label" for="cbSosmed"
+                          >Social Media</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Upload Field (unchanged) -->
+                <div class="col-12 mb-3 mt-3">
+                  <label class="form-label fw-bold">
+                    Upload File Program Visibility
+                    <small class="text-muted">(opsional)</small>
+                  </label>
+                  <input
+                    type="file"
+                    id="fileVisibility"
+                    class="form-control"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    multiple
+                  />
+                </div>
+
                 <!-- Bagian Metode Pembayaran -->
                 <div class="col-12 mt-4">
                   <h5 class="fw-bold text-primary mt-1 mb-3">
@@ -2233,6 +2343,11 @@
             required: false,
             label: "Pipeline 24 Bulan",
           },
+          {
+            id: "fileVisibility",
+            required: false,
+            label: "fileVisibility",
+          },
         ];
 
         const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
@@ -2515,6 +2630,7 @@
             "bukuTabungan",
             "suratKuasa",
             "pipeline24Bulan",
+            "fileVisibility",
           ]);
 
           if (!mergedFileBase64) {
