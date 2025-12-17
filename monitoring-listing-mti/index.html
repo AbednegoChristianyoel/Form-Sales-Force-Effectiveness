@@ -518,6 +518,22 @@
                 <option value="trade">Trade</option>
               </select>
             </div>
+
+            <!-- Di dalam modal filter, bagian "Filter Jenis Pembayaran" -->
+            <div class="mb-3">
+              <label for="paymentTypeSelect" class="form-label fw-bold"
+                >Jenis Pembayaran</label
+              >
+              <select class="form-select" id="paymentTypeSelect">
+                <option value="">Semua Metode Pembayaran</option>
+                <option value="Potong Tagihan Distributor">
+                  Potong Tagihan Distributor
+                </option>
+                <option value="Transfer Langsung">Transfer Langsung</option>
+                <option value="Tidak Berbayar">Tidak Berbayar</option>
+              </select>
+            </div>
+
             <!-- 🔹 Filter Nama Pengaju (hanya untuk non-Sales) -->
             <div class="mb-3" id="pengajuContainer" style="display: none">
               <label for="pengajuSelect" class="form-label fw-bold"
@@ -1304,6 +1320,7 @@
           .val()
           .toLowerCase();
         const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
+        const paymentTypeFilter = $("#paymentTypeSelect").val()?.toLowerCase(); // ✅ Tambahkan filter metode pembayaran
 
         const filtered = allData.filter((item) => {
           const statusValue = (item.status || "").toLowerCase();
@@ -1313,6 +1330,7 @@
             item.namaSales ||
             ""
           ).toLowerCase();
+          const paymentTypeValue = (item.metodePembayaran || "").toLowerCase(); // ✅ Ambil nilai metode pembayaran dari data
 
           const statusMatch = !statusFilter || statusValue === statusFilter;
           const approvalMatch =
@@ -1326,7 +1344,16 @@
             pengajuFilter === "all" ||
             !pengajuFilter ||
             pengajuValue === pengajuFilter.toLowerCase();
-          return statusMatch && approvalMatch && outletMatch && pengajuMatch;
+          const paymentTypeMatch =
+            !paymentTypeFilter || paymentTypeValue === paymentTypeFilter; // ✅ Tambahkan logika filter metode pembayaran
+
+          return (
+            statusMatch &&
+            approvalMatch &&
+            outletMatch &&
+            pengajuMatch &&
+            paymentTypeMatch
+          );
         });
 
         renderCards(filtered);
