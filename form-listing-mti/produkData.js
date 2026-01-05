@@ -128,7 +128,7 @@ const produkData = [
   {
     procode: "0200850",
     itname: "POLYSILANE TAB. KUNYAH 5X8TAB",
-    hna: 62400,
+    hna: 38000,
     costCenter: "PHAROS INDONESIA",
   },
   {
@@ -461,7 +461,7 @@ const produkData = [
     hna: 36000,
     costCenter: "PT. SARUA SUBUR",
   },
-    {
+  {
     procode: "0516850",
     itname: "NBC ACNE PLAST ( BRIGHTENING & SOOTHING)",
     hna: 28000,
