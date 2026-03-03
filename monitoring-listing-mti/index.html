@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>MONITORING LISTING MTI & TKOS</title>
+    <title>MONITORING LISTING MTI, TKOS, & APOTEK GROUP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Bootstrap, jQuery, SweetAlert2 -->
@@ -269,7 +269,9 @@
         min-height: 38px;
         background-color: #fff;
         box-shadow: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
       }
 
       .ts-control.focus {
@@ -398,14 +400,14 @@
               <a
                 class="nav-link text-white fw-bold"
                 href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-listing-mti"
-                >FORM LISTING MTI & TKOS</a
+                >FORM LISTING MTI, TKOS, & APOTEK GROUP</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link text-white active-page fw-bold"
                 href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
-                >MONITORING LISTING MTI & TKOS</a
+                >MONITORING LISTING MTI, TKOS, & APOTEK GROUP</a
               >
             </li>
           </ul>
@@ -426,7 +428,7 @@
     </div>
 
     <div class="container-md px-3">
-      <h4 class="mb-3 mt-3">MONITORING LISTING MTI & TKOS</h4>
+      <h4 class="mb-3 mt-3">MONITORING LISTING MTI, TKOS, & APOTEK GROUP</h4>
 
       <div
         class="d-flex flex-wrap align-items-center justify-content-between gap-2"
@@ -1040,14 +1042,16 @@
                   minlength="8"
                   maxlength="8"
                   pattern=".{8}"
-                  oninvalid="this.setCustomValidity('Kode PI harus tepat 8 karakter.')"
+                  oninvalid="
+                    this.setCustomValidity('Kode PI harus tepat 8 karakter.')
+                  "
                   oninput="
-    if (this.value.length !== 8) {
-      this.setCustomValidity('Kode PI harus tepat 8 karakter.');
-    } else {
-      this.setCustomValidity('');
-    }
-  "
+                    if (this.value.length !== 8) {
+                      this.setCustomValidity('Kode PI harus tepat 8 karakter.');
+                    } else {
+                      this.setCustomValidity('');
+                    }
+                  "
                 />
               </div>
             </div>
@@ -1083,9 +1087,8 @@
         console.log("User sudah login:", userData);
 
         // Tampilkan ucapan selamat datang
-        document.getElementById(
-          "welcomeText"
-        ).textContent = `Selamat Datang, ${userData.nama}`;
+        document.getElementById("welcomeText").textContent =
+          `Selamat Datang, ${userData.nama}`;
 
         // Jika role = Sales, hide tombol Approve & Reject
         if (userData.roles?.toLowerCase() === "sales") {
@@ -1167,7 +1170,7 @@
             body: JSON.stringify({
               action: "getLogById",
             }),
-          }
+          },
         )
           .then((res) => res.json())
           .then((res) => {
@@ -1184,9 +1187,9 @@
 
         // 🔹 Kirim nip & role ke API (doGet)
         const url = `${apiURL}?nip=${encodeURIComponent(
-          nip
+          nip,
         )}&role=${encodeURIComponent(role)}&namaNsm=${encodeURIComponent(
-          namaNsm
+          namaNsm,
         )}`;
 
         fetch(url)
@@ -1231,13 +1234,13 @@
                 ...new Set(
                   allData
                     .map((d) => d.namaPengaju || d.namaSales)
-                    .filter(Boolean)
+                    .filter(Boolean),
                 ),
               ];
 
               // Urutkan abjad
               uniquePengaju.sort((a, b) =>
-                a.localeCompare(b, "id", { sensitivity: "base" })
+                a.localeCompare(b, "id", { sensitivity: "base" }),
               );
 
               // Tambahkan opsi lain (pinned = 0)
@@ -1408,7 +1411,7 @@
 
         if (!dataArray.length) {
           submissionList.append(
-            '<div class="col-12 text-center text-muted mt-3">Tidak ada data</div>'
+            '<div class="col-12 text-center text-muted mt-3">Tidak ada data</div>',
           );
           return;
         }
@@ -1433,7 +1436,7 @@
           const jumlahPengajuan = countMap[outletKey]?.size || 0; // ambil size dari Set
           const safeJson = encodeURIComponent(JSON.stringify(item)).replace(
             /'/g,
-            "\\'"
+            "\\'",
           ); // ← tambahkan baris ini
           const card = `
       <div class="col-md-6 mb-4">
@@ -1450,8 +1453,8 @@
               />
               <p class="fw-semibold text-dark m-0">
                 ${item.id || "-"} <span class="text-muted">| ${formatDate(
-            item.timeStamp
-          )}</span>
+                  item.timeStamp,
+                )}</span>
               </p>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -1512,7 +1515,7 @@
                 <div class="col-6">
                   <small class="text-secondary">Status</small>
                   <p class="fw-bold m-0 d-flex align-items-center justify-content-center gap-2 ${getStatusClass(
-                    item.status
+                    item.status,
                   )}"
                     style="border-radius:6px; padding:4px 8px; width:80%; text-align:center;">
                     <i class="bi bi-info-circle"></i>  <!-- 🔹 1 ikon tetap -->
@@ -1637,7 +1640,7 @@
                         const jumlahOutlet = item.jumlahOutlet
                           ? parseInt(
                               String(item.jumlahOutlet).replace(/[^\d]/g, ""),
-                              10
+                              10,
                             ) || 1
                           : 1;
 
@@ -1648,7 +1651,7 @@
                         const totalBayar = item.totalBayar
                           ? parseInt(
                               String(item.totalBayar).replace(/[^\d]/g, ""),
-                              10
+                              10,
                             )
                           : 0;
 
@@ -1773,8 +1776,8 @@
                     type="button" 
                     class="btn btn-warning w-100"
                     onclick="openOrModal('${item.id}', '${
-                  item.metodePembayaran || ""
-                }')"
+                      item.metodePembayaran || ""
+                    }')"
 >
                     Masukkan No OR
                   </button>
@@ -1899,13 +1902,13 @@
                   Swal.fire(
                     "Berhasil!",
                     "Pengajuan Berhasil Dibatalkan",
-                    "success"
+                    "success",
                   ).then(() => location.reload());
                 } else {
                   Swal.fire(
                     "Error",
                     json.message || "Gagal update data",
-                    "error"
+                    "error",
                   );
                 }
               })
@@ -1925,7 +1928,7 @@
 
       function getSelectedIds() {
         return [...document.querySelectorAll(".bulk-checkbox:checked")].map(
-          (cb) => cb.value
+          (cb) => cb.value,
         );
       }
       function bulkApprove() {
@@ -1995,7 +1998,7 @@
                 "Error",
                 json.message ||
                   "Terjadi Kesalahan Pada Proses Approval atau Rejection",
-                "error"
+                "error",
               );
             }
           })
@@ -2025,7 +2028,7 @@
             "Status:",
             statusStr,
             "UserRole:",
-            userRole
+            userRole,
           );
 
           // 🔹 RULE REJECT
@@ -2033,7 +2036,7 @@
             if (userRole !== "admin" && !approvalStr.includes(userRole)) {
               allowed = false;
               blocked.push(
-                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`
+                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`,
               );
             }
           }
@@ -2043,12 +2046,12 @@
             if (statusStr !== "need approval") {
               allowed = false;
               blocked.push(
-                `${item.namaOutlet} (status saat ini: ${item.status})`
+                `${item.namaOutlet} (status saat ini: ${item.status})`,
               );
             } else if (!approvalStr.includes(userRole)) {
               allowed = false;
               blocked.push(
-                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`
+                `${item.namaOutlet} (butuh role ${item.approval}, Anda ${userData.roles})`,
               );
             }
           }
@@ -2187,8 +2190,8 @@
 
         fetch(
           `https://script.google.com/macros/s/AKfycbxioIs2Is4tjybHa76LkP2EmyUzwoHtnG-MIuHQbj5HyaHWfRJUq2UELUGmmes0klbS/exec?id=${encodeURIComponent(
-            id
-          )}&user=${encodeURIComponent(userName)}`
+            id,
+          )}&user=${encodeURIComponent(userName)}`,
         )
           .then((response) => response.json())
           .then((result) => {
@@ -2215,7 +2218,7 @@
           "Buka modal No OR untuk ID:",
           itemId,
           "Metode Pembayaran:",
-          itemMetodePembayaran
+          itemMetodePembayaran,
         );
         document.getElementById("orItemId").value = itemId;
         document.getElementById("orMetodePembayaran").value =
@@ -2275,7 +2278,7 @@
                 text: `Kode OR: ${res.kodeOr} berhasil disimpan untuk ID: ${res.id}`,
               }).then(() => {
                 bootstrap.Modal.getInstance(
-                  document.getElementById("orModal")
+                  document.getElementById("orModal"),
                 ).hide();
                 location.reload(); // 🔹 reload halaman
               });
@@ -2335,7 +2338,7 @@
             const pdfFile = new File(
               [pdfBlob],
               file.name.replace(/\.[^/.]+$/, "") + ".pdf",
-              { type: "application/pdf" }
+              { type: "application/pdf" },
             );
 
             callback(pdfFile);
@@ -2417,7 +2420,7 @@
                   `,
                   }).then(() => {
                     bootstrap.Modal.getInstance(
-                      document.getElementById("uploadBuktiModal")
+                      document.getElementById("uploadBuktiModal"),
                     ).hide();
                     location.reload();
                   });
@@ -2425,7 +2428,7 @@
                   Swal.fire(
                     "Error",
                     res.message || "Gagal upload bukti bayar",
-                    "error"
+                    "error",
                   );
                 }
               })
@@ -2435,7 +2438,7 @@
                 Swal.fire(
                   "Error",
                   "Terjadi kesalahan saat upload bukti bayar",
-                  "error"
+                  "error",
                 );
               });
           };
@@ -2451,7 +2454,7 @@
           "Subdist:",
           itemSubDistributor,
           "PKP:",
-          itemPkp
+          itemPkp,
         );
 
         document.getElementById("pumItemId").value = itemId;
@@ -2506,7 +2509,7 @@
             const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
             const copiedPages = await mergedPdf.copyPages(
               pdf,
-              pdf.getPageIndices()
+              pdf.getPageIndices(),
             );
             copiedPages.forEach((page) => mergedPdf.addPage(page));
           } else if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -2540,8 +2543,8 @@
         const base64String = btoa(
           mergedBytes.reduce(
             (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
+            "",
+          ),
         );
         return base64String;
       }
@@ -2658,7 +2661,7 @@
                 '" target="_blank" class="text-primary fw-bold">Lihat File PUM</a>',
             }).then(() => {
               bootstrap.Modal.getInstance(
-                document.getElementById("pumModal")
+                document.getElementById("pumModal"),
               ).hide();
               location.reload();
             });
@@ -2688,7 +2691,7 @@
         const diffMs = new Date(to) - new Date(from);
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         const diffHours = Math.floor(
-          (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
         );
         return `(${diffDays} days ${diffHours} hours)`;
       }
@@ -2826,7 +2829,7 @@
         document.getElementById("detailKcp").textContent = item.kcpBank || "-";
 
         document.getElementById("dcFee").textContent = formatRupiah(
-          item.dcFee || 0
+          item.dcFee || 0,
         );
         const totalListingFeeValue =
           (Number(item.totalListingFee) || 0) + (Number(item.dcFee) || 0);
@@ -2835,19 +2838,19 @@
           formatRupiah(totalListingFeeValue);
         document.getElementById("totalQty").textContent = item.totalQtyPO || 0;
         document.getElementById("totalValuePo").textContent = formatRupiah(
-          item.totalValuePO || 0
+          item.totalValuePO || 0,
         );
         document.getElementById("ppn").textContent = formatRupiah(
-          item.ppn || 0
+          item.ppn || 0,
         );
         document.getElementById("feePlusPpn").textContent = formatRupiah(
-          item.feePlusPpn || 0
+          item.feePlusPpn || 0,
         );
         document.getElementById("pph").textContent = formatRupiah(
-          item.pph || 0
+          item.pph || 0,
         );
         document.getElementById("totalBayar").textContent = formatRupiah(
-          item.totalBayar || 0
+          item.totalBayar || 0,
         );
         if (item.grossUp === "Gross Up") {
           document.getElementById("headerListingFee").textContent =
@@ -2859,7 +2862,7 @@
 
         // 🔹 Informasi Tambahan
         const sectionTambahan = document.getElementById(
-          "sectionInformasiTambahan"
+          "sectionInformasiTambahan",
         );
         const detailCatatan = document.getElementById("detailCatatan");
 
@@ -2933,7 +2936,7 @@
               text: "Kode PI berhasil disimpan!",
             }).then(() => {
               bootstrap.Modal.getInstance(
-                document.getElementById("inputKodePiModal")
+                document.getElementById("inputKodePiModal"),
               ).hide();
 
               location.reload(); // jika mau reload data
@@ -2942,7 +2945,7 @@
             Swal.fire(
               "Error",
               res.message || "Gagal menyimpan Kode PI",
-              "error"
+              "error",
             );
           }
         } catch (err) {
@@ -2951,7 +2954,7 @@
           Swal.fire(
             "Error",
             "Terjadi kesalahan saat menyimpan Kode PI",
-            "error"
+            "error",
           );
         }
       }
