@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
@@ -139,7 +139,9 @@
         color: #212529;
         line-height: 1.5;
         box-shadow: none;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition:
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
       }
 
       .ts-control::placeholder,
@@ -325,6 +327,13 @@
       .navbar-collapse {
         text-align: center; /* teks rata tengah */
       }
+      #groupOutletTableWrapper {
+        margin-bottom: 0 !important;
+      }
+
+      #groupOutletTableWrapper + * {
+        margin-top: 0 !important;
+      }
     </style>
   </head>
 
@@ -430,7 +439,7 @@
                     disabled
                   />
                 </div>
-                <div class="col-6">
+                <div class="col-md-6">
                   <label class="form-label fw-bold">Nama</label>
                   <input
                     type="text"
@@ -528,10 +537,22 @@
                         >Toko Kosmetik</label
                       >
                     </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="sektorOutlet"
+                        id="sektorApotek"
+                        value="Apotek Group"
+                      />
+                      <label class="form-check-label" for="sektorApotek"
+                        >Apotek Group</label
+                      >
+                    </div>
                   </div>
                 </div>
 
-                <div class="col-12 mt-3">
+                <div class="col-12 mt-3 mb-3">
                   <label class="form-label fw-bold"
                     >Apakah Outlet Punya Kode PI? (Sudah Pernah
                     Registrasi)</label
@@ -562,6 +583,27 @@
                         >Tidak Ada Kode PI</label
                       >
                     </div>
+                  </div>
+                </div>
+
+                <div
+                  id="groupOutletTableWrapper"
+                  class="mb-0 mt-0"
+                  style="display: none"
+                >
+                  <h6 class="fw-bold">List Outlet Group Dipilih</h6>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                      <thead class="table-light">
+                        <tr>
+                          <th class="bg-primary text-white">Kode PI</th>
+                          <th class="bg-primary text-white">Nama Outlet</th>
+                          <th class="bg-primary text-white">Kota</th>
+                          <th class="bg-primary text-white">Alamat</th>
+                        </tr>
+                      </thead>
+                      <tbody id="groupOutletTableBody"></tbody>
+                    </table>
                   </div>
                 </div>
 
@@ -1261,6 +1303,7 @@
     </div>
 
     <script src="produkData.js"></script>
+    <script src="all_nip.js"></script>
 
     <script>
       const jumlahOutletInput = document.getElementById("jumlahOutlet");
@@ -1309,7 +1352,7 @@
           });
 
           const res = await fetch(
-            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`
+            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`,
           );
           const data = await res.json();
           Swal.close();
@@ -1318,7 +1361,7 @@
             return Swal.fire(
               "Data Tidak Ditemukan",
               `Data NIP: ${nip} tidak ditemukan.`,
-              "error"
+              "error",
             );
           }
 
@@ -1382,6 +1425,190 @@
         });
       });
 
+      function loadApotekGroupFromLocal() {
+        if (!userData || !userData.nip) return;
+
+        const nipData = dataApotekGroup[userData.nip];
+
+        tomOutletSelect.clear();
+        tomOutletSelect.clearOptions();
+        globalOutletData = {};
+
+        if (!nipData || !nipData.outlets) {
+          tomOutletSelect.addOption({
+            value: "",
+            text: "Tidak ada Apotek Group",
+          });
+          tomOutletSelect.refreshOptions(false);
+          return;
+        }
+
+        tomOutletSelect.addOption({ value: "", text: "Pilih Group" });
+
+        const uniqueGroup = new Set(); // 🔥 untuk filter double
+
+        nipData.outlets.forEach((o) => {
+          if (uniqueGroup.has(o.group_code)) return; // skip kalau sudah pernah
+
+          uniqueGroup.add(o.group_code);
+
+          const key = o.group_code;
+          const text = o.group_code + " - " + o.nama_group;
+
+          tomOutletSelect.addOption({
+            value: key,
+            text: text,
+          });
+
+          globalOutletData[key] = {
+            type: "group",
+            group_code: o.group_code,
+            nama_group: o.nama_group,
+            kota: o.kota,
+            alamat: o.alamat,
+            group_id: o.group_id,
+            groupOutlets: nipData.outlets.filter(
+              (x) => x.group_code === o.group_code,
+            ),
+          };
+        });
+
+        tomOutletSelect.refreshOptions(false);
+      }
+
+      function resetOutletDropdown() {
+        if (!tomOutletSelect) return;
+
+        tomOutletSelect.clear(); // hapus selected value
+        tomOutletSelect.clearOptions(); // hapus semua option
+        tomOutletSelect.addOption({
+          value: "",
+          text: "Pilih Outlet",
+        });
+
+        tomOutletSelect.setValue(""); // kosongkan value
+        tomOutletSelect.refreshOptions(false);
+
+        globalOutletData = {}; // reset data mapping
+      }
+
+      function updateOutletsBySector() {
+        const selected = document.querySelector(
+          'input[name="sektorOutlet"]:checked',
+        );
+
+        if (!selected) return;
+
+        const sector = selected.value;
+
+        // 🔥 update label
+        updateLabelBySector();
+
+        // 🔥 reset dropdown
+        resetOutletDropdown();
+
+        if (sector === "Apotek Group") {
+          loadApotekGroupFromLocal();
+        } else if (sector === "MTI" || sector === "Toko Kosmetik") {
+          if (userData && userData.nip) {
+            getDataByNIP(userData.nip);
+          }
+        }
+      }
+
+      function updateLabelBySector() {
+        const selected = document.querySelector(
+          'input[name="sektorOutlet"]:checked',
+        );
+
+        if (!selected) return;
+
+        const label = document.getElementById("labelKodePi");
+
+        if (selected.value === "Apotek Group") {
+          label.textContent = "Kode Group";
+        } else {
+          label.textContent = "Kode PI";
+        }
+      }
+
+      document
+        .querySelectorAll('input[name="sektorOutlet"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", updateOutletsBySector);
+        });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const sektorRadios = document.querySelectorAll(
+          'input[name="sektorOutlet"]',
+        );
+
+        const radioPiAda = document.getElementById("piAda");
+        const radioPiTidakAda = document.getElementById("piTidak");
+
+        sektorRadios.forEach((radio) => {
+          radio.addEventListener("change", function () {
+            const sektor = this.value;
+
+            if (sektor === "Apotek Group") {
+              // ✅ auto pilih
+              radioPiAda.checked = true;
+
+              // 🔒 lock
+              radioPiAda.disabled = true;
+              radioPiTidakAda.disabled = true;
+            } else {
+              // 🔓 unlock
+              radioPiAda.disabled = false;
+              radioPiTidakAda.disabled = false;
+            }
+          });
+        });
+      });
+
+      function renderGroupOutletTable(groupCode) {
+        const tableBody = document.getElementById("groupOutletTableBody");
+        tableBody.innerHTML = "";
+
+        // 🔥 Ambil semua outlet dari semua NIP
+        let allOutlets = [];
+
+        Object.values(dataApotekGroup).forEach((nipObj) => {
+          if (nipObj.outlets) {
+            allOutlets = allOutlets.concat(nipObj.outlets);
+          }
+        });
+
+        // 🔥 Filter berdasarkan group_code
+        const groupOutlets = allOutlets.filter(
+          (o) => o.group_code === groupCode,
+        );
+
+        // 🔥 Hilangkan duplicate berdasarkan kode_pi
+        const uniqueKodePi = new Set();
+
+        groupOutlets.forEach((o) => {
+          if (uniqueKodePi.has(o.kode_pi)) return;
+
+          uniqueKodePi.add(o.kode_pi);
+
+          const row = `
+      <tr>
+        <td>${o.kode_pi || ""}</td>
+        <td>${o.nama_outlet || ""}</td>
+        <td>${o.kota || ""}</td>
+        <td>${o.alamat || ""}</td>
+      </tr>
+    `;
+
+          tableBody.insertAdjacentHTML("beforeend", row);
+        });
+
+        // tampilkan tabel
+        document.getElementById("groupOutletTableWrapper").style.display =
+          "block";
+      }
+
       // 🔹 Logout
       // Tambahkan tombol logout jika mau
       function logout() {
@@ -1421,17 +1648,36 @@
       // event ketika pilih outlet
       document.getElementById("outletMTI").addEventListener("change", (e) => {
         const kode = e.target.value;
-        if (globalOutletData[kode]) {
-          const o = globalOutletData[kode];
-          document.getElementById("kodePi").value = o.kodePi || "";
+        const o = globalOutletData[kode];
+
+        const tableWrapper = document.getElementById("groupOutletTableWrapper");
+
+        // 🔹 Reset default dulu
+        document.getElementById("kodePi").value = "";
+        document.getElementById("namaOutlet").value = "";
+        document.getElementById("kotaOutlet").value = "";
+        document.getElementById("alamatOutlet").value = "";
+        tableWrapper.style.display = "none";
+
+        if (!o) return;
+
+        // 🔥 Kalau Apotek Group
+        if (o.type === "group") {
+          document.getElementById("kodePi").value = o.group_code || "";
+          document.getElementById("namaOutlet").value = o.nama_group || "";
+          document.getElementById("kotaOutlet").value = o.kota || "";
+          document.getElementById("alamatOutlet").value = o.alamat || "";
+
+          renderGroupOutletTable(o.group_code); // ⬅ kirim group_code saja
+          tableWrapper.style.display = "block";
+        }
+
+        // 🔥 Kalau MTI / Toko Kosmetik
+        else {
+          document.getElementById("kodePi").value = o.kodePi || o.kode || "";
           document.getElementById("namaOutlet").value = o.nama || "";
           document.getElementById("kotaOutlet").value = o.kota || "";
           document.getElementById("alamatOutlet").value = o.alamat || "";
-        } else {
-          document.getElementById("kodePi").value = "";
-          document.getElementById("namaOutlet").value = "";
-          document.getElementById("kotaOutlet").value = "";
-          document.getElementById("alamatOutlet").value = "";
         }
       });
 
@@ -1470,7 +1716,7 @@
               field.setAttribute("readonly", true);
               field.classList.add("readonly-field");
               field.removeAttribute("placeholder"); // 🔥 hapus hint saat readonly
-            }
+            },
           );
         } else {
           // kalau tidak ada kode PI → field editable + dropdown hilang
@@ -1496,7 +1742,7 @@
                 field.placeholder = "Masukkan Kota Outlet";
               if (id === "alamatOutlet")
                 field.placeholder = "Masukkan Alamat Outlet";
-            }
+            },
           );
         }
       }
@@ -1611,7 +1857,7 @@
               field.value = "";
               field.setAttribute(
                 "data-placeholder",
-                field.placeholder || field.options?.[0]?.text || ""
+                field.placeholder || field.options?.[0]?.text || "",
               );
               if (field.tagName === "SELECT") {
                 field.selectedIndex = -1; // kosongkan dropdown
@@ -1723,7 +1969,7 @@
             } else {
               // batalkan pilihan → kembalikan ke PT sebelumnya
               document.querySelector(
-                `input[name="ptListing"][value="${currentPT}"]`
+                `input[name="ptListing"][value="${currentPT}"]`,
               ).checked = true;
             }
           });
@@ -1746,7 +1992,7 @@
         ["procode", "itname", "costCenter", "listingFee", "hna"].forEach(
           (id) => {
             document.getElementById(id).value = "";
-          }
+          },
         );
 
         const selected = produkData.find((p) => p.procode === e.target.value);
@@ -1760,7 +2006,7 @@
           const qty =
             parseInt(document.getElementById("qtyListing").value) || 0;
           document.getElementById("valueEstimate").value = formatRupiah(
-            selected.hna * qty
+            selected.hna * qty,
           );
         }
       });
@@ -1768,13 +2014,13 @@
       // Saat input Qty PO → hitung ulang Value Estimate
       document.getElementById("qtyListing").addEventListener("input", () => {
         const selected = produkData.find(
-          (p) => p.procode === selectProduk.value
+          (p) => p.procode === selectProduk.value,
         );
         if (selected) {
           const qty =
             parseInt(document.getElementById("qtyListing").value) || 0;
           document.getElementById("valueEstimate").value = formatRupiah(
-            selected.hna * qty
+            selected.hna * qty,
           );
         }
       });
@@ -1790,7 +2036,7 @@
           "valueEstimate",
         ];
         const emptyFields = requiredFields.filter(
-          (id) => !document.getElementById(id).value
+          (id) => !document.getElementById(id).value,
         );
 
         if (emptyFields.length > 0) {
@@ -1803,7 +2049,7 @@
         }
 
         const qtyListing = parseInt(
-          document.getElementById("qtyListing").value
+          document.getElementById("qtyListing").value,
         );
         if (qtyListing < 1) {
           Swal.fire({
@@ -1818,7 +2064,7 @@
         const tbody = document.querySelector("#produkTable tbody");
 
         const sudahAda = Array.from(tbody.querySelectorAll("tr")).some(
-          (row) => row.querySelector("td").textContent === procode
+          (row) => row.querySelector("td").textContent === procode,
         );
         if (sudahAda) {
           Swal.fire({
@@ -1885,7 +2131,7 @@
           tbody.appendChild(row);
 
           const option = selectProduk.querySelector(
-            `option[value="${procode}"]`
+            `option[value="${procode}"]`,
           );
           if (option) option.disabled = true;
 
@@ -2106,7 +2352,7 @@
         (id) => {
           const el = document.getElementById(id);
           if (el) el.addEventListener("change", hitungRingkasan);
-        }
+        },
       );
       // Event ganti Gross Up → ubah label
       document
@@ -2114,7 +2360,7 @@
         .addEventListener("change", function () {
           const labelListing = document.getElementById("labelListingFee");
           const labelTotalFee = document.getElementById(
-            "labelTotalFeeListingItem"
+            "labelTotalFeeListingItem",
           );
 
           if (this.value === "Gross Up") {
@@ -2305,7 +2551,7 @@
             const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
             const copiedPages = await mergedPdf.copyPages(
               pdf,
-              pdf.getPageIndices()
+              pdf.getPageIndices(),
             );
             copiedPages.forEach((page) => mergedPdf.addPage(page));
           } else if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -2339,8 +2585,8 @@
         const base64String = btoa(
           mergedBytes.reduce(
             (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
+            "",
+          ),
         );
         return base64String;
       }
@@ -2358,7 +2604,7 @@
             const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
             const copiedPages = await mergedPdf.copyPages(
               pdf,
-              pdf.getPageIndices()
+              pdf.getPageIndices(),
             );
             copiedPages.forEach((page) => mergedPdf.addPage(page));
           } else if (file.type === "image/jpeg" || file.type === "image/png") {
@@ -2382,8 +2628,8 @@
         const base64String = btoa(
           mergedBytes.reduce(
             (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
+            "",
+          ),
         );
         return base64String;
       }
@@ -2461,7 +2707,7 @@
                     produkTable.style.backgroundColor = "#ffdddd";
                     setTimeout(
                       () => (produkTable.style.backgroundColor = ""),
-                      1000
+                      1000,
                     );
                   }
                 },
@@ -2475,7 +2721,7 @@
 
           try {
             const res = await fetch(
-              `https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec?action=produk&nip=${nip}&npwp=${npwpDigits}`
+              `https://script.google.com/macros/s/AKfycbz5Y49vGaDwfDpz5OC4N9wGQrZC2NqiCFzMBLMFrYZX8D6cWoR5aGuwOdvDiKIGm-JN/exec?action=produk&nip=${nip}&npwp=${npwpDigits}`,
             );
             const result = await res.json();
 
@@ -2544,7 +2790,7 @@
           let isPiMode = document.getElementById("piAda").checked;
 
           const sektorOutlet = document.querySelector(
-            'input[name="sektorOutlet"]:checked'
+            'input[name="sektorOutlet"]:checked',
           ).value;
 
           // susun data sesuai kolom sheet
@@ -2579,25 +2825,25 @@
             produkList: JSON.stringify(produkList),
             totalQtyPO: document.getElementById("totalQty").textContent,
             totalValuePO: getNumberFromRupiah(
-              document.getElementById("totalFeePO").textContent
+              document.getElementById("totalFeePO").textContent,
             ),
             totalListingFee: getNumberFromRupiah(
-              document.getElementById("totalFee").textContent
+              document.getElementById("totalFee").textContent,
             ),
             dcFee: getNumberFromRupiah(
-              document.getElementById("dcFeeValue").textContent
+              document.getElementById("dcFeeValue").textContent,
             ),
             ppn: getNumberFromRupiah(
-              document.getElementById("ppnValue").textContent
+              document.getElementById("ppnValue").textContent,
             ),
             feePlusPpn: getNumberFromRupiah(
-              document.getElementById("totalFeePPN").textContent
+              document.getElementById("totalFeePPN").textContent,
             ),
             pph: getNumberFromRupiah(
-              document.getElementById("pphValue").textContent
+              document.getElementById("pphValue").textContent,
             ),
             totalBayar: getNumberFromRupiah(
-              document.getElementById("totalBayar").textContent
+              document.getElementById("totalBayar").textContent,
             ),
             noRekening: document.getElementById("nomorRekening")?.value || "",
             namaPemilikRekening:
@@ -2620,7 +2866,7 @@
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(payload),
-              }
+              },
             );
 
             const result = await res.json();
@@ -2664,7 +2910,7 @@
               });
             } else {
               throw new Error(
-                result.message || "Terjadi kesalahan saat simpan."
+                result.message || "Terjadi kesalahan saat simpan.",
               );
             }
           } catch (err) {
