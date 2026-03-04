@@ -653,34 +653,19 @@
                           <th class="bg-primary text-white" style="width: 30%">
                             SKU
                           </th>
-                          <th class="bg-primary text-white">Satuan Jual</th>
                           <th class="bg-primary text-white">
-                            Besaran Insentif
+                            Minimal Satuan Penjualan (Sell-out)
                           </th>
+                          <th class="bg-primary text-white">Nilai Insentif</th>
                           <th class="bg-primary text-white">
-                            Akumulasi Pembelian 3 Bulan Terakhir
-                          </th>
-                          <th class="bg-primary text-white">
-                            Maksimal Insentif
+                            Target Pembelian (Sell-in)
                           </th>
                         </tr>
                       </thead>
+                      <tbody id="produkTableBody"></tbody>
                       <tbody id="produkTableBody">
                         <!-- Diisi via JS -->
                       </tbody>
-                      <tfoot>
-                        <tr class="fw-bold">
-                          <td colspan="5" class="bg-primary text-white">
-                            TOTAL
-                          </td>
-                          <td
-                            id="totalMaxInsentif"
-                            class="bg-primary text-white"
-                          >
-                            Rp0
-                          </td>
-                        </tr>
-                      </tfoot>
                     </table>
                   </div>
                 </div>
@@ -908,12 +893,12 @@
       const MASTER_PRODUK_SC = {
         MICROLAXTAB: {
           nama: "MICROLAXTAB BISACODYL 5MG@10",
-          satuan: "1 Blister (10 Tablet)",
+          satuan: "1 Blister",
           insentif: 2000,
         },
         ALBUSMIN: {
           nama: "ALBUSMIN 3 BLISTER @ 10 KAPSUL",
-          satuan: "1 Box (30 Kapsul)",
+          satuan: "1 Box (3 Blister)",
           insentif: 15000,
         },
         PRAXION_SUSP: {
@@ -923,63 +908,63 @@
         },
         PRORIS_KAPLET: {
           nama: "PRORIS IBUPROFEN 10 KAPLET",
-          satuan: "1 Catch Cover (10 Kaplet)",
-          insentif: 1000,
+          satuan: "1 Box (10 Catch Cover)",
+          insentif: 10000,
         },
         NSU_NEW_FORMULA_15S: {
           nama: "NOURISH SKIN ULTIMATE NEW 15`S",
-          satuan: "1 Box (15 Tablet)",
+          satuan: "1 Box",
           insentif: 5000,
         },
         NSU_NEW_FORMULA_30S: {
           nama: "NOURISH SKIN ULTIMATE NEW 30`S",
-          satuan: "1 Box (30 Tablet)",
+          satuan: "1 Box",
           insentif: 10000,
         },
         NS_GLOW_15: {
           nama: "NOURISH SKIN GLOW 15 TAB",
-          satuan: "1 Box (15 Tablet)",
+          satuan: "1 Box",
           insentif: 4000,
         },
         NS_GLOW_30: {
           nama: "NOURISH SKIN GLOW 30 TAB",
-          satuan: "1 Box (30 Tablet)",
+          satuan: "1 Box",
           insentif: 7000,
         },
         VIOSTIN_50: {
           nama: "VIOSTIN 50 KAPLET",
-          satuan: "1 Catch Cover (10 Kaplet)",
-          insentif: 3000,
+          satuan: "1 Box (5 Catch Cover)",
+          insentif: 15000,
         },
         VIOSTIN_30: {
           nama: "VIOSTIN 30 KAPLET",
-          satuan: "1 Box (30 Kaplet)",
+          satuan: "1 Box (5 Strip)",
           insentif: 5000,
         },
         ASCARDIA_: {
           nama: "ASCARDIA 80MG TAB 100`S",
-          satuan: "1 Strip (10 Tablet)",
-          insentif: 500,
+          satuan: "1 Box (10 Strip)",
+          insentif: 5000,
         },
         TORAS_4_MG_TABLET: {
           nama: "TORAS 4MG TAB 100`S",
-          satuan: "1 Blister (10 Tablet)",
-          insentif: 1000,
+          satuan: "1 Box (10 Blister)",
+          insentif: 10000,
         },
         TORAS_8_MG_TABLET: {
           nama: "TORAS 8MG TAB 100`S",
-          satuan: "1 Blister (10 Tablet)",
-          insentif: 2000,
+          satuan: "1 Box (10 Blister)",
+          insentif: 20000,
         },
         MEDISIO_5_ML: {
           nama: "MEDISIO 36% CONCENTRATE 5ML",
           satuan: "1 Botol",
-          insentif: 1400,
+          insentif: 1000,
         },
         MEDISIO_10_ML: {
           nama: "MEDISIO 36% CONCENTRATE 10 ML",
           satuan: "1 Botol",
-          insentif: 2300,
+          insentif: 2000,
         },
         BRION_OINT_20GR: {
           nama: "BRION OINT 20GR",
@@ -1000,73 +985,36 @@
         const tbody = document.getElementById("produkTableBody");
         tbody.innerHTML = "";
 
-        let totalMax = 0;
-        let no = 1;
-        let hasData = false;
-
+        // 🔴 Kalau belum pilih outlet / belum ada data
         if (!produkSC || Object.keys(produkSC).length === 0) {
           showEmptyMessage();
           return;
         }
 
+        let no = 1;
+
         Object.keys(MASTER_PRODUK_SC).forEach((key) => {
           const master = MASTER_PRODUK_SC[key];
-          const akumulasiAsli = Number(produkSC[key] || 0);
+          const target = Number(produkSC[key] || 0);
 
-          // 🔴 Jika asli 0 → skip (hide)
-          if (akumulasiAsli === 0) return;
-
-          let akumulasiHitung = akumulasiAsli;
-          let akumulasiTampil = akumulasiAsli;
-
-          // 🔥 KHUSUS BRION
-          if (key.includes("BRION")) {
-            akumulasiHitung = akumulasiAsli * 10; // untuk hitung insentif
-            akumulasiTampil = 0; // yang ditampilkan tetap 0
+          // 🔥 Tentukan satuan target
+          let satuanTarget = "UB";
+          if (key === "PRAXION_SUSP") {
+            satuanTarget = "Botol";
           }
-
-          // 🔥 VIOSTIN ×5
-          if (key.includes("VIOSTIN")) {
-            akumulasiHitung = akumulasiAsli * 5;
-            akumulasiTampil = akumulasiHitung;
-          }
-
-          // 🔥 PRORIS, TORAS, ASCARDIA ×10
-          if (
-            key.includes("PRORIS") ||
-            key.includes("TORAS") ||
-            key.includes("ASCARDIA")
-          ) {
-            akumulasiHitung = akumulasiAsli * 10;
-            akumulasiTampil = akumulasiHitung;
-          }
-
-          hasData = true;
-
-          const maksimalInsentif = akumulasiHitung * master.insentif;
-          totalMax += maksimalInsentif;
 
           const row = `
       <tr>
-        <td>${no++}</td>
-        <td class="text-start">${master.nama}</td>
-        <td>${master.satuan}</td>
-        <td>${formatRupiah(master.insentif)}</td>
-        <td>${akumulasiTampil}</td>
-        <td>${formatRupiah(maksimalInsentif)}</td>
+        <td class="text-center align-middle">${no++}</td>
+        <td class="text-start align-middle">${master.nama}</td>
+        <td class="align-middle">${master.satuan}</td>
+        <td class="align-middle">${formatRupiah(master.insentif)}</td>
+        <td class="text-center align-middle">${target} ${satuanTarget}</td>
       </tr>
     `;
 
           tbody.insertAdjacentHTML("beforeend", row);
         });
-
-        if (!hasData) {
-          showEmptyMessage();
-          return;
-        }
-
-        document.getElementById("totalMaxInsentif").innerText =
-          formatRupiah(totalMax);
       }
 
       // 🔹 Function khusus untuk tampilkan pesan kosong
