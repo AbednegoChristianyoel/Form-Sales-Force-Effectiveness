@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MONITORING INSENTIF SC 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap, jQuery, SweetAlert2 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://connect-assets.prosple.com/cdn/ff/nDJLhKo3GxHUnuJJLt-cRdMGUAmxDY2NSAzboL84_ec/1700559379/public/styles/scale_and_crop_center_120x120/public/2023-11/Logo-Pharos-Indonesia-200x200-2023.jpg?itok=4-AmM7sn"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      h3 {
+        font-size: 18px;
+      }
+      h4 {
+        font-size: 16px;
+      }
+      h5 {
+        font-size: 15px;
+      }
+      h6 {
+        font-size: 14px;
+      }
+
+      /* Kecilkan teks button */
+      .btn {
+        font-size: 13px !important;
+      }
+
+      /* Dropdown item juga kecil */
+      .dropdown-menu .dropdown-item {
+        font-size: 13px !important;
+      }
+
+      .dropdown-toggle::after {
+        font-size: 14px !important;
+        vertical-align: middle;
+        transition: transform 0.2s ease;
+      }
+
+      /* 🔹 Saat dropdown terbuka (aria-expanded=true), putar arrow ke atas */
+      .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+      }
+      .navbar-custom {
+        background-color: #0d6efd;
+      }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      /* Hover semua link */
+      .navbar-nav .nav-link:hover {
+        background-color: #0b5ed7;
+        color: #fff !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Aktif (halaman sekarang) */
+      .navbar-nav .nav-link.active-page {
+        background-color: #fff !important;
+        color: #0d6efd !important;
+        font-weight: bold;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Hover di link aktif */
+      .navbar-nav .nav-link.active-page:hover {
+        background-color: #e9f2ff !important;
+        color: #0b5ed7 !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+      h4 {
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: #0d6efd;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.9rem;
+      }
+      button,
+      .btn {
+        font-weight: bold !important;
+      }
+      .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+        padding: 0.55rem 1rem;
+        border-radius: 0.5rem;
+      }
+      .btn-primary:hover {
+        background-color: #0b5ed7;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 0.55rem 1rem;
+        border-radius: 0.5rem;
+      }
+      .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+      ::placeholder {
+        color: #bbb !important;
+        opacity: 1;
+      }
+      .card-detail {
+        border-radius: 1rem;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        background: #fff;
+        margin-top: 1rem;
+        display: none;
+      }
+      hr {
+        border-top: 2px solid #dee2e6;
+        margin: 1rem 0 1.5rem 0;
+      }
+      #submissionList {
+        margin-top: 1rem;
+      }
+      .list-group-item {
+        border-radius: 0.5rem !important;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+      .list-group-item:hover {
+        background-color: #e9f2ff;
+      }
+      .swal2-popup {
+        font-size: 0.95rem !important;
+      }
+      .select2-container--default .select2-selection--single {
+        height: 38px !important;
+        padding: 0.375rem 0.75rem !important;
+        line-height: 1.5 !important;
+        display: flex !important;
+        align-items: center !important;
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+      }
+      .select2-selection__rendered {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        line-height: 1.5 !important;
+        color: #212529 !important;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+      }
+      select.form-select {
+        width: 100%;
+        max-width: 100%;
+      }
+      select.form-select option {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .select2-container--default
+        .select2-selection--single
+        .select2-selection__arrow {
+        height: 100% !important;
+        top: 50% !important;
+        transform: translateY(-50%);
+        right: 10px;
+        position: absolute;
+        pointer-events: none;
+      }
+      .card-modern {
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+      }
+      .card-modern:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+      .bg-soft-primary {
+        background-color: #f1f5ff !important;
+        border-bottom: none;
+        border-radius: 1rem 1rem 0 0 !important;
+      }
+      .btn-generate {
+        background-color: var(--bs-primary);
+        color: white;
+      }
+      .btn-generate:hover {
+        background-color: #0b5ed7;
+      }
+      .btn-upload {
+        background-color: #009045;
+        color: white;
+      }
+      .btn-upload:hover {
+        background-color: #007a39;
+      }
+      .card-footer a {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      #loader-wrapper.fade-out {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+      }
+      .btn-approve {
+        background-color: #28a745; /* hijau custom */
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+        transition: 0.3s;
+      }
+      .btn-approve:hover {
+        background-color: #218838;
+      }
+
+      .btn-reject {
+        background-color: #dc3545; /* merah custom */
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+        transition: 0.3s;
+      }
+      .btn-reject:hover {
+        background-color: #c82333;
+      }
+      .btn-logout {
+        background: #fff;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+      }
+
+      .btn-logout:hover {
+        background: #d6e7ff; /* putih kebiruan */
+        color: #0b5ed7;
+        border-color: #0b5ed7;
+      }
+      /* Hilangkan kotak ganda Tom Select */
+      .ts-wrapper {
+        border: none !important;
+        box-shadow: none !important;
+        background: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* Samakan tampilan Tom Select dengan Bootstrap form-select */
+      .ts-control {
+        border-radius: 0.5rem !important;
+        padding: 0.45rem 0.9rem !important;
+        border: 1px solid #ced4da !important;
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        min-height: 38px;
+        background-color: #fff;
+        box-shadow: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .ts-control.focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .ts-dropdown {
+        border-radius: 0.5rem;
+        border: 1px solid #ced4da;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+        font-size: 0.95rem;
+      }
+
+      .ts-dropdown .option.active {
+        background-color: #0d6efd;
+        color: #fff;
+      }
+      #detailProdukList,
+      table.table-bordered th,
+      table.table-bordered td {
+        vertical-align: middle !important;
+      }
+      table.table-bordered thead th {
+        background-color: #ffd700 !important; /* kuning */
+        color: #000 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+      }
+      /* Footer khusus TOTAL BAYAR */
+      table.table-bordered tfoot tr:last-child {
+        background-color: #ffd700 !important;
+        font-weight: bold !important;
+      }
+      table.table-bordered,
+      table.table-bordered th,
+      table.table-bordered td {
+        border: 2px solid #000000 !important; /* tebal 2px, warna biru */
+      }
+      #headerListingFee,
+      table.table-bordered td:nth-child(4) {
+        max-width: 150px; /* lebar maksimum */
+        white-space: normal; /* biar bisa wrap ke baris baru */
+        word-wrap: break-word; /* pecah kata panjang */
+      }
+      /* Batasi lebar kolom VALUE ESTIMATE */
+      table.table-bordered th:nth-child(7),
+      table.table-bordered td:nth-child(7) {
+        max-width: 120px; /* lebar maksimum */
+        white-space: normal; /* teks bisa wrap */
+        word-wrap: break-word; /* pecah kata panjang */
+      }
+      #logContainer hr {
+        margin: 12px 0;
+      }
+      .text-orange-dark {
+        color: #ff8c00 !important; /* Dark Orange */
+      }
+      .text-red-dark {
+        color: #c10000 !important; /* merah lebih pekat */
+      }
+
+      .text-green-dark {
+        color: #007400 !important; /* hijau lebih pekat */
+      }
+      .navbar-collapse {
+        text-align: center; /* teks rata tengah */
+      }
+      /* Perbesar panah dropdown di navbar */
+      .navbar .dropdown-toggle::after {
+        border-top-width: 0.45em !important;
+        border-right-width: 0.45em !important;
+        border-left-width: 0.45em !important;
+        vertical-align: middle;
+      }
+      /* tabel produk lebih compact */
+      #produkTable {
+        font-size: 13px;
+      }
+
+      #produkTable thead th {
+        background: #0d6efd;
+        color: white;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      #produkTable td {
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+
+      #produkTable th {
+        padding: 7px 8px;
+      }
+
+      /* mobile */
+      @media (max-width: 768px) {
+        #produkTable {
+          font-size: 11px;
+        }
+
+        #produkTable td,
+        #produkTable th {
+          padding: 5px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loader -->
+    <div
+      id="loader-wrapper"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 4rem; height: 4rem"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
+    >
+      <div class="container">
+        <!-- Brand Dropdown -->
+        <div class="dropdown">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2 dropdown-toggle text-decoration-none"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-cash-coin text-white fs-3"></i>
+            <span class="text-white fw-bold" style="font-size: 1.4rem">
+              PRO-SC
+            </span>
+          </a>
+
+          <ul class="dropdown-menu shadow custom-dropdown">
+            <li>
+              <a class="dropdown-item fw-semibold" href="#">
+                <i class="bi bi-cash-coin me-2"></i> PRO-SC
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item fw-semibold" href="#">
+                <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item fw-semibold" href="#">
+                <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item text-danger fw-semibold"
+                href="#"
+                onclick="logout()"
+              >
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hamburger Toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu Navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <!-- Menu di kiri -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+            <li class="nav-item mt-3 mt-lg-0 me-lg-2">
+              <a
+                class="nav-link text-white fw-bold"
+                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-listing-mti"
+              >
+                FORM PENDAFTARAN INSENTIF SC 2026
+              </a>
+            </li>
+            <li class="nav-item mt-2 mt-lg-0">
+              <a
+                class="nav-link text-white active-page fw-bold"
+                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
+              >
+                MONITORING INSENTIF SC 2026
+              </a>
+            </li>
+          </ul>
+
+          <!-- Logout di kanan -->
+          <div class="d-flex">
+            <button class="btn btn-logout w-100 fw-bold" onclick="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sapaan Selamat Datang -->
+    <div class="container-md px-3 mt-3">
+      <h4 id="welcomeText" class="fw-bold text-dark mb-1"></h4>
+    </div>
+
+    <div class="container-md px-3 mt-3">
+      <h4 class="mb-1 mt-0">MONITORING INSENTIF SC 2026</h4>
+
+      <div
+        class="d-flex flex-wrap align-items-center justify-content-between gap-2"
+      >
+        <div id="actionButtons" class="d-flex gap-2" style="width: 200px">
+          <button
+            class="btn btn-success fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+            onclick="bulkApprove()"
+          >
+            <i class="bi bi-check-circle me-1"></i>
+            <span>Approve</span>
+          </button>
+
+          <button
+            class="btn btn-danger fw-bold w-50 d-flex justify-content-center align-items-center text-center"
+            onclick="bulkReject()"
+          >
+            <i class="bi bi-x-circle me-1"></i>
+            <span>Reject</span>
+          </button>
+        </div>
+
+        <!-- Input + Filter -->
+        <div class="input-group" style="max-width: 350px">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Filter Nama Outlet..."
+          />
+          <button
+            class="btn btn-primary fw-bold d-flex align-items-center gap-1"
+            id="openStatusFilter"
+          >
+            <i class="bi bi-filter"></i> Filter
+          </button>
+        </div>
+      </div>
+
+      <hr class="mt-2 mb-2" />
+
+      <!-- List Pengajuan -->
+      <div class="row" id="submissionList"></div>
+    </div>
+
+    <!-- Modal Filter -->
+    <div class="modal fade" id="statusFilterModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-funnel me-2"></i>Filter Data
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Status -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Status</label>
+              <select class="form-select" id="modalStatusSelect">
+                <option value="">Semua Status</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Sudah Upload SKP">Sudah Upload SKP</option>
+                <option value="Done">Done</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <!-- Nama Pengaju -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nama Pengaju</label>
+              <select class="form-select" id="pengajuSelect">
+                <option value="all">Semua Pengaju</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-primary fw-bold"
+              id="applyStatusFilter"
+            >
+              Terapkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL DETAIL INSENTIF SC -->
+    <!-- ========================= -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Detail Pengajuan Insentif SC</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="detailInfo"></div>
+
+            <hr class="my-2" />
+
+            <!-- BUTTON SHOW HIDE -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold text-primary m-0">
+                Detail Summary Insentif SC Mar 2026
+              </h6>
+
+              <button
+                class="btn btn-sm btn-outline-primary"
+                id="toggleProdukBtn"
+                onclick="toggleProdukTable()"
+              >
+                Show Detail
+              </button>
+            </div>
+
+            <!-- TABLE COLLAPSE -->
+            <div id="produkCollapse" style="display: none">
+              <div class="table-responsive">
+                <table
+                  class="table table-bordered table-sm align-middle text-center"
+                  id="produkTable"
+                >
+                  <thead>
+                    <tr>
+                      <th style="width: 5%">No</th>
+                      <th style="width: 30%">SKU</th>
+                      <th>Minimal Sell-Out</th>
+                      <th>Nilai Insentif</th>
+                      <th>Target Sell-In</th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="produkTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL UPLOAD SKP -->
+    <!-- ========================= -->
+    <div class="modal fade" id="uploadSKPModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-upload me-2"></i>Upload File SKP
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <input type="hidden" id="uploadId" />
+
+            <div class="mb-3">
+              <label class="form-label fw-bold"
+                >Upload File SKP (Signed Outlet)</label
+              >
+              <input
+                type="file"
+                class="form-control"
+                id="fileSKP"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <small class="text-muted mt-1">
+                <span class="text-danger">*</span> Format file: JPG, PNG, atau
+                PDF (Maks 5 MB)
+              </small>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+
+            <button class="btn btn-primary fw-bold" onclick="uploadSKP()">
+              <i class="bi bi-upload"></i>
+              Upload
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiURL =
+        "https://script.google.com/macros/s/AKfycbwKLYOdiQaYnOWPlQWrJ-N_p5vXZXplGorCfR4Yp69E2mJaC9x6ErVr5yHJMB3LQb_q/exec";
+      let userData = null;
+
+      // Cek login
+      const storedUser = localStorage.getItem("userData");
+      if (!storedUser) {
+        window.location.href = "../login.html";
+      } else {
+        userData = JSON.parse(storedUser);
+        console.log("User sudah login:", userData);
+
+        // Tampilkan ucapan selamat datang
+        document.getElementById("welcomeText").textContent =
+          `Selamat Datang, ${userData.nama}`;
+
+        // Jika role = Sales, hide tombol Approve & Reject
+        if (userData.roles?.toLowerCase() === "sales") {
+          document.getElementById("actionButtons").classList.add("d-none");
+        }
+
+        // 🔹 Langsung tarik data sesuai nip user login
+        if (userData.nip) {
+          console.log("Mengambil data untuk NIP:", userData.nip);
+          getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "NIP tidak ditemukan",
+            text: "Silakan login ulang.",
+          });
+        }
+      }
+
+      // Tambahkan tombol logout jika mau
+      function logout() {
+        Swal.fire({
+          title: "Konfirmasi Keluar",
+          text: "Apakah Anda yakin ingin keluar?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Keluar",
+          cancelButtonText: "Batal",
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("userData");
+            window.location.href = "../login.html";
+          }
+        });
+      }
+
+      let allData = [];
+
+      function getDataByNIP(nip, jabatan, nama) {
+        console.log(
+          "Memulai pengambilan data dengan NIP:",
+          nip,
+          "Jabatan:",
+          jabatan,
+          "Nama:",
+          nama,
+        );
+        Swal.fire({
+          title: "Memuat data...",
+          text: "Mohon Ditunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        const params = new URLSearchParams({
+          nip: nip,
+          jabatan: jabatan,
+          nama: nama,
+        });
+
+        const url = `${apiURL}?${params.toString()}`;
+
+        fetch(url)
+          .then((res) => res.json())
+          .then((json) => {
+            Swal.close();
+
+            if (json.result !== "success") {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Gagal ambil data dari server",
+              });
+              return;
+            }
+
+            allData = json.data || [];
+
+            console.log("DATA DARI APPS SCRIPT:", allData);
+
+            if (!allData.length) {
+              $("#submissionList").html(
+                `<div class="col-12 text-center text-muted mt-3">
+            Tidak ada data
+          </div>`,
+              );
+              return;
+            }
+
+            // 🔥 LANGSUNG RENDER
+            renderInsentifCards(allData);
+
+            // 🔥 Siapkan dropdown pengaju (kalau bukan sales)
+            setupPengajuFilter();
+          })
+          .catch((err) => {
+            Swal.close();
+            console.error(err);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Gagal ambil data.",
+            });
+          });
+      }
+
+      function applyFilters() {
+        const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
+        const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
+        const outletFilter = $("input[placeholder='Filter Nama Outlet...']")
+          .val()
+          .toLowerCase();
+
+        const filtered = allData.filter((item) => {
+          const statusValue = (item.status || "").toLowerCase();
+          const pengajuValue = (
+            item.namaPengaju ||
+            item.namaSales ||
+            ""
+          ).toLowerCase();
+          const outletValue = (item.namaOutlet || "").toLowerCase();
+
+          const statusMatch = !statusFilter || statusValue === statusFilter;
+
+          const pengajuMatch =
+            pengajuFilter === "all" ||
+            !pengajuFilter ||
+            pengajuValue === pengajuFilter;
+
+          const outletMatch =
+            !outletFilter || outletValue.includes(outletFilter);
+
+          return statusMatch && pengajuMatch && outletMatch;
+        });
+
+        renderInsentifCards(filtered);
+      }
+
+      function setupPengajuFilter() {
+        const pengajuSelect = $("#pengajuSelect");
+        pengajuSelect.empty();
+
+        pengajuSelect.append(`<option value="all">Semua Pengaju</option>`);
+
+        const uniquePengaju = [
+          ...new Set(
+            allData.map((item) =>
+              (item.namaPengaju || item.namaSales || "").trim(),
+            ),
+          ),
+        ];
+
+        uniquePengaju.forEach((nama) => {
+          if (nama) {
+            pengajuSelect.append(
+              `<option value="${nama.toLowerCase()}">${nama}</option>`,
+            );
+          }
+        });
+
+        $("#pengajuContainer").show();
+      }
+
+      // =========================
+      // FORMAT DATE
+      // =========================
+      function formatDate(dateString) {
+        if (!dateString) return "-";
+        const d = new Date(dateString);
+        return d.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      // =========================
+      // STATUS BADGE
+      // =========================
+      function getStatusBadge(status) {
+        if (!status) return `<span class="badge bg-secondary">Unknown</span>`;
+
+        if (status === "Approved")
+          return `<span class="badge bg-success">Approved</span>`;
+        if (status === "Rejected")
+          return `<span class="badge bg-danger">Rejected</span>`;
+        if (status === "Cancelled")
+          return `<span class="badge bg-danger">Cancelled</span>`;
+        if (status === "Sudah Upload SKP")
+          return `<span class="badge bg-info-subtle text-info-emphasis">
+            Sudah Upload SKP
+          </span>`;
+        return `<span class="badge bg-secondary">${status}</span>`;
+      }
+
+      // =========================
+      // RENDER CARD
+      // =========================
+      function renderInsentifCards(dataArray) {
+        const submissionList = $("#submissionList");
+        submissionList.empty();
+
+        if (!dataArray.length) {
+          submissionList.append(
+            '<div class="col-12 text-center text-muted mt-3">Tidak ada data</div>',
+          );
+          return;
+        }
+
+        dataArray.forEach((item) => {
+          const safeJson = encodeURIComponent(JSON.stringify(item)).replace(
+            /'/g,
+            "\\'",
+          );
+
+          // ✅ FORMAT RUPIAH
+          const estimasiInsentif = item.totalInsentif
+            ? Number(item.totalInsentif).toLocaleString("id-ID")
+            : "0";
+
+          const card = `
+            <div class="col-md-6 mb-4">
+              <div class="card shadow-sm border-0 h-100 position-relative">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    style="transform:scale(1.3);"
+                    value="${item.id}"
+                  >
+                  <div>
+                    <strong>${item.id}</strong><br>
+                    <small>${formatDate(item.timeStamp)}</small>
+                  </div>
+                  <div class="text-end">
+                    <span class="badge bg-primary">${item.periodeProgram}</span><br>
+                    ${getStatusBadge(item.status)}
+                  </div>
+                </div>
+
+                <div class="card-body">
+
+                  <div class="mb-2">
+                    <small class="text-secondary">Outlet</small>
+                    <h6 class="fw-bold text-primary mb-0">${item.namaOutlet}</h6>
+                    <small>${item.kodePI} | ${item.kota}</small>
+                  </div>
+
+                  <hr class="my-2">
+
+                  <div class="row">
+                    <div class="col-6">
+                      <small class="text-secondary">Pengaju</small>
+                      <p class="fw-bold m-0">${item.namaPengaju}</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-secondary">NIP</small>
+                      <p class="fw-bold m-0">${item.nipPengaju}</p>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+                    <div class="col-6">
+                      <small class="text-secondary">Nama Owner</small>
+                      <p class="fw-bold m-0">${item.namaOwnerOutlet || "-"}</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-secondary">Nomor PIC SC</small>
+                      <p class="fw-bold m-0">${item.namaPicSC || "-"}</p>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+                    <div class="col-6">
+                      <small class="text-secondary">Jenis E-Wallet</small>
+                      <p class="fw-bold m-0">${item.jenisEwallet || "-"}</p>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-secondary">Nomor E-Wallet</small>
+                      <p class="fw-bold m-0">${item.noEwallet || "-"}</p>
+                    </div>
+                  </div>
+
+                  <div class="row mt-3">
+
+                    <div class="col-6 mb-3">
+                      <small class="text-secondary d-block">File SKP (Generated)</small>
+
+                      ${
+                        item.generateSKP
+                          ? `
+                          <a href="${item.generateSKP}" target="_blank"
+                            class="btn btn-primary btn-sm mt-2">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>
+                            Buka SKP (Generated)
+                          </a>
+                        `
+                          : `
+                          <button class="btn btn-secondary btn-sm mt-2" disabled>
+                            Belum Generate SKP
+                          </button>
+                        `
+                      }
+                    </div>
+
+                    <div class="col-6">
+                      <small class="text-secondary d-block">File SKP (Signed)</small>
+
+                      ${
+                        item.uploadSkp
+                          ? `
+                          <a href="${item.uploadSkp}" target="_blank"
+                            class="btn btn-primary btn-sm mt-2">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>
+                            Buka SKP (Signed)
+                          </a>
+                        `
+                          : `
+                          <button class="btn btn-secondary btn-sm mt-2" disabled>
+                            Belum Upload SKP
+                          </button>
+                        `
+                      }
+                    </div>
+
+                  </div>
+
+                  <!-- Estimasi Insentif -->
+                  <div class="mt-3">
+                    <div class="rounded p-3 d-flex justify-content-between align-items-center"
+                        style="background:#f1f5ff;">
+
+                      <div>
+                        <small class="text-primary fw-bold d-block">
+                          Estimasi Insentif (Berdasarkan Sell-Out)*
+                        </small>
+
+                        <span class="fw-bold text-success fs-5">
+                          Rp ${estimasiInsentif}
+                        </span>
+
+                        <small class="text-muted d-block mt-1" style="font-size:11px;">
+                          *Nilai di atas merupakan estimasi berdasarkan data sell-out yang diinput.
+                          Insentif akan diproses hanya jika target sell-in dari produk yang diklaim
+                          telah tercapai sesuai Target.
+                        </small>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="bg-white border-top text-center py-2">
+
+                  <!-- Action Dropdown -->
+                  <div class="dropdown mb-2">
+                    <button class="btn btn-primary dropdown-toggle w-100"
+                            type="button"
+                            data-bs-toggle="dropdown">
+                      Action Menu
+                    </button>
+
+                    <ul class="dropdown-menu w-100">
+
+                      <li>
+                        <a class="dropdown-item ${item.generateSKP ? "disabled text-muted" : ""}"
+                          href="#"
+                          ${item.generateSKP ? "" : `onclick="generateSKP('${item.id}')`}>
+                          <i class="bi bi-file-earmark-pdf me-2"></i>
+                          Generate SKP
+                        </a>
+                      </li>
+
+                      <li>
+                        <a class="dropdown-item"
+                          href="#"
+                          onclick="openUploadModal('${item.id}')">
+                          <i class="bi bi-upload me-2"></i>
+                          Upload SKP
+                        </a>
+                      </li>
+
+                      <li>
+                        <a class="dropdown-item"
+                          href="#"
+                          onclick="uploadStruk('${item.id}')">
+                          <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                          Upload Struk Sell-Out Outlet
+                        </a>
+                      </li>
+
+                    </ul>
+                  </div>
+
+                  <!-- Show Detail -->
+                  <div style="cursor:pointer"
+                      onclick="openDetailModal(JSON.parse(decodeURIComponent('${safeJson}')))">
+                    <span class="text-primary fw-bold">Show Detail</span>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            `;
+          submissionList.append(card);
+        });
+      }
+
+      // =========================
+      // OPEN MODAL DETAIL
+      // =========================
+      function openDetailModal(item) {
+        const modal = new bootstrap.Modal(
+          document.getElementById("detailModal"),
+        );
+
+        document.getElementById("detailInfo").innerHTML = `
+        <div class="row">
+          <div class="col-md-4">
+            <strong>ID:</strong> ${item.id}<br>
+            <strong>Periode:</strong> ${item.periodeProgram}<br>
+            <strong>Status:</strong> ${getStatusBadge(item.status)}<br>
+            <strong>Waktu Pendaftaran:</strong> ${formatDate(item.timeStamp)}
+          </div>
+
+          <div class="col-md-4">
+            <strong>Outlet:</strong> ${item.namaOutlet}<br>
+            <strong>Kode PI:</strong> ${item.kodePI}<br>
+            <strong>Kota:</strong> ${item.kota}<br>
+            <strong>Alamat:</strong> ${item.alamat || "-"}
+          </div>
+
+          <div class="col-md-4">
+            <strong>Owner:</strong> ${item.namaOwnerOutlet}<br>
+            <strong>PIC SC:</strong> ${item.namaPicSC}<br>
+            <strong>Nomor E-Wallet:</strong> ${item.noEwallet || "-"}<br>
+            <strong>E-Wallet:</strong> ${item.jenisEwallet}
+          </div>
+        </div>
+
+        <hr class="my-2" />
+
+        <div class="row mt-2">
+          <div class="col-md-4">
+            <strong>File SKP (Generated):</strong><br>
+
+            ${
+              item.generateSKP
+                ? `<a href="${item.generateSKP}" target="_blank" class="btn btn-primary btn-sm mt-1">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Generated)
+                  </a>`
+                : `<button class="btn btn-secondary btn-sm mt-1" disabled>
+                    Belum Generate SKP
+                  </button>`
+            }
+          </div>
+
+          <div class="col-md-4">
+            <strong>File SKP (Signed):</strong><br>
+
+            ${
+              item.uploadSKP
+                ? `<a href="${item.uploadSKP}" target="_blank" class="btn btn-success btn-sm mt-1">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Signed)
+                  </a>`
+                : `<button class="btn btn-secondary btn-sm mt-1" disabled>
+                    Belum Upload SKP
+                  </button>`
+            }
+          </div>
+        </div>
+      `;
+
+        renderProdukTable(item.dataProduk);
+
+        modal.show();
+      }
+
+      // =========================
+      // RENDER TABEL PRODUK
+      // =========================
+      function renderProdukTable(dataProduk) {
+        const tbody = document.getElementById("produkTableBody");
+        tbody.innerHTML = "";
+
+        if (!dataProduk) {
+          tbody.innerHTML = `<tr>
+      <td colspan="5" class="text-muted">Tidak ada produk</td>
+    </tr>`;
+          return;
+        }
+
+        let produkObj =
+          typeof dataProduk === "string" ? JSON.parse(dataProduk) : dataProduk;
+
+        let no = 1;
+
+        Object.keys(produkObj).forEach((sku) => {
+          const qty = parseInt(produkObj[sku]) || 0;
+
+          if (qty > 0) {
+            tbody.innerHTML += `
+        <tr>
+          <td>${no++}</td>
+          <td class="text-start">${sku}</td>
+          <td>${qty}</td>
+          <td>-</td>
+          <td>${qty}</td>
+        </tr>
+      `;
+          }
+        });
+
+        if (no === 1) {
+          tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-muted">
+          Tidak ada produk
+        </td>
+      </tr>`;
+        }
+      }
+      function toggleProdukTable() {
+        const table = document.getElementById("produkCollapse");
+        const btn = document.getElementById("toggleProdukBtn");
+
+        if (table.style.display === "none") {
+          table.style.display = "block";
+          btn.innerText = "Hide Detail";
+        } else {
+          table.style.display = "none";
+          btn.innerText = "Show Detail";
+        }
+      }
+
+      // Buka modal
+      $("#openStatusFilter").on("click", function () {
+        $("#statusFilterModal").modal("show");
+      });
+
+      // Terapkan filter
+      $("#applyStatusFilter").on("click", function () {
+        applyFilters();
+        $("#statusFilterModal").modal("hide");
+      });
+
+      // Search realtime Nama Outlet
+      $("input[placeholder='Filter Nama Outlet...']").on("input", function () {
+        applyFilters();
+      });
+
+      function generateSKP(id) {
+        if (!id) return;
+
+        Swal.fire({
+          title: "Generate SKP",
+          text: "Mohon tunggu, sedang membuat SKP...",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        const user = userData?.nama || "";
+        apiURLGenerateSKP =
+          "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
+        const url = `${apiURLGenerateSKP}?id=${encodeURIComponent(id)}&user=${encodeURIComponent(user)}`;
+
+        fetch(url)
+          .then((res) => res.json())
+          .then((json) => {
+            Swal.close();
+
+            if (json.error) {
+              Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: json.error,
+              });
+              return;
+            }
+
+            if (json.success) {
+              const link = json.pdfUrl || "";
+
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                confirmButtonText: "Yes",
+                customClass: {
+                  confirmButton: "btn btn-primary",
+                },
+                buttonsStyling: false,
+                html: `
+                SKP berhasil dibuat!<br><br>
+
+                ${
+                  link
+                    ? `
+                  <a href="${link}" target="_blank" class="btn btn-primary">
+                    Download / Buka SKP
+                  </a>
+                `
+                    : `
+                  <span class="text-muted">Link SKP tidak tersedia</span>
+                `
+                }
+              `,
+              }).then(() => {
+                // refresh data
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              });
+            } else {
+              Swal.fire({
+                icon: "warning",
+                title: "Info",
+                text: "SKP sudah dibuat atau tidak ada perubahan.",
+              });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Gagal generate SKP.",
+            });
+          });
+      }
+
+      function openUploadModal(id) {
+        document.getElementById("uploadId").value = id;
+        document.getElementById("fileSKP").value = "";
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("uploadSKPModal"),
+        );
+        modal.show();
+      }
+
+      async function uploadSKP() {
+        const fileInput = document.getElementById("fileSKP");
+        const id = document.getElementById("uploadId").value;
+
+        if (!fileInput.files.length) {
+          Swal.fire({
+            icon: "warning",
+            title: "File belum dipilih",
+            text: "Silakan pilih file terlebih dahulu",
+          });
+          return;
+        }
+
+        const file = fileInput.files[0];
+
+        // ✅ VALIDASI FORMAT FILE (PDF, JPG, PNG)
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire({
+            icon: "error",
+            title: "Format file tidak valid",
+            text: "File harus JPG, PNG, atau PDF",
+          });
+          return;
+        }
+
+        // ✅ VALIDASI UKURAN FILE (MAX 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire({
+            icon: "error",
+            title: "File terlalu besar",
+            text: "Maksimal 5MB",
+          });
+          return;
+        }
+
+        // ✅ PROSES UPLOAD
+        Swal.fire({
+          title: "Upload SKP Sedang Diproses...",
+          text: "Mohon ditung sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        const reader = new FileReader();
+
+        reader.onload = async function (e) {
+          const base64 = e.target.result.split(",")[1];
+
+          const formData = new URLSearchParams();
+          formData.append("action", "uploadSkp");
+          formData.append("id", id);
+          formData.append("filename", file.name);
+          formData.append("mimeType", file.type);
+          formData.append("file", base64);
+
+          apiURLGenerateSKP =
+            "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
+          try {
+            const res = await fetch(apiURLGenerateSKP, {
+              method: "POST",
+              body: formData,
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+              Swal.fire({
+                icon: "success",
+                title: "Upload Berhasil",
+                confirmButtonText: "Yes",
+                customClass: {
+                  confirmButton: "btn btn-primary",
+                },
+                buttonsStyling: false,
+                html: `
+                File berhasil diupload.<br><br>
+                <a href="${result.url}" target="_blank" class="btn btn-primary">
+                  Lihat SKP Terupload
+                </a>
+              `,
+              }).then(() => {
+                // tutup modal
+                bootstrap.Modal.getInstance(
+                  document.getElementById("uploadSKPModal"),
+                ).hide();
+
+                // refresh data berdasarkan NIP
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Upload gagal",
+                text: result.message,
+              });
+            }
+          } catch (err) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: err.message,
+            });
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      function uploadStruk(id) {
+        Swal.fire(
+          "Upload Struk",
+          `Fungsi Upload Struk untuk ID: ${id}`,
+          "info",
+        );
+        // TODO: buka modal upload struk
+      }
+
+      // 🔥 HILANGKAN LOADER SAAT HALAMAN SELESAI LOAD
+      window.addEventListener("load", function () {
+        const loader = document.getElementById("loader-wrapper");
+        if (loader) {
+          loader.classList.add("fade-out");
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 500);
+        }
+      });
+    </script>
+  </body>
+</html>

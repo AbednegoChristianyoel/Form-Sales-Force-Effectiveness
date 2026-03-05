@@ -22,7 +22,7 @@
       const analytics = getAnalytics(app);
     </script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -71,8 +71,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <style>
       body {
-        background: #ffffff;
-        font-family: "Roboto", sans-serif;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      h3 {
+        font-size: 18px;
+      }
+      h4 {
+        font-size: 16px;
+      }
+      h5 {
+        font-size: 15px;
+      }
+      h6 {
+        font-size: 14px;
+      }
+
+      /* Kecilkan teks button */
+      .btn {
+        font-size: 13px !important;
+      }
+
+      /* Dropdown item juga kecil */
+      .dropdown-menu .dropdown-item {
+        font-size: 13px !important;
+      }
+
+      /* 🔹 Jaga agar icon dropdown (arrow) tidak ikut kecil */
+      .dropdown-toggle::after {
+        font-size: 14px !important; /* ukuran arrow */
+        vertical-align: middle;
       }
       .navbar-custom {
         background-color: #0d6efd;
@@ -331,6 +373,13 @@
       .container,
       .form-wrapper {
         overflow: visible !important;
+      }
+      /* Perbesar panah dropdown di navbar */
+      .navbar .dropdown-toggle::after {
+        border-top-width: 0.45em !important;
+        border-right-width: 0.45em !important;
+        border-left-width: 0.45em !important;
+        vertical-align: middle;
       }
     </style>
   </head>
