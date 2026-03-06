@@ -486,17 +486,20 @@
 
           <ul class="dropdown-menu shadow custom-dropdown">
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
                 <i class="bi bi-cash-coin me-2"></i> PRO-SC
               </a>
             </li>
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
                 <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
               </a>
             </li>
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a
+                class="dropdown-item fw-semibold"
+                href="../form-pendaftaran-program-ethical/"
+              >
                 <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
               </a>
             </li>
@@ -530,7 +533,7 @@
             <li class="nav-item mt-3 mt-lg-0 me-lg-2">
               <a
                 class="nav-link text-white fw-bold"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-listing-mti"
+                href="../form-insentif-sc/"
               >
                 FORM PENDAFTARAN INSENTIF SC 2026
               </a>
@@ -538,7 +541,7 @@
             <li class="nav-item mt-2 mt-lg-0">
               <a
                 class="nav-link text-white active-page fw-bold"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
+                href="../monitoring-insentif-sc/"
               >
                 MONITORING INSENTIF SC 2026
               </a>
@@ -640,6 +643,13 @@
               <label class="form-label fw-bold">Nama Pengaju</label>
               <select class="form-select" id="pengajuSelect">
                 <option value="all">Semua Pengaju</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Sorting Pengajuan</label>
+              <select class="form-select" id="sortSelect">
+                <option value="newest">Terbaru</option>
+                <option value="oldest">Terlama</option>
               </select>
             </div>
           </div>
@@ -788,30 +798,30 @@
 
       // Cek login
       const storedUser = localStorage.getItem("userData");
+
       if (!storedUser) {
+        // simpan halaman sekarang sebelum login
+        sessionStorage.setItem("redirectAfterLogin", window.location.href);
+
         window.location.href = "../login.html";
       } else {
         userData = JSON.parse(storedUser);
         console.log("User sudah login:", userData);
 
-        // Tampilkan ucapan selamat datang
         document.getElementById("welcomeText").textContent =
           `Selamat Datang, ${userData.nama}`;
 
-        // Jika role = Sales, hide tombol Approve & Reject
         if (userData.roles?.toLowerCase() === "sales") {
           document.getElementById("actionButtons").classList.add("d-none");
         }
 
-        // 🔹 Langsung tarik data sesuai nip user login
         if (userData.nip) {
-          console.log("Mengambil data untuk NIP:", userData.nip);
           getDataByNIP(userData.nip, userData.jabatan, userData.nama);
         } else {
           Swal.fire({
             icon: "warning",
             title: "NIP tidak ditemukan",
-            text: "Silakan login ulang.",
+            text: "Silakan login ulang",
           });
         }
       }
@@ -837,14 +847,6 @@
       let allData = [];
 
       function getDataByNIP(nip, jabatan, nama) {
-        console.log(
-          "Memulai pengambilan data dengan NIP:",
-          nip,
-          "Jabatan:",
-          jabatan,
-          "Nama:",
-          nama,
-        );
         Swal.fire({
           title: "Memuat data...",
           text: "Mohon Ditunggu sebentar :)",
@@ -876,8 +878,6 @@
 
             allData = json.data || [];
 
-            console.log("DATA DARI APPS SCRIPT:", allData);
-
             if (!allData.length) {
               $("#submissionList").html(
                 `<div class="col-12 text-center text-muted mt-3">
@@ -907,6 +907,8 @@
       function applyFilters() {
         const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
         const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
+        const sortType = $("#sortSelect").val(); // ambil pilihan sort
+
         const outletFilter = $("input[placeholder='Filter Nama Outlet...']")
           .val()
           .toLowerCase();
@@ -931,6 +933,19 @@
             !outletFilter || outletValue.includes(outletFilter);
 
           return statusMatch && pengajuMatch && outletMatch;
+        });
+
+        // 🔽 SORT DATA
+        filtered.sort((a, b) => {
+          const timeA = new Date(a.timeStamp || 0);
+          const timeB = new Date(b.timeStamp || 0);
+
+          if (sortType === "oldest") {
+            return timeA - timeB;
+          }
+
+          // default terbaru
+          return timeB - timeA;
         });
 
         renderInsentifCards(filtered);
@@ -959,6 +974,20 @@
         });
 
         $("#pengajuContainer").show();
+      }
+
+      let currentSort = "newest";
+
+      function sortSubmissions(data) {
+        if (currentSort === "newest") {
+          return data.sort(
+            (a, b) => new Date(b.timeStamp) - new Date(a.timeStamp),
+          );
+        } else {
+          return data.sort(
+            (a, b) => new Date(a.timeStamp) - new Date(b.timeStamp),
+          );
+        }
       }
 
       // =========================
@@ -1022,16 +1051,19 @@
             <div class="col-md-6 mb-4">
               <div class="card shadow-sm border-0 h-100 position-relative">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                  <input
-                    type="checkbox"
-                    class="form-check-input me-2"
-                    style="transform:scale(1.3);"
-                    value="${item.id}"
-                  >
-                  <div>
-                    <strong>${item.id}</strong><br>
-                    <small>${formatDate(item.timeStamp)}</small>
-                  </div>
+                  <!-- LEFT SIDE -->
+                    <div class="d-flex align-items-center">
+                      <input
+                        type="checkbox"
+                        class="form-check-input me-3"
+                        style="transform:scale(1.3);"
+                        value="${item.id}"
+                      >
+                      <div>
+                        <strong>${item.id}</strong><br>
+                        <small>${formatDate(item.timeStamp)}</small>
+                      </div>
+                    </div>
                   <div class="text-end">
                     <span class="badge bg-primary">${item.periodeProgram}</span><br>
                     ${getStatusBadge(item.status)}
@@ -1548,12 +1580,12 @@
       }
 
       function uploadStruk(id) {
-        Swal.fire(
-          "Upload Struk",
-          `Fungsi Upload Struk untuk ID: ${id}`,
-          "info",
-        );
-        // TODO: buka modal upload struk
+        Swal.fire({
+          icon: "info",
+          title: "Upload Struk",
+          html: "Upload Struk masih dalam tahap pengembangan.<br>Mohon ditunggu updatenya 🙂<br><br>Terima Kasih.",
+          confirmButtonText: "OK",
+        });
       }
 
       // 🔥 HILANGKAN LOADER SAAT HALAMAN SELESAI LOAD

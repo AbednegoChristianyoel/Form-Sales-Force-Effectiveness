@@ -432,17 +432,20 @@
 
           <ul class="dropdown-menu shadow custom-dropdown">
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
                 <i class="bi bi-cash-coin me-2"></i> PRO-SC
               </a>
             </li>
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
                 <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
               </a>
             </li>
             <li>
-              <a class="dropdown-item fw-semibold" href="#">
+              <a
+                class="dropdown-item fw-semibold"
+                href="../form-pendaftaran-program-ethical/"
+              >
                 <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
               </a>
             </li>
@@ -476,7 +479,7 @@
             <li class="nav-item mt-3 mt-lg-0 me-lg-2">
               <a
                 class="nav-link text-white active-page fw-bold"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-listing-mti"
+                href="../form-insentif-sc/"
               >
                 FORM PENDAFTARAN INSENTIF SC 2026
               </a>
@@ -484,7 +487,7 @@
             <li class="nav-item mt-2 mt-lg-0">
               <a
                 class="nav-link text-white fw-bold"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/monitoring-listing-mti"
+                href="../monitoring-insentif-sc/"
               >
                 MONITORING INSENTIF SC 2026
               </a>
@@ -566,7 +569,7 @@
                   <label for="outletSC" class="form-label fw-bold"
                     >Kode Outlet</label
                   >
-                  <select id="outletSC">
+                  <select id="outletSC" class="required-field">
                     <option value="">Pilih Outlet</option>
                   </select>
                 </div>
@@ -581,6 +584,7 @@
                     class="form-control"
                     readonly
                     disabled
+                    required
                   />
                 </div>
                 <div class="col-md-6">
@@ -618,7 +622,7 @@
                   <label class="form-label fw-bold">Nama Owner Outlet</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control required-field"
                     id="namaOwnerOutlet"
                     placeholder="Masukkan Nama Owner Outlet"
                   />
@@ -629,7 +633,7 @@
                   <label class="form-label fw-bold">Nama PIC SC Outlet</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control required-field"
                     id="namaPicSC"
                     placeholder="Masukkan Nama PIC SC Outlet"
                   />
@@ -643,7 +647,7 @@
                   <input
                     type="tel"
                     id="noEwallet"
-                    class="form-control"
+                    class="form-control required-field"
                     placeholder="Contoh: 0878213512311"
                     pattern="08[0-9]{8,13}"
                     maxlength="15"
@@ -664,7 +668,7 @@
                   <input
                     type="text"
                     id="namaPenggunaEWallet"
-                    class="form-control"
+                    class="form-control required-field"
                     placeholder="Contoh: abednegoefra"
                   />
                 </div>
@@ -674,7 +678,7 @@
                   <label for="jenisEwallet" class="form-label fw-bold">
                     Jenis E-Wallet PIC SC
                   </label>
-                  <select id="jenisEwallet" class="form-select">
+                  <select id="jenisEwallet" class="form-select required-field">
                     <option value="">Pilih E-Wallet</option>
                     <option value="DANA">DANA</option>
                     <option value="GOPAY">GOPAY</option>
@@ -716,7 +720,6 @@
                           </th>
                         </tr>
                       </thead>
-                      <tbody id="produkTableBody"></tbody>
                       <tbody id="produkTableBody">
                         <!-- Diisi via JS -->
                       </tbody>
@@ -1096,11 +1099,51 @@
         renderProductTable({});
       }
 
+      function validateForm() {
+        let valid = true;
+        let firstError = null;
+
+        document.querySelectorAll(".required-field").forEach((field) => {
+          field.classList.remove("is-invalid");
+
+          if (!field.value || field.value.trim() === "") {
+            field.classList.add("is-invalid");
+            valid = false;
+
+            if (!firstError) {
+              firstError = field;
+            }
+          }
+        });
+
+        if (!valid) {
+          Swal.fire({
+            icon: "error",
+            title: "Data belum lengkap",
+            text: "Mohon lengkapi semua field yang wajib diisi.",
+          });
+
+          if (firstError) {
+            firstError.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            firstError.focus();
+          }
+        }
+
+        return valid;
+      }
+
       // 🚀 Event submit SC Form
       document
         .getElementById("scForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
+
+          if (!validateForm()) {
+            return;
+          }
 
           if (!document.getElementById("confirmCheck").checked) {
             Swal.fire({

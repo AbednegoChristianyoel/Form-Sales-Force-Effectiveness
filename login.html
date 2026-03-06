@@ -200,7 +200,7 @@
         {
           backdrop: "static", // tidak bisa close dengan klik luar
           keyboard: false, // tidak bisa close dengan ESC
-        }
+        },
       );
       // Submit Login Form
       $("#loginForm").on("submit", function (e) {
@@ -305,10 +305,18 @@
                 html: "Selamat datang, <b>" + result.nama + "</b>",
                 confirmButtonText: "OK", // munculkan tombol OK
               }).then(() => {
-                if (result.roles && result.roles.toLowerCase() === "sales") {
-                  window.location.href = "form-listing-mti/index.html";
+                const redirectUrl =
+                  sessionStorage.getItem("redirectAfterLogin");
+
+                if (redirectUrl) {
+                  sessionStorage.removeItem("redirectAfterLogin");
+                  window.location.href = redirectUrl;
                 } else {
-                  window.location.href = "monitoring-listing-mti/index.html";
+                  if (result.roles && result.roles.toLowerCase() === "sales") {
+                    window.location.href = "form-listing-mti/index.html";
+                  } else {
+                    window.location.href = "monitoring-listing-mti/index.html";
+                  }
                 }
               });
             } else {
