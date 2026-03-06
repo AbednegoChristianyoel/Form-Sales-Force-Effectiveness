@@ -584,7 +584,6 @@
                     class="form-control"
                     readonly
                     disabled
-                    required
                   />
                 </div>
                 <div class="col-md-6">
@@ -1103,12 +1102,26 @@
         let valid = true;
         let firstError = null;
 
-        document.querySelectorAll(".required-field").forEach((field) => {
+        const fields = document.querySelectorAll(
+          "input.required-field, select.required-field, textarea.required-field",
+        );
+
+        fields.forEach((field) => {
           field.classList.remove("is-invalid");
 
-          if (!field.value || field.value.trim() === "") {
+          let isEmpty = false;
+
+          if (field.type === "checkbox") {
+            isEmpty = !field.checked;
+          } else {
+            isEmpty = !field.value || field.value.trim() === "";
+          }
+
+          if (isEmpty) {
             field.classList.add("is-invalid");
             valid = false;
+
+            console.log("Field kosong:", field.id || field.name || field);
 
             if (!firstError) {
               firstError = field;
