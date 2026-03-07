@@ -1336,6 +1336,8 @@
 
         renderProdukTable(item.dataProduk);
 
+        if (item.id) renderLogsById(item.id);
+
         modal.show();
       }
 
@@ -1672,7 +1674,6 @@
         const modal = new bootstrap.Modal(
           document.getElementById("uploadSKPModal"),
         );
-        if (id) renderLogsById(id);
         modal.show();
       }
 
