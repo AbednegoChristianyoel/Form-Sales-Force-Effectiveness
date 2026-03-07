@@ -1334,7 +1334,6 @@
         </div>
       `;
 
-        if (item.id) renderLogsById(item.id);
         renderProdukTable(item.dataProduk);
 
         modal.show();
@@ -1673,7 +1672,6 @@
         const modal = new bootstrap.Modal(
           document.getElementById("uploadSKPModal"),
         );
-        if (item.id) renderLogsById(item.id);
         modal.show();
       }
 
