@@ -560,14 +560,14 @@
               <div class="col-md-6">
                 <label class="form-label fw-bold">Nama Owner Outlet</label>
                 <input type="text" class="form-control required-field" id="namaOwnerOutlet"
-                  placeholder="Masukkan Nama Owner Outlet" />
+                  placeholder="Masukkan Nama Owner Outlet" required />
               </div>
 
               <!-- Nama PIC SC Outlet -->
               <div class="col-md-6">
                 <label class="form-label fw-bold">Nama PIC SC Outlet</label>
                 <input type="text" class="form-control required-field" id="namaPicSC"
-                  placeholder="Masukkan Nama PIC SC Outlet" />
+                  placeholder="Masukkan Nama PIC SC Outlet" required />
               </div>
 
               <!-- No. HP E-Wallet PIC SC -->
@@ -585,7 +585,7 @@
               <div class="col-md-6">
                 <label class="form-label fw-bold">Nama Pengguna E-Wallet PIC SC</label>
                 <input type="text" id="namaPenggunaEWallet" class="form-control required-field"
-                  placeholder="Contoh: abednegoefra" />
+                  placeholder="Contoh: abednegoefra" required />
               </div>
 
               <!-- Jenis E-Wallet PIC SC -->
@@ -593,7 +593,7 @@
                 <label for="jenisEwallet" class="form-label fw-bold">
                   Jenis E-Wallet PIC SC
                 </label>
-                <select id="jenisEwallet" class="form-select required-field">
+                <select id="jenisEwallet" class="form-select required-field" required>
                   <option value="">Pilih E-Wallet</option>
                   <option value="DANA">DANA</option>
                   <option value="GOPAY">GOPAY</option>
@@ -1000,13 +1000,11 @@
       renderProductTable({});
     }
 
-
     // 🚀 Event submit SC Form
     document
       .getElementById("scForm")
       .addEventListener("submit", async function (e) {
         e.preventDefault();
-
 
         if (!document.getElementById("confirmCheck").checked) {
           Swal.fire({
