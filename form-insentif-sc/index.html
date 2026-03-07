@@ -941,8 +941,13 @@
 
         // 🔥 Tentukan satuan target
         let satuanTarget = "UB";
+
         if (key === "PRAXION_SUSP") {
           satuanTarget = "Botol";
+        } else if (key === "MEDISIO_5_ML" || key === "MEDISIO_10_ML") {
+          satuanTarget = "Botol";
+        } else if (key === "BRION_OINT_20GR") {
+          satuanTarget = "Tube";
         }
 
         const row = `
