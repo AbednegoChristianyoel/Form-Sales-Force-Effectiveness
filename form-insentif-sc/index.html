@@ -1000,7 +1000,6 @@
       renderProductTable({});
     }
 
-    function validateForm() { let valid = true; let firstError = null; document.querySelectorAll(".required-field").forEach((field) => { field.classList.remove("is-invalid"); if (!field.value || field.value.trim() === "") { field.classList.add("is-invalid"); valid = false; if (!firstError) { firstError = field; } } }); if (!valid) { Swal.fire({ icon: "error", title: "Data belum lengkap", text: "Mohon lengkapi semua field yang wajib diisi.", }); if (firstError) { firstError.scrollIntoView({ behavior: "smooth", block: "center", }); firstError.focus(); } } return valid; }
 
     // 🚀 Event submit SC Form
     document
@@ -1008,9 +1007,6 @@
       .addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        if (!validateForm()) {
-          return;
-        }
 
         if (!document.getElementById("confirmCheck").checked) {
           Swal.fire({
