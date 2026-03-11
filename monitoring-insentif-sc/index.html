@@ -834,7 +834,7 @@
 
             <div class="table-responsive">
               <table class="table table-bordered table-sm align-middle">
-                <thead>
+                <thead class="table-primary">
                   <tr>
                     <th style="width: 60px">No</th>
                     <th>ID</th>
@@ -889,7 +889,9 @@
             <p class="fw-bold">Berikut data yang akan di-reject:</p>
 
             <div class="table-responsive">
-              <table class="table table-bordered table-sm align-middle">
+              <table
+                class="table bg-primary table-bordered table-sm align-middle"
+              >
                 <thead>
                   <tr>
                     <th style="width: 60px">No</th>
@@ -1010,14 +1012,10 @@
           .then((res) => {
             if (res.result === "success") {
               allLogs = res.logs;
-              console.log("Logs berhasil diambil:", allLogs);
             } else {
-              console.warn("Gagal ambil log");
             }
           })
-          .catch((err) => {
-            console.error("Error fetch log:", err);
-          });
+          .catch((err) => {});
 
         const params = new URLSearchParams({
           nip: nip,
@@ -1409,7 +1407,7 @@
 
                     <!-- Action Dropdown -->
                     <div class="dropdown mb-2 mx-3">
-                      <button class="btn btn-primary dropdown-toggle w-100 fs-3 fe-3"
+                      <button class="btn btn-primary custom-dropdown dropdown-toggle w-100 fs-3 fe-3"
                               type="button"
                               data-bs-toggle="dropdown">
                         Action Menu
@@ -1417,27 +1415,41 @@
 
                       <ul class="dropdown-menu w-100">
 
-                      <li>
-                        <a class="dropdown-item ${item.generateSKP ? "disabled text-muted" : ""}"
-                          href="#"
-                          ${item.generateSKP ? "" : `onclick="generateSKP('${item.id}')`}>
-                          <i class="bi bi-file-earmark-pdf me-2"></i>
-                          Generate SKP
-                        </a>
-                      </li>
+                        <li>
+                          ${
+                            item.generateSKP
+                              ? `
+                              <a class="dropdown-item disabled text-muted">
+                                <i class="bi bi-file-earmark-pdf me-2"></i>
+                                Generate SKP
+                              </a>
+                            `
+                              : `
+                              <a class="dropdown-item"
+                                onclick="generateSKP('${item.id}')">
+                                <i class="bi bi-file-earmark-pdf me-2"></i>
+                                Generate SKP
+                              </a>
+                            `
+                          }
+                        </li>
+
+                        <!-- Divider -->
+                        <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
 
                         <li>
                           <a class="dropdown-item"
-                            href="#"
                             onclick="openUploadModal('${item.id}')">
                             <i class="bi bi-upload me-2"></i>
                             Upload SKP
                           </a>
                         </li>
 
+                        <!-- Divider -->
+                        <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
+
                         <li>
                           <a class="dropdown-item"
-                            href="#"
                             onclick="uploadStruk('${item.id}')">
                             <i class="bi bi-file-earmark-arrow-up me-2"></i>
                             Upload Struk Sell-Out Outlet
@@ -1497,7 +1509,7 @@
           <hr class="my-2" />
 
           <div class="row mt-2">
-            <div class="col-md-4">
+            <div class="col-md-4 mb-2">
               <strong>File SKP (Generated):</strong><br>
 
               ${
@@ -1820,7 +1832,7 @@
           // kiri
           const colLeft = document.createElement("div");
           colLeft.className = "col-8";
-          colLeft.innerHTML = `<strong>${log.action}</strong> | ${log.user}`;
+          colLeft.innerHTML = `<strong>${log.action}</strong> oleh ${log.user}`;
 
           // kanan
           const colRight = document.createElement("div");
@@ -2093,7 +2105,6 @@
 
       function confirmBulkApprove() {
         const selected = getCheckedItems();
-
         const ids = selected.map((item) => item.id);
 
         Swal.fire({
@@ -2102,59 +2113,100 @@
           icon: "question",
           showCancelButton: true,
           confirmButtonText: "Ya Approve",
-        }).then((result) => {
+          cancelButtonText: "Batal",
+          confirmButtonColor: "#0d6efd",
+          cancelButtonColor: "#6c757d",
+          reverseButtons: true,
+        }).then(async (result) => {
           if (!result.isConfirmed) return;
 
           Swal.fire({
-            title: "Processing...",
+            title: "Memproses data...",
+            text: "Mohon Ditunggu sebentar :)",
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading(),
           });
 
-          fetch(apiURL, {
-            method: "POST",
-            body: JSON.stringify({
-              action: "bulkApprove",
-              ids: ids,
-              user: userData.nama,
-            }),
-          })
-            .then((res) => res.json())
-            .then((res) => {
-              Swal.close();
+          const formData = new URLSearchParams();
+          formData.append("action", "bulkApprove");
+          formData.append("ids", ids.join(","));
+          formData.append("username", userData?.nama || "");
 
-              if (res.success) {
-                Swal.fire({
-                  icon: "success",
-                  title: "Berhasil Approve",
-                });
+          const apiURLGenerateSKP =
+            "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
 
-                bootstrap.Modal.getInstance(
-                  document.getElementById("bulkApproveModal"),
-                ).hide();
-
-                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Gagal Approve",
-                });
-              }
+          try {
+            const res = await fetch(apiURLGenerateSKP, {
+              method: "POST",
+              body: formData,
             });
+
+            const text = await res.text();
+            console.log("SERVER RESPONSE:", text);
+
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (e) {
+              throw new Error("Response bukan JSON: " + text);
+            }
+
+            Swal.close();
+
+            if (data.success) {
+              let errorHtml = "";
+
+              if (data.errors && data.errors.length > 0) {
+                errorHtml = data.errors
+                  .map((e) => `• <b>${e.id}</b> - ${e.reason}`)
+                  .join("<br>");
+              }
+
+              await Swal.fire({
+                icon: data.failCount > 0 ? "warning" : "success",
+                title: "Proses Approve Selesai",
+                html: `
+            <b>Berhasil:</b> ${data.successCount}<br>
+            <b>Gagal:</b> ${data.failCount}
+            ${errorHtml ? `<hr><b>Detail Error:</b><br>${errorHtml}` : ""}
+          `,
+              });
+
+              getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+
+              bootstrap.Modal.getInstance(
+                document.getElementById("bulkApproveModal"),
+              )?.hide();
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Gagal Approve",
+                text: data.message || "Unknown error",
+              });
+            }
+          } catch (err) {
+            console.error("Bulk Approve Error:", err);
+
+            Swal.fire({
+              icon: "error",
+              title: "Server Error",
+              text: err.message,
+            });
+          }
         });
       }
+
       function confirmBulkReject() {
         const selected = getCheckedItems();
         const ids = selected.map((item) => item.id);
-
-        const reason = document.getElementById("rejectReason").value.trim();
+        const reason = document.getElementById("rejectReason").value;
 
         if (!reason) {
           Swal.fire({
             icon: "warning",
             title: "Alasan Reject Wajib Diisi",
+            text: "Silakan isi alasan reject sebelum melanjutkan",
           });
-
           return;
         }
 
@@ -2164,49 +2216,86 @@
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "Ya Reject",
-          confirmButtonColor: "#d33",
-        }).then((result) => {
+          cancelButtonText: "Batal",
+          confirmButtonColor: "#dc3545",
+          cancelButtonColor: "#6c757d",
+          reverseButtons: true,
+        }).then(async (result) => {
           if (!result.isConfirmed) return;
 
           Swal.fire({
-            title: "Processing...",
+            title: "Memproses data...",
+            text: "Mohon Ditunggu sebentar :)",
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading(),
           });
 
-          fetch(apiURL, {
-            method: "POST",
-            body: JSON.stringify({
-              action: "bulkReject",
-              ids: ids,
-              reason: reason,
-              user: userData.nama,
-            }),
-          })
-            .then((res) => res.json())
-            .then((res) => {
-              Swal.close();
+          const formData = new URLSearchParams();
+          formData.append("action", "bulkReject");
+          formData.append("ids", ids.join(","));
+          formData.append("username", userData?.nama || "");
 
-              if (res.success) {
-                Swal.fire({
-                  icon: "success",
-                  title: "Berhasil Reject",
-                });
+          const apiURLGenerateSKP =
+            "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
 
-                bootstrap.Modal.getInstance(
-                  document.getElementById("bulkRejectModal"),
-                ).hide();
-
-                document.getElementById("rejectReason").value = "";
-
-                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Gagal Reject",
-                });
-              }
+          try {
+            const res = await fetch(apiURLGenerateSKP, {
+              method: "POST",
+              body: formData,
             });
+
+            const text = await res.text();
+            console.log("SERVER RESPONSE:", text);
+
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (e) {
+              throw new Error("Response bukan JSON: " + text);
+            }
+
+            Swal.close();
+
+            if (data.success) {
+              let errorHtml = "";
+
+              if (data.errors && data.errors.length > 0) {
+                errorHtml = data.errors
+                  .map((e) => `• <b>${e.id}</b> - ${e.reason}`)
+                  .join("<br>");
+              }
+
+              await Swal.fire({
+                icon: data.failCount > 0 ? "warning" : "success",
+                title: "Proses Reject Selesai",
+                html: `
+            <b>Berhasil:</b> ${data.successCount}<br>
+            <b>Gagal:</b> ${data.failCount}
+            ${errorHtml ? `<hr><b>Detail Error:</b><br>${errorHtml}` : ""}
+          `,
+              });
+
+              getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+
+              bootstrap.Modal.getInstance(
+                document.getElementById("bulkRejectModal"),
+              )?.hide();
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Gagal Reject",
+                text: data.message || "Unknown error",
+              });
+            }
+          } catch (err) {
+            console.error("Bulk Reject Error:", err);
+
+            Swal.fire({
+              icon: "error",
+              title: "Server Error",
+              text: err.message,
+            });
+          }
         });
       }
 

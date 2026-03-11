@@ -312,11 +312,7 @@
                   sessionStorage.removeItem("redirectAfterLogin");
                   window.location.href = redirectUrl;
                 } else {
-                  if (result.roles && result.roles.toLowerCase() === "sales") {
-                    window.location.href = "form-listing-mti/index.html";
-                  } else {
-                    window.location.href = "monitoring-listing-mti/index.html";
-                  }
+                  window.location.href = "monitoring-insentif-sc/index.html";
                 }
               });
             } else {
