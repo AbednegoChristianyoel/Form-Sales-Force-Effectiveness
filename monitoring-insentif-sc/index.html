@@ -638,18 +638,31 @@
               </select>
             </div>
 
-            <!-- Nama Pengaju -->
+            <!-- Status -->
             <div class="mb-3">
-              <label class="form-label fw-bold">Nama Pengaju</label>
-              <select class="form-select" id="pengajuSelect">
-                <option value="all">Semua Pengaju</option>
+              <label class="form-label fw-bold">Status Validate FIC</label>
+              <select class="form-select" id="modalStatusFICSelect">
+                <option value="">Semua Status</option>
+                <option value="not validated fic">Not Validated FIC</option>
+                <option value="validated fic">Validated FIC</option>
               </select>
             </div>
+
             <div class="mb-3">
               <label class="form-label fw-bold">Sorting Pengajuan</label>
               <select class="form-select" id="sortSelect">
-                <option value="newest">Terbaru</option>
                 <option value="oldest">Terlama</option>
+                <option value="newest">Terbaru</option>
+              </select>
+            </div>
+
+            <!-- Nama Pengaju -->
+            <div class="mb-3">
+              <label for="pengajuSelect" class="form-label fw-bold"
+                >Nama Pengaju</label
+              >
+              <select class="form-select" id="pengajuSelect">
+                <option value="all">Semua Pengaju</option>
               </select>
             </div>
           </div>
@@ -791,6 +804,128 @@
       </div>
     </div>
 
+    <!-- ========================= -->
+    <!-- MODAL BULK APPROVE -->
+    <!-- ========================= -->
+    <div class="modal fade" id="bulkApproveModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-check-circle me-2"></i>
+              Konfirmasi Approve
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="fw-bold">Berikut data yang akan di-approve:</p>
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th style="width: 60px">No</th>
+                    <th>ID</th>
+                    <th>Outlet</th>
+                    <th>Pengaju</th>
+                    <th>Nama PIC SC</th>
+                    <th>No E-Wallet SC</th>
+                    <th>Periode</th>
+                  </tr>
+                </thead>
+                <tbody id="approveList"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Batal
+            </button>
+
+            <button
+              class="btn btn-success fw-bold"
+              onclick="confirmBulkApprove()"
+            >
+              <i class="bi bi-check-circle me-1"></i>
+              Konfirmasi Approve
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL BULK REJECT -->
+    <!-- ========================= -->
+    <div class="modal fade" id="bulkRejectModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-x-circle me-2"></i>
+              Konfirmasi Reject
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p class="fw-bold">Berikut data yang akan di-reject:</p>
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th style="width: 60px">No</th>
+                    <th>ID</th>
+                    <th>Outlet</th>
+                    <th>Pengaju</th>
+                    <th>Nama PIC SC</th>
+                    <th>No E-Wallet SC</th>
+                    <th>Periode</th>
+                  </tr>
+                </thead>
+                <tbody id="rejectList"></tbody>
+              </table>
+            </div>
+
+            <div class="mt-3">
+              <label class="form-label fw-bold">Alasan Reject</label>
+              <textarea
+                class="form-control"
+                id="rejectReason"
+                rows="3"
+                placeholder="Masukkan alasan reject..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Batal
+            </button>
+
+            <button
+              class="btn btn-danger fw-bold"
+              onclick="confirmBulkReject()"
+            >
+              <i class="bi bi-x-circle me-1"></i>
+              Konfirmasi Reject
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbwKLYOdiQaYnOWPlQWrJ-N_p5vXZXplGorCfR4Yp69E2mJaC9x6ErVr5yHJMB3LQb_q/exec";
@@ -879,19 +1014,60 @@
             allData = json.data || [];
 
             if (!allData.length) {
-              $("#submissionList").html(
-                `<div class="col-12 text-center text-muted mt-3">
-            Tidak ada data
-          </div>`,
-              );
+              $("#submissionList").html(`
+            <div class="col-12 text-center text-muted mt-3">
+              Tidak ada data
+            </div>
+          `);
               return;
             }
 
-            // 🔥 LANGSUNG RENDER
+            // 🔥 Render card
             renderInsentifCards(allData);
 
-            // 🔥 Siapkan dropdown pengaju (kalau bukan sales)
-            setupPengajuFilter();
+            // 🔥 Isi dropdown pengaju
+            const pengajuSelect = document.getElementById("pengajuSelect");
+            pengajuSelect.innerHTML = "";
+
+            const optAll = document.createElement("option");
+            optAll.value = "all";
+            optAll.textContent = "Semua Pengaju";
+            optAll.dataset.pinned = "1";
+            pengajuSelect.appendChild(optAll);
+
+            const uniquePengaju = [
+              ...new Set(
+                allData
+                  .map((d) => d.namaPengaju || d.namaSales)
+                  .filter(Boolean),
+              ),
+            ];
+
+            uniquePengaju.sort((a, b) =>
+              a.localeCompare(b, "id", { sensitivity: "base" }),
+            );
+
+            uniquePengaju.forEach((nama) => {
+              const opt = document.createElement("option");
+              opt.value = nama;
+              opt.textContent = nama;
+              opt.dataset.pinned = "0";
+              pengajuSelect.appendChild(opt);
+            });
+
+            // 🔥 Re-init TomSelect (versi kamu yang work)
+            if (window.pengajuTomSelect) window.pengajuTomSelect.destroy();
+
+            window.pengajuTomSelect = new TomSelect("#pengajuSelect", {
+              create: false,
+              placeholder: "Pilih Nama Pengaju...",
+              sortField: [
+                { field: "pinned", direction: "desc" },
+                { field: "text", direction: "asc" },
+              ],
+            });
+
+            window.pengajuTomSelect.setValue("all", true);
           })
           .catch((err) => {
             Swal.close();
@@ -905,6 +1081,7 @@
       }
 
       function applyFilters() {
+        const ficFilter = $("#modalStatusFICSelect").val()?.toLowerCase();
         const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
         const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
         const sortType = $("#sortSelect").val(); // ambil pilihan sort
@@ -921,8 +1098,10 @@
             ""
           ).toLowerCase();
           const outletValue = (item.namaOutlet || "").toLowerCase();
+          const ficValue = (item.statusValidateFIC || "").toLowerCase();
 
           const statusMatch = !statusFilter || statusValue === statusFilter;
+          const ficMatch = !ficFilter || ficValue === ficFilter;
 
           const pengajuMatch =
             pengajuFilter === "all" ||
@@ -932,7 +1111,7 @@
           const outletMatch =
             !outletFilter || outletValue.includes(outletFilter);
 
-          return statusMatch && pengajuMatch && outletMatch;
+          return statusMatch && pengajuMatch && outletMatch && ficMatch;
         });
 
         // 🔽 SORT DATA
@@ -1017,8 +1196,8 @@
           return `<span class="badge bg-danger">Cancelled</span>`;
         if (status === "Sudah Upload SKP")
           return `<span class="badge bg-info-subtle text-info-emphasis">
-            Sudah Upload SKP
-          </span>`;
+              Sudah Upload SKP
+            </span>`;
         return `<span class="badge bg-secondary">${status}</span>`;
       }
 
@@ -1048,193 +1227,218 @@
             : "0";
 
           const card = `
-            <div class="col-md-6 mb-4">
-              <div class="card shadow-sm border-0 h-100 position-relative">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                  <!-- LEFT SIDE -->
-                    <div class="d-flex align-items-center">
-                      <input
-                        type="checkbox"
-                        class="form-check-input me-3"
-                        style="transform:scale(1.3);"
-                        value="${item.id}"
-                      >
-                      <div>
-                        <strong>${item.id}</strong><br>
-                        <small>${formatDate(item.timeStamp)}</small>
+              <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100 position-relative">
+                  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <!-- LEFT SIDE -->
+                      <div class="d-flex align-items-center">
+                        <input
+                          type="checkbox"
+                          class="form-check-input me-3"
+                          style="transform:scale(1.3);"
+                          value="${item.id}"
+                        >
+                        <div>
+                          <strong>${item.id}</strong><br>
+                          <small>${formatDate(item.timeStamp)}</small>
+                        </div>
                       </div>
-                    </div>
-                  <div class="text-end">
-                    <span class="badge bg-primary">${item.periodeProgram}</span><br>
-                    ${getStatusBadge(item.status)}
-                  </div>
-                </div>
-
-                <div class="card-body">
-
-                  <div class="mb-2">
-                    <small class="text-secondary">Outlet</small>
-                    <h6 class="fw-bold text-primary mb-0">${item.namaOutlet}</h6>
-                    <small>${item.kodePI} | ${item.kota}</small>
-                  </div>
-
-                  <hr class="my-2">
-
-                  <div class="row">
-                    <div class="col-6">
-                      <small class="text-secondary">Pengaju</small>
-                      <p class="fw-bold m-0">${item.namaPengaju}</p>
-                    </div>
-                    <div class="col-6">
-                      <small class="text-secondary">NIP</small>
-                      <p class="fw-bold m-0">${item.nipPengaju}</p>
-                    </div>
-                  </div>
-
-                  <div class="row mt-2">
-                    <div class="col-6">
-                      <small class="text-secondary">Nama Owner</small>
-                      <p class="fw-bold m-0">${item.namaOwnerOutlet || "-"}</p>
-                    </div>
-                    <div class="col-6">
-                      <small class="text-secondary">Nomor PIC SC</small>
-                      <p class="fw-bold m-0">${item.namaPicSC || "-"}</p>
-                    </div>
-                  </div>
-
-                  <div class="row mt-2">
-                    <div class="col-6">
-                      <small class="text-secondary">Jenis E-Wallet</small>
-                      <p class="fw-bold m-0">${item.jenisEwallet || "-"}</p>
-                    </div>
-                    <div class="col-6">
-                      <small class="text-secondary">Nomor E-Wallet</small>
-                      <p class="fw-bold m-0">${item.noEwallet || "-"}</p>
-                    </div>
-                  </div>
-
-                  <div class="row mt-3">
-
-                    <div class="col-6 mb-3">
-                      <small class="text-secondary d-block">File SKP (Generated)</small>
+                    <div class="text-end">
+                      <span class="badge bg-primary">${item.periodeProgram}</span><br>
+                      ${getStatusBadge(item.status)}<br>
 
                       ${
-                        item.generateSKP
-                          ? `
-                          <a href="${item.generateSKP}" target="_blank"
-                            class="btn btn-primary btn-sm mt-2">
-                            <i class="bi bi-file-earmark-pdf me-1"></i>
-                            Buka SKP (Generated)
-                          </a>
-                        `
-                          : `
-                          <button class="btn btn-secondary btn-sm mt-2" disabled>
-                            Belum Generate SKP
-                          </button>
-                        `
-                      }
-                    </div>
-
-                    <div class="col-6">
-                      <small class="text-secondary d-block">File SKP (Signed)</small>
-
-                      ${
-                        item.uploadSkp
-                          ? `
-                          <a href="${item.uploadSkp}" target="_blank"
-                            class="btn btn-primary btn-sm mt-2">
-                            <i class="bi bi-file-earmark-pdf me-1"></i>
-                            Buka SKP (Signed)
-                          </a>
-                        `
-                          : `
-                          <button class="btn btn-secondary btn-sm mt-2" disabled>
-                            Belum Upload SKP
-                          </button>
-                        `
+                        item.statusValidateFIC
+                          ? `<span class="badge ${
+                              item.statusValidateFIC === "Validated FIC"
+                                ? "bg-success"
+                                : item.statusValidateFIC === "Not Validated FIC"
+                                  ? "bg-warning text-dark"
+                                  : "bg-secondary"
+                            } mt-1">
+                              ${item.statusValidateFIC}
+                            </span>`
+                          : ""
                       }
                     </div>
                   </div>
 
-                  <!-- Estimasi Insentif -->
-                  <div class="mt-2">
-                    <div class="rounded p-3 d-flex justify-content-between align-items-center"
-                        style="background:#f1f5ff;">
+                  <div class="card-body">
 
-                      <div>
-                        <small class="text-primary fw-bold d-block">
-                          Estimasi Insentif (Berdasarkan Sell-Out)*
-                        </small>
+                    <div class="mb-2">
+                      <small class="text-secondary">Outlet</small>
+                      <h6 class="fw-bold text-primary mb-0">${item.namaOutlet}</h6>
+                      <small>${item.kodePI} | ${item.kota}</small>
+                    </div>
 
-                        <span class="fw-bold text-success fs-5">
-                          Rp ${estimasiInsentif}
-                        </span>
+                    <hr class="my-2">
 
-                        <small class="text-muted d-block mt-1" style="font-size:11px;">
-                          *Nilai di atas merupakan estimasi berdasarkan data sell-out yang diinput.
-                          Insentif akan diproses hanya jika target sell-in dari produk yang diklaim
-                          telah tercapai sesuai Target.
-                        </small>
+                    <div class="row">
+                      <div class="col-6">
+                        <small class="text-secondary">Pengaju</small>
+                        <p class="fw-bold m-0">${item.namaPengaju}</p>
+                      </div>
+                      <div class="col-6">
+                        <small class="text-secondary">NIP</small>
+                        <p class="fw-bold m-0">${item.nipPengaju}</p>
+                      </div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-6">
+                        <small class="text-secondary">Nama Owner</small>
+                        <p class="fw-bold m-0">${item.namaOwnerOutlet || "-"}</p>
+                      </div>
+                      <div class="col-6">
+                        <small class="text-secondary">Nomor PIC SC</small>
+                        <p class="fw-bold m-0">${item.namaPicSC || "-"}</p>
+                      </div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-6">
+                        <small class="text-secondary">Jenis E-Wallet</small>
+                        <p class="fw-bold m-0">${item.jenisEwallet || "-"}</p>
+                      </div>
+                      <div class="col-6">
+                        <small class="text-secondary">Nomor E-Wallet</small>
+                        <p class="fw-bold m-0">${item.noEwallet || "-"}</p>
+                      </div>
+                    </div>
+
+                    <div class="row mt-3">
+
+                      <div class="col-6 mb-3">
+                        <small class="text-secondary d-block">File SKP (Generated)</small>
+
+                        ${
+                          item.generateSKP
+                            ? `
+                            <a href="${item.generateSKP}" target="_blank"
+                              class="btn btn-primary btn-sm mt-2">
+                              <i class="bi bi-file-earmark-pdf me-1"></i>
+                              Buka SKP (Generated)
+                            </a>
+                          `
+                            : `
+                            <button class="btn btn-secondary btn-sm mt-2" disabled>
+                              Belum Generate SKP
+                            </button>
+                          `
+                        }
                       </div>
 
+                      <div class="col-6">
+                        <small class="text-secondary d-block">File SKP (Signed)</small>
+
+                        ${
+                          item.uploadSkp
+                            ? `
+                            <a href="${item.uploadSkp}" target="_blank"
+                              class="btn btn-primary btn-sm mt-2">
+                              <i class="bi bi-file-earmark-pdf me-1"></i>
+                              Buka SKP (Signed)
+                            </a>
+                          `
+                            : `
+                            <button class="btn btn-secondary btn-sm mt-2" disabled>
+                              Belum Upload SKP
+                            </button>
+                          `
+                        }
+                      </div>
                     </div>
+
+                    <!-- Estimasi Insentif -->
+                    <div class="mt-2">
+                      <div class="rounded p-3 d-flex justify-content-between align-items-center"
+                          style="background:#f1f5ff;">
+
+                        <div>
+                          <small class="text-primary fw-bold d-block">
+                            Estimasi Insentif (Berdasarkan Sell-Out)*
+                          </small>
+
+                          <span class="fw-bold text-success fs-5">
+                            Rp ${estimasiInsentif}
+                          </span>
+
+                          <small class="text-muted d-block mt-1" style="font-size:11px;">
+                            *Nilai di atas merupakan estimasi berdasarkan data sell-out yang diinput.
+                            Insentif akan diproses hanya jika target sell-in dari produk yang diklaim
+                            telah tercapai sesuai Target.
+                          </small>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="bg-white border-top text-center py-2">
+
+                    <!-- Action Dropdown -->
+                    <div class="dropdown mb-2">
+                      <button class="btn btn-primary dropdown-toggle w-100"
+                              type="button"
+                              data-bs-toggle="dropdown">
+                        Action Menu
+                      </button>
+
+                      <ul class="dropdown-menu w-100">
+
+                      <li>
+                        ${
+                          item.generateSKP
+                            ? `
+                            <a class="dropdown-item disabled text-muted">
+                              <i class="bi bi-file-earmark-pdf me-2"></i>
+                              Generate SKP
+                            </a>
+                          `
+                            : `
+                            <a class="dropdown-item"
+                              href="#"
+                              onclick="generateSKP('${item.id}')">
+                              <i class="bi bi-file-earmark-pdf me-2"></i>
+                              Generate SKP
+                            </a>
+                          `
+                        }
+                      </li>
+
+                        <li>
+                          <a class="dropdown-item"
+                            href="#"
+                            onclick="openUploadModal('${item.id}')">
+                            <i class="bi bi-upload me-2"></i>
+                            Upload SKP
+                          </a>
+                        </li>
+
+                        <li>
+                          <a class="dropdown-item"
+                            href="#"
+                            onclick="uploadStruk('${item.id}')">
+                            <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                            Upload Struk Sell-Out Outlet
+                          </a>
+                        </li>
+
+                      </ul>
+                    </div>
+
+                    <!-- Show Detail -->
+                    <div style="cursor:pointer"
+                        onclick="openDetailModal(JSON.parse(decodeURIComponent('${safeJson}')))">
+                      <span class="text-primary fw-bold">Show Detail</span>
+                    </div>
+
                   </div>
 
                 </div>
-
-                <div class="bg-white border-top text-center py-2">
-
-                  <!-- Action Dropdown -->
-                  <div class="dropdown mb-2">
-                    <button class="btn btn-primary dropdown-toggle w-100"
-                            type="button"
-                            data-bs-toggle="dropdown">
-                      Action Menu
-                    </button>
-
-                    <ul class="dropdown-menu w-100">
-
-                      <li>
-                        <a class="dropdown-item ${item.generateSKP ? "disabled text-muted" : ""}"
-                          href="#"
-                          ${item.generateSKP ? "" : `onclick="generateSKP('${item.id}')`}>
-                          <i class="bi bi-file-earmark-pdf me-2"></i>
-                          Generate SKP
-                        </a>
-                      </li>
-
-                      <li>
-                        <a class="dropdown-item"
-                          href="#"
-                          onclick="openUploadModal('${item.id}')">
-                          <i class="bi bi-upload me-2"></i>
-                          Upload SKP
-                        </a>
-                      </li>
-
-                      <li>
-                        <a class="dropdown-item"
-                          href="#"
-                          onclick="uploadStruk('${item.id}')">
-                          <i class="bi bi-file-earmark-arrow-up me-2"></i>
-                          Upload Struk Sell-Out Outlet
-                        </a>
-                      </li>
-
-                    </ul>
-                  </div>
-
-                  <!-- Show Detail -->
-                  <div style="cursor:pointer"
-                      onclick="openDetailModal(JSON.parse(decodeURIComponent('${safeJson}')))">
-                    <span class="text-primary fw-bold">Show Detail</span>
-                  </div>
-
-                </div>
-
               </div>
-            </div>
-            `;
+              `;
           submissionList.append(card);
         });
       }
@@ -1248,61 +1452,61 @@
         );
 
         document.getElementById("detailInfo").innerHTML = `
-        <div class="row">
-          <div class="col-md-4">
-            <strong>ID:</strong> ${item.id}<br>
-            <strong>Periode:</strong> ${item.periodeProgram}<br>
-            <strong>Status:</strong> ${getStatusBadge(item.status)}<br>
-            <strong>Waktu Pendaftaran:</strong> ${formatDate(item.timeStamp)}
+          <div class="row">
+            <div class="col-md-4">
+              <strong>ID:</strong> ${item.id}<br>
+              <strong>Periode:</strong> ${item.periodeProgram}<br>
+              <strong>Status:</strong> ${getStatusBadge(item.status)}<br>
+              <strong>Waktu Pendaftaran:</strong> ${formatDate(item.timeStamp)}
+            </div>
+
+            <div class="col-md-4">
+              <strong>Outlet:</strong> ${item.namaOutlet}<br>
+              <strong>Kode PI:</strong> ${item.kodePI}<br>
+              <strong>Kota:</strong> ${item.kota}<br>
+              <strong>Alamat:</strong> ${item.alamat || "-"}
+            </div>
+
+            <div class="col-md-4">
+              <strong>Owner:</strong> ${item.namaOwnerOutlet}<br>
+              <strong>PIC SC:</strong> ${item.namaPicSC}<br>
+              <strong>Nomor E-Wallet:</strong> ${item.noEwallet || "-"}<br>
+              <strong>E-Wallet:</strong> ${item.jenisEwallet}
+            </div>
           </div>
 
-          <div class="col-md-4">
-            <strong>Outlet:</strong> ${item.namaOutlet}<br>
-            <strong>Kode PI:</strong> ${item.kodePI}<br>
-            <strong>Kota:</strong> ${item.kota}<br>
-            <strong>Alamat:</strong> ${item.alamat || "-"}
+          <hr class="my-2" />
+
+          <div class="row mt-2">
+            <div class="col-md-4">
+              <strong>File SKP (Generated):</strong><br>
+
+              ${
+                item.generateSKP
+                  ? `<a href="${item.generateSKP}" target="_blank" class="btn btn-primary btn-sm mt-1">
+                      <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Generated)
+                    </a>`
+                  : `<button class="btn btn-secondary btn-sm mt-1" disabled>
+                      Belum Generate SKP
+                    </button>`
+              }
+            </div>
+
+            <div class="col-md-4">
+              <strong>File SKP (Signed):</strong><br>
+
+              ${
+                item.uploadSKP
+                  ? `<a href="${item.uploadSKP}" target="_blank" class="btn btn-success btn-sm mt-1">
+                      <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Signed)
+                    </a>`
+                  : `<button class="btn btn-secondary btn-sm mt-1" disabled>
+                      Belum Upload SKP
+                    </button>`
+              }
+            </div>
           </div>
-
-          <div class="col-md-4">
-            <strong>Owner:</strong> ${item.namaOwnerOutlet}<br>
-            <strong>PIC SC:</strong> ${item.namaPicSC}<br>
-            <strong>Nomor E-Wallet:</strong> ${item.noEwallet || "-"}<br>
-            <strong>E-Wallet:</strong> ${item.jenisEwallet}
-          </div>
-        </div>
-
-        <hr class="my-2" />
-
-        <div class="row mt-2">
-          <div class="col-md-4">
-            <strong>File SKP (Generated):</strong><br>
-
-            ${
-              item.generateSKP
-                ? `<a href="${item.generateSKP}" target="_blank" class="btn btn-primary btn-sm mt-1">
-                    <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Generated)
-                  </a>`
-                : `<button class="btn btn-secondary btn-sm mt-1" disabled>
-                    Belum Generate SKP
-                  </button>`
-            }
-          </div>
-
-          <div class="col-md-4">
-            <strong>File SKP (Signed):</strong><br>
-
-            ${
-              item.uploadSKP
-                ? `<a href="${item.uploadSKP}" target="_blank" class="btn btn-success btn-sm mt-1">
-                    <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Signed)
-                  </a>`
-                : `<button class="btn btn-secondary btn-sm mt-1" disabled>
-                    Belum Upload SKP
-                  </button>`
-            }
-          </div>
-        </div>
-      `;
+        `;
 
         renderProdukTable(item.dataProduk);
 
@@ -1318,8 +1522,8 @@
 
         if (!dataProduk) {
           tbody.innerHTML = `<tr>
-      <td colspan="5" class="text-muted">Tidak ada produk</td>
-    </tr>`;
+        <td colspan="5" class="text-muted">Tidak ada produk</td>
+      </tr>`;
           return;
         }
 
@@ -1333,24 +1537,24 @@
 
           if (qty > 0) {
             tbody.innerHTML += `
-        <tr>
-          <td>${no++}</td>
-          <td class="text-start">${sku}</td>
-          <td>${qty}</td>
-          <td>-</td>
-          <td>${qty}</td>
-        </tr>
-      `;
+          <tr>
+            <td>${no++}</td>
+            <td class="text-start">${sku}</td>
+            <td>${qty}</td>
+            <td>-</td>
+            <td>${qty}</td>
+          </tr>
+        `;
           }
         });
 
         if (no === 1) {
           tbody.innerHTML = `
-      <tr>
-        <td colspan="5" class="text-muted">
-          Tidak ada produk
-        </td>
-      </tr>`;
+        <tr>
+          <td colspan="5" class="text-muted">
+            Tidak ada produk
+          </td>
+        </tr>`;
         }
       }
       function toggleProdukTable() {
@@ -1423,20 +1627,20 @@
                 },
                 buttonsStyling: false,
                 html: `
-                SKP berhasil dibuat!<br><br>
+                  SKP berhasil dibuat!<br><br>
 
-                ${
-                  link
-                    ? `
-                  <a href="${link}" target="_blank" class="btn btn-primary">
-                    Download / Buka SKP
-                  </a>
-                `
-                    : `
-                  <span class="text-muted">Link SKP tidak tersedia</span>
-                `
-                }
-              `,
+                  ${
+                    link
+                      ? `
+                    <a href="${link}" target="_blank" class="btn btn-primary">
+                      Download / Buka SKP
+                    </a>
+                  `
+                      : `
+                    <span class="text-muted">Link SKP tidak tersedia</span>
+                  `
+                  }
+                `,
               }).then(() => {
                 // refresh data
                 getDataByNIP(userData.nip, userData.jabatan, userData.nama);
@@ -1546,11 +1750,11 @@
                 },
                 buttonsStyling: false,
                 html: `
-                File berhasil diupload.<br><br>
-                <a href="${result.url}" target="_blank" class="btn btn-primary">
-                  Lihat SKP Terupload
-                </a>
-              `,
+                  File berhasil diupload.<br><br>
+                  <a href="${result.url}" target="_blank" class="btn btn-primary">
+                    Lihat SKP Terupload
+                  </a>
+                `,
               }).then(() => {
                 // tutup modal
                 bootstrap.Modal.getInstance(
@@ -1598,6 +1802,215 @@
           }, 500);
         }
       });
+
+      function getCheckedItems() {
+        const checkedIds = [];
+
+        document
+          .querySelectorAll("#submissionList input[type='checkbox']:checked")
+          .forEach((cb) => {
+            checkedIds.push(cb.value);
+          });
+
+        const selectedData = allData.filter((item) =>
+          checkedIds.includes(item.id),
+        );
+
+        return selectedData;
+      }
+
+      function bulkApprove() {
+        const selected = getCheckedItems();
+
+        if (!selected.length) {
+          Swal.fire({
+            icon: "warning",
+            title: "Tidak ada data dipilih",
+            text: "Silakan checklist data terlebih dahulu",
+          });
+
+          return;
+        }
+
+        const tbody = document.getElementById("approveList");
+        tbody.innerHTML = "";
+
+        selected.forEach((item, i) => {
+          tbody.innerHTML += `
+      <tr>
+        <td class="text-center">${i + 1}</td>
+        <td class="text-center">${item.id}</td>
+        <td>${item.namaOutlet}</td>
+        <td>${item.namaPengaju}</td>
+        <td>${item.namaPicSC || "-"}</td>
+        <td>${item.noEwallet || "-"}</td>
+        <td class="text-center">${item.periodeProgram}</td>
+      </tr>
+    `;
+        });
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("bulkApproveModal"),
+        );
+
+        modal.show();
+      }
+
+      function bulkReject() {
+        const selected = getCheckedItems();
+
+        if (!selected.length) {
+          Swal.fire({
+            icon: "warning",
+            title: "Tidak ada data dipilih",
+            text: "Silakan checklist data terlebih dahulu",
+          });
+
+          return;
+        }
+
+        const tbody = document.getElementById("rejectList");
+        tbody.innerHTML = "";
+
+        selected.forEach((item, i) => {
+          tbody.innerHTML += `
+      <tr>
+        <td class="text-center">${i + 1}</td>
+        <td class="text-center">${item.id}</td>
+        <td>${item.namaOutlet}</td>
+        <td>${item.namaPengaju}</td>
+        <td>${item.namaPicSC || "-"}</td>
+        <td>${item.noEwallet || "-"}</td>
+        <td class="text-center">${item.periodeProgram}</td>
+      </tr>
+    `;
+        });
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("bulkRejectModal"),
+        );
+
+        modal.show();
+      }
+
+      function confirmBulkApprove() {
+        const selected = getCheckedItems();
+
+        const ids = selected.map((item) => item.id);
+
+        Swal.fire({
+          title: "Approve Data?",
+          text: `${ids.length} data akan diapprove`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Ya Approve",
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+
+          Swal.fire({
+            title: "Processing...",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          fetch(apiURL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "bulkApprove",
+              ids: ids,
+              user: userData.nama,
+            }),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              Swal.close();
+
+              if (res.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Berhasil Approve",
+                });
+
+                bootstrap.Modal.getInstance(
+                  document.getElementById("bulkApproveModal"),
+                ).hide();
+
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Gagal Approve",
+                });
+              }
+            });
+        });
+      }
+      function confirmBulkReject() {
+        const selected = getCheckedItems();
+        const ids = selected.map((item) => item.id);
+
+        const reason = document.getElementById("rejectReason").value.trim();
+
+        if (!reason) {
+          Swal.fire({
+            icon: "warning",
+            title: "Alasan Reject Wajib Diisi",
+          });
+
+          return;
+        }
+
+        Swal.fire({
+          title: "Reject Data?",
+          text: `${ids.length} data akan direject`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya Reject",
+          confirmButtonColor: "#d33",
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+
+          Swal.fire({
+            title: "Processing...",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          fetch(apiURL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "bulkReject",
+              ids: ids,
+              reason: reason,
+              user: userData.nama,
+            }),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              Swal.close();
+
+              if (res.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Berhasil Reject",
+                });
+
+                bootstrap.Modal.getInstance(
+                  document.getElementById("bulkRejectModal"),
+                ).hide();
+
+                document.getElementById("rejectReason").value = "";
+
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Gagal Reject",
+                });
+              }
+            });
+        });
+      }
     </script>
   </body>
 </html>
