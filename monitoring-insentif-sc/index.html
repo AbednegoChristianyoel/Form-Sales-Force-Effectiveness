@@ -734,9 +734,9 @@
                     <tr>
                       <th style="width: 5%">No</th>
                       <th style="width: 30%">SKU</th>
-                      <th>Minimal Sell-Out</th>
+                      <th>Minimal Satuan Penjualan (Sell-out)</th>
                       <th>Nilai Insentif</th>
-                      <th>Target Sell-In</th>
+                      <th>Target Pembelian (Sell-in)</th>
                     </tr>
                   </thead>
 
@@ -744,6 +744,13 @@
                 </table>
               </div>
             </div>
+
+            <hr class="my-2" />
+
+            <h6 class="fw-bold text-primary m-0 mb-2">
+              Riwayat Log Insentif SC
+            </h6>
+            <div id="logContainer"></div>
           </div>
         </div>
       </div>
@@ -980,6 +987,7 @@
       }
 
       let allData = [];
+      let allLogs = [];
 
       function getDataByNIP(nip, jabatan, nama) {
         Swal.fire({
@@ -988,6 +996,28 @@
           allowOutsideClick: false,
           didOpen: () => Swal.showLoading(),
         });
+
+        fetch(
+          "https://script.google.com/macros/s/AKfycbwtIwsdxpIT-X_o4yAh7Aci2tcDAlf8ew0B5exC1doTro5Qi36RniBS9F4djCtu3jiIqA/exec",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              action: "getLogByIdSC",
+            }),
+          },
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.result === "success") {
+              allLogs = res.logs;
+              console.log("Logs berhasil diambil:", allLogs);
+            } else {
+              console.warn("Gagal ambil log");
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetch log:", err);
+          });
 
         const params = new URLSearchParams({
           nip: nip,
@@ -1378,8 +1408,8 @@
                   <div class="bg-white border-top text-center py-2">
 
                     <!-- Action Dropdown -->
-                    <div class="dropdown mb-2">
-                      <button class="btn btn-primary dropdown-toggle w-100"
+                    <div class="dropdown mb-2 mx-3">
+                      <button class="btn btn-primary dropdown-toggle w-100 fs-3 fe-3"
                               type="button"
                               data-bs-toggle="dropdown">
                         Action Menu
@@ -1388,23 +1418,12 @@
                       <ul class="dropdown-menu w-100">
 
                       <li>
-                        ${
-                          item.generateSKP
-                            ? `
-                            <a class="dropdown-item disabled text-muted">
-                              <i class="bi bi-file-earmark-pdf me-2"></i>
-                              Generate SKP
-                            </a>
-                          `
-                            : `
-                            <a class="dropdown-item"
-                              href="#"
-                              onclick="generateSKP('${item.id}')">
-                              <i class="bi bi-file-earmark-pdf me-2"></i>
-                              Generate SKP
-                            </a>
-                          `
-                        }
+                        <a class="dropdown-item ${item.generateSKP ? "disabled text-muted" : ""}"
+                          href="#"
+                          ${item.generateSKP ? "" : `onclick="generateSKP('${item.id}')`}>
+                          <i class="bi bi-file-earmark-pdf me-2"></i>
+                          Generate SKP
+                        </a>
                       </li>
 
                         <li>
@@ -1496,8 +1515,8 @@
               <strong>File SKP (Signed):</strong><br>
 
               ${
-                item.uploadSKP
-                  ? `<a href="${item.uploadSKP}" target="_blank" class="btn btn-success btn-sm mt-1">
+                item.uploadSkp
+                  ? `<a href="${item.uploadSkp}" target="_blank" class="btn btn-primary btn-sm mt-1">
                       <i class="bi bi-file-earmark-pdf me-1"></i> Buka SKP (Signed)
                     </a>`
                   : `<button class="btn btn-secondary btn-sm mt-1" disabled>
@@ -1510,53 +1529,170 @@
 
         renderProdukTable(item.dataProduk);
 
+        if (item.id) renderLogsById(item.id);
+
         modal.show();
       }
 
-      // =========================
-      // RENDER TABEL PRODUK
-      // =========================
+      const MASTER_PRODUK_SC = {
+        MICROLAXTAB: {
+          nama: "MICROLAXTAB BISACODYL 5MG@10",
+          satuan: "1 Blister",
+          insentif: 2000,
+        },
+        ALBUSMIN: {
+          nama: "ALBUSMIN 3 BLISTER @ 10 KAPSUL",
+          satuan: "1 Box (3 Blister)",
+          insentif: 15000,
+        },
+        PRAXION_SUSP: {
+          nama: "PRAXION SUSP 60ML RASA JERUK",
+          satuan: "1 Botol",
+          insentif: 3000,
+        },
+        PRORIS_KAPLET: {
+          nama: "PRORIS IBUPROFEN 10 KAPLET",
+          satuan: "1 Box (10 Catch Cover)",
+          insentif: 10000,
+        },
+        NSU_NEW_FORMULA_15S: {
+          nama: "NOURISH SKIN ULTIMATE NEW 15`S",
+          satuan: "1 Box",
+          insentif: 5000,
+        },
+        NSU_NEW_FORMULA_30S: {
+          nama: "NOURISH SKIN ULTIMATE NEW 30`S",
+          satuan: "1 Box",
+          insentif: 10000,
+        },
+        NS_GLOW_15: {
+          nama: "NOURISH SKIN GLOW 15 TAB",
+          satuan: "1 Box",
+          insentif: 4000,
+        },
+        NS_GLOW_30: {
+          nama: "NOURISH SKIN GLOW 30 TAB",
+          satuan: "1 Box",
+          insentif: 7000,
+        },
+        VIOSTIN_50: {
+          nama: "VIOSTIN 50 KAPLET",
+          satuan: "1 Box (5 Catch Cover)",
+          insentif: 15000,
+        },
+        VIOSTIN_30: {
+          nama: "VIOSTIN 30 KAPLET",
+          satuan: "1 Box (5 Strip)",
+          insentif: 5000,
+        },
+        ASCARDIA_: {
+          nama: "ASCARDIA 80MG TAB 100`S",
+          satuan: "1 Box (10 Strip)",
+          insentif: 5000,
+        },
+        TORAS_4_MG_TABLET: {
+          nama: "TORAS 4MG TAB 100`S",
+          satuan: "1 Box (10 Blister)",
+          insentif: 10000,
+        },
+        TORAS_8_MG_TABLET: {
+          nama: "TORAS 8MG TAB 100`S",
+          satuan: "1 Box (10 Blister)",
+          insentif: 20000,
+        },
+        MEDISIO_5_ML: {
+          nama: "MEDISIO 36% CONCENTRATE 5ML",
+          satuan: "1 Botol",
+          insentif: 1000,
+        },
+        MEDISIO_10_ML: {
+          nama: "MEDISIO 36% CONCENTRATE 10 ML",
+          satuan: "1 Botol",
+          insentif: 2000,
+        },
+        BRION_OINT_20GR: {
+          nama: "BRION OINT 20GR",
+          satuan: "1 Tube",
+          insentif: 5000,
+        },
+      };
+
       function renderProdukTable(dataProduk) {
         const tbody = document.getElementById("produkTableBody");
         tbody.innerHTML = "";
 
+        // 🔴 Jika data kosong
         if (!dataProduk) {
-          tbody.innerHTML = `<tr>
-        <td colspan="5" class="text-muted">Tidak ada produk</td>
-      </tr>`;
+          tbody.innerHTML = `
+      <tr>
+          <td colspan="5" class="text-center text-muted">
+          Tidak ada produk
+        </td>
+        </tr>
+    `;
           return;
         }
 
-        let produkObj =
-          typeof dataProduk === "string" ? JSON.parse(dataProduk) : dataProduk;
+        // 🔥 Jika data berupa string JSON
+        if (typeof dataProduk === "string") {
+          try {
+            dataProduk = JSON.parse(dataProduk);
+          } catch (e) {
+            console.error("Format dataProduk salah:", e);
+            return;
+          }
+        }
 
         let no = 1;
 
-        Object.keys(produkObj).forEach((sku) => {
-          const qty = parseInt(produkObj[sku]) || 0;
+        Object.keys(MASTER_PRODUK_SC).forEach((key) => {
+          const master = MASTER_PRODUK_SC[key];
 
-          if (qty > 0) {
-            tbody.innerHTML += `
-          <tr>
-            <td>${no++}</td>
-            <td class="text-start">${sku}</td>
-            <td>${qty}</td>
-            <td>-</td>
-            <td>${qty}</td>
-          </tr>
-        `;
+          // 🔥 Ambil target sell-in
+          const target = Number(dataProduk[key] || 0);
+
+          // 🔥 Tentukan satuan target
+          let satuanTarget = "UB";
+
+          if (key === "PRAXION_SUSP") {
+            satuanTarget = "Botol";
+          } else if (key === "MEDISIO_5_ML" || key === "MEDISIO_10_ML") {
+            satuanTarget = "Botol";
+          } else if (key === "BRION_OINT_20GR") {
+            satuanTarget = "Tube";
           }
+
+          const row = `
+      <tr>
+        <td class="text-center align-middle">${no++}</td>
+        <td class="text-start align-middle">${master.nama}</td>
+        <td class="align-middle">${master.satuan}</td>
+        <td class="align-middle">${formatRupiah(master.insentif)}</td>
+        <td class="text-center align-middle">
+          ${target} ${satuanTarget}
+        </td>
+      </tr>
+    `;
+
+          tbody.insertAdjacentHTML("beforeend", row);
         });
 
+        // 🔴 Jika semua kosong
         if (no === 1) {
           tbody.innerHTML = `
         <tr>
-          <td colspan="5" class="text-muted">
+          <td colspan="5" class="text-center text-muted">
             Tidak ada produk
           </td>
-        </tr>`;
+        </tr>
+    `;
         }
       }
+
+      function formatRupiah(angka) {
+        return "Rp " + Number(angka).toLocaleString("id-ID");
+      }
+
       function toggleProdukTable() {
         const table = document.getElementById("produkCollapse");
         const btn = document.getElementById("toggleProdukBtn");
@@ -1663,6 +1799,67 @@
           });
       }
 
+      function renderLogsById(logId) {
+        const container = document.getElementById("logContainer");
+        container.innerHTML = "";
+
+        let logs = allLogs.filter((l) => l.id === logId);
+
+        if (logs.length === 0) {
+          container.innerHTML = `<p class="text-muted">Tidak ada riwayat log.</p>`;
+          return;
+        }
+
+        // urut naik (lama → baru)
+        logs.sort((a, b) => new Date(a.timeStamp) - new Date(b.timeStamp));
+
+        logs.forEach((log, index) => {
+          const row = document.createElement("div");
+          row.className = "row mb-1"; // 🔹 jarak kecil
+
+          // kiri
+          const colLeft = document.createElement("div");
+          colLeft.className = "col-8";
+          colLeft.innerHTML = `<strong>${log.action}</strong> | ${log.user}`;
+
+          // kanan
+          const colRight = document.createElement("div");
+          colRight.className = "col-4 text-end text-muted";
+
+          let timeText = formatDate(log.timeStamp);
+
+          if (index > 0) {
+            timeText +=
+              " " + diffTime(logs[index - 1].timeStamp, log.timeStamp);
+          }
+
+          colRight.innerText = timeText;
+
+          row.appendChild(colLeft);
+          row.appendChild(colRight);
+          container.appendChild(row);
+
+          // 🔹 notes jika ada
+          if (log.notes !== "") {
+            const notesRow = document.createElement("div");
+            notesRow.className = "row mb-2";
+
+            notesRow.innerHTML = `
+        <div class="col-12">
+          <small class="text-muted">Notes:</small> ${log.notes}
+        </div>
+      `;
+
+            container.appendChild(notesRow);
+          }
+
+          // 🔹 garis pemisah kecil
+          const hr = document.createElement("hr");
+          hr.className = "my-2"; // sebelumnya default my-3
+          container.appendChild(hr);
+        });
+      }
+
       function openUploadModal(id) {
         document.getElementById("uploadId").value = id;
         document.getElementById("fileSKP").value = "";
@@ -1729,6 +1926,7 @@
           formData.append("filename", file.name);
           formData.append("mimeType", file.type);
           formData.append("file", base64);
+          formData.append("username", userData?.nama || "");
 
           apiURLGenerateSKP =
             "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
@@ -2010,6 +2208,15 @@
               }
             });
         });
+      }
+
+      function diffTime(from, to) {
+        const diffMs = new Date(to) - new Date(from);
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor(
+          (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        return `(${diffDays} days ${diffHours} hours)`;
       }
     </script>
   </body>
