@@ -2234,6 +2234,7 @@
           formData.append("action", "bulkReject");
           formData.append("ids", ids.join(","));
           formData.append("username", userData?.nama || "");
+          formData.append("reason", reason);
 
           const apiURLGenerateSKP =
             "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
