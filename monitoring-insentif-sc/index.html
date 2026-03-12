@@ -1332,6 +1332,13 @@
                         <p class="fw-bold m-0">${item.jenisEwallet || "-"}</p>
                       </div>
                       <div class="col-6">
+                        <small class="text-secondary">Nama Akun E-Wallet</small>
+                        <p class="fw-bold m-0">${item.namaPenggunaEWallet || "-"}</p>
+                      </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-6">
                         <small class="text-secondary">Nomor E-Wallet</small>
                         <p class="fw-bold m-0">${item.noEwallet || "-"}</p>
                       </div>
@@ -1505,6 +1512,7 @@
             <div class="col-md-4">
               <strong>Owner:</strong> ${item.namaOwnerOutlet}<br>
               <strong>PIC SC:</strong> ${item.namaPicSC}<br>
+              <strong>Nama Akun E-Wallet:</strong> ${item.namaPenggunaEWallet || "-"}<br>
               <strong>Nomor E-Wallet:</strong> ${item.noEwallet || "-"}<br>
               <strong>E-Wallet:</strong> ${item.jenisEwallet}
             </div>
