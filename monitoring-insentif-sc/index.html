@@ -955,7 +955,10 @@
         document.getElementById("welcomeText").textContent =
           `Selamat Datang, ${userData.nama}`;
 
-        if (userData.roles?.toLowerCase() === "sales") {
+        if (
+          userData.roles?.toLowerCase() === "sales" ||
+          userData.roles?.toLowerCase() === "nsm"
+        ) {
           document.getElementById("actionButtons").classList.add("d-none");
         }
 
@@ -1404,69 +1407,70 @@
                   </div>
 
                   <div class="bg-white border-top text-center py-2">
+                    ${
+                      userData.roles !== "FIC"
+                        ? `
+                        <!-- Action Dropdown -->
+                        <div class="dropdown mb-2 mx-3">
+                          <button class="btn btn-primary custom-dropdown dropdown-toggle w-100 fs-3 fe-3"
+                                  type="button"
+                                  data-bs-toggle="dropdown">
+                            Action Menu
+                          </button>
 
-                    <!-- Action Dropdown -->
-                    <div class="dropdown mb-2 mx-3">
-                      <button class="btn btn-primary custom-dropdown dropdown-toggle w-100 fs-3 fe-3"
-                              type="button"
-                              data-bs-toggle="dropdown">
-                        Action Menu
-                      </button>
+                          <ul class="dropdown-menu w-100">
 
-                      <ul class="dropdown-menu w-100">
+                            <li>
+                              ${
+                                item.generateSKP
+                                  ? `
+                                  <a class="dropdown-item disabled text-muted">
+                                    <i class="bi bi-file-earmark-pdf me-2"></i>
+                                    Generate SKP
+                                  </a>
+                                `
+                                  : `
+                                  <a class="dropdown-item"
+                                    onclick="generateSKP('${item.id}')">
+                                    <i class="bi bi-file-earmark-pdf me-2"></i>
+                                    Generate SKP
+                                  </a>
+                                `
+                              }
+                            </li>
 
-                        <li>
-                          ${
-                            item.generateSKP
-                              ? `
-                              <a class="dropdown-item disabled text-muted">
-                                <i class="bi bi-file-earmark-pdf me-2"></i>
-                                Generate SKP
-                              </a>
-                            `
-                              : `
+                            <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
+
+                            <li>
                               <a class="dropdown-item"
-                                onclick="generateSKP('${item.id}')">
-                                <i class="bi bi-file-earmark-pdf me-2"></i>
-                                Generate SKP
+                                onclick="openUploadModal('${item.id}')">
+                                <i class="bi bi-upload me-2"></i>
+                                Upload SKP
                               </a>
-                            `
-                          }
-                        </li>
+                            </li>
 
-                        <!-- Divider -->
-                        <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
+                            <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
 
-                        <li>
-                          <a class="dropdown-item"
-                            onclick="openUploadModal('${item.id}')">
-                            <i class="bi bi-upload me-2"></i>
-                            Upload SKP
-                          </a>
-                        </li>
+                            <li>
+                              <a class="dropdown-item"
+                                onclick="uploadStruk('${item.id}')">
+                                <i class="bi bi-file-earmark-arrow-up me-2"></i>
+                                Upload Struk Sell-Out Outlet
+                              </a>
+                            </li>
 
-                        <!-- Divider -->
-                        <li><hr class="dropdown-divider" style="margin:2px 0;"></li>
-
-                        <li>
-                          <a class="dropdown-item"
-                            onclick="uploadStruk('${item.id}')">
-                            <i class="bi bi-file-earmark-arrow-up me-2"></i>
-                            Upload Struk Sell-Out Outlet
-                          </a>
-                        </li>
-
-                      </ul>
-                    </div>
+                          </ul>
+                        </div>
+                        `
+                        : ""
+                    }
 
                     <!-- Show Detail -->
                     <div style="cursor:pointer"
                         onclick="openDetailModal(JSON.parse(decodeURIComponent('${safeJson}')))">
                       <span class="text-primary fw-bold">Show Detail</span>
                     </div>
-
                   </div>
-
                 </div>
               </div>
               `;
