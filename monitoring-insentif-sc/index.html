@@ -1285,10 +1285,12 @@
                                 ? "bg-success"
                                 : item.statusValidateFIC === "Not Validated FIC"
                                   ? "bg-warning text-dark"
-                                  : "bg-secondary"
+                                  : item.statusValidateFIC === "Rejected"
+                                    ? "bg-danger"
+                                    : "bg-secondary"
                             } mt-1">
-                              ${item.statusValidateFIC}
-                            </span>`
+                                      ${item.statusValidateFIC}
+                                    </span>`
                           : ""
                       }
                     </div>
