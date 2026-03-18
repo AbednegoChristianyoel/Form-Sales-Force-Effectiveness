@@ -730,13 +730,19 @@
                   class="table table-bordered table-sm align-middle text-center"
                   id="produkTable"
                 >
-                  <thead>
+                  <thead class="bg-primary text-white">
                     <tr>
                       <th style="width: 5%">No</th>
-                      <th style="width: 30%">SKU</th>
-                      <th>Minimal Satuan Penjualan (Sell-out)</th>
-                      <th>Nilai Insentif</th>
-                      <th>Target Pembelian (Sell-in)</th>
+                      <th style="width: 20%">SKU</th>
+                      <th style="width: 20%">
+                        Minimal Satuan<br />Penjualan (Sell Out)
+                      </th>
+                      <th style="width: 15%">Nilai<br />Insentif</th>
+                      <th style="width: 15%">
+                        Target Pembelian<br />(Sell-in)
+                      </th>
+                      <th style="width: 15%">Claim QTY<br />(Sell-out)</th>
+                      <th style="width: 10%">Total Estimasi<br />Insentif*</th>
                     </tr>
                   </thead>
 
@@ -744,6 +750,14 @@
                 </table>
               </div>
             </div>
+
+            <hr class="my-2" />
+
+            <h6 class="fw-bold text-primary m-0 mb-2">
+              List Struk Sudah Diupload
+            </h6>
+
+            <div id="strukListContainer" class="mt-2"></div>
 
             <hr class="my-2" />
 
@@ -834,7 +848,7 @@
 
             <div class="table-responsive">
               <table class="table table-bordered table-sm align-middle">
-                <thead class="table-primary">
+                <thead class="bg-primary text-white">
                   <tr>
                     <th style="width: 60px">No</th>
                     <th>ID</th>
@@ -892,7 +906,7 @@
               <table
                 class="table bg-primary table-bordered table-sm align-middle"
               >
-                <thead>
+                <thead class="bg-primary text-white">
                   <tr>
                     <th style="width: 60px">No</th>
                     <th>ID</th>
@@ -929,6 +943,235 @@
             >
               <i class="bi bi-x-circle me-1"></i>
               Konfirmasi Reject
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL UPLOAD STRUK -->
+    <!-- ========================= -->
+    <div class="modal fade" id="uploadStrukModal" tabindex="-1">
+      <div
+        class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-receipt me-2"></i>Upload Struk Sell-Out Outlet
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <input type="hidden" id="strukIdPengajuan" />
+
+            <!-- ========================= -->
+            <!-- HEADER INPUT -->
+            <!-- ========================= -->
+            <div class="row align-items-end mb-3">
+              <!-- ID -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold">ID Struk</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="strukId"
+                  placeholder="Masukkan nomor ID Struk"
+                  required
+                />
+              </div>
+
+              <!-- Tanggal Penjualan -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Tanggal Penjualan</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="strukTanggal"
+                  min="2026-03-01"
+                  max="2026-03-31"
+                />
+              </div>
+
+              <!-- Upload File Struk -->
+              <div class="col-md-12 mt-3">
+                <label class="form-label fw-bold">Upload File Struk</label>
+
+                <input
+                  type="file"
+                  class="form-control"
+                  id="strukFile"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  required
+                />
+
+                <small class="text-muted">
+                  Format yang diperbolehkan: JPG, PNG, PDF
+                </small>
+
+                <div
+                  id="strukFilePreview"
+                  class="mt-2 text-success fw-semibold"
+                ></div>
+              </div>
+            </div>
+
+            <!-- ========================= -->
+            <!-- HEADER LIST PRODUK -->
+            <!-- ========================= -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h4 class="fw-bold text-primary m-0">
+                List Produk Pharos Terjual
+              </h4>
+
+              <button
+                class="btn btn-sm btn-primary"
+                onclick="openProdukModal()"
+              >
+                <i class="bi bi-plus-circle me-1"></i> Tambah Produk
+              </button>
+            </div>
+
+            <hr />
+
+            <!-- ========================= -->
+            <!-- TABLE PRODUK -->
+            <!-- ========================= -->
+            <div class="table-responsive">
+              <table
+                class="table table-bordered table-hover text-center align-middle"
+              >
+                <thead class="bg-primary text-white">
+                  <tr>
+                    <th style="width: 150px">Nama Produk</th>
+                    <th style="width: 80px">Qty</th>
+                    <th style="width: 100px">Satuan</th>
+                    <th style="width: 100px">Total Penjualan</th>
+                    <th style="width: 100px">Total Value Penjualan</th>
+                    <th style="width: 60px">Aksi</th>
+                  </tr>
+                </thead>
+
+                <tbody id="produkStrukBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Batal
+            </button>
+
+            <button class="btn btn-success fw-bold" onclick="submitStruk()">
+              <i class="bi bi-check-circle"></i> Submit Struk
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MODAL TAMBAH PRODUK -->
+    <!-- ========================= -->
+    <div class="modal fade" id="produkModal" tabindex="-1">
+      <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-box-seam me-2"></i>Tambah Produk
+            </h5>
+            <button
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Produk -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Produk</label>
+              <select class="form-select" id="produkDropdown"></select>
+            </div>
+
+            <!-- Qty -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Qty</label>
+              <input
+                type="number"
+                class="form-control"
+                id="produkQty"
+                placeholder="Masukkan jumlah"
+                min="1"
+                step="1"
+                required
+              />
+            </div>
+
+            <!-- Satuan -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Satuan</label>
+              <select class="form-select" id="produkSatuan"></select>
+            </div>
+
+            <!-- Total Value Penjualan -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Total Value Penjualan</label>
+
+              <div class="input-group">
+                <span class="input-group-text">Rp </span>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="produkValue"
+                  placeholder="Masukkan total penjualan"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Batal
+            </button>
+
+            <button class="btn btn-success" onclick="tambahProdukKeTabel()">
+              Tambah
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Struk -->
+    <div class="modal fade" id="modalDetailStruk" tabindex="-1">
+      <div
+        class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalDetailStrukTitle">Detail Struk</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body" id="modalDetailStrukBody">
+            <!-- isi dinamis -->
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Tutup
             </button>
           </div>
         </div>
@@ -992,6 +1235,7 @@
       }
 
       let allData = [];
+      let allStruk = [];
       let allLogs = [];
 
       function getDataByNIP(nip, jabatan, nama) {
@@ -1043,6 +1287,8 @@
             }
 
             allData = json.data || [];
+            allStruk = json.dataStruk || [];
+            console.log("Data Struk yang diterima:", allStruk);
 
             if (!allData.length) {
               $("#submissionList").html(`
@@ -1253,9 +1499,8 @@
           );
 
           // ✅ FORMAT RUPIAH
-          const estimasiInsentif = item.totalInsentif
-            ? Number(item.totalInsentif).toLocaleString("id-ID")
-            : "0";
+          const hasilHitung = hitungInsentifDariStruk(allStruk, item.id);
+          const estimasiInsentif = hasilHitung.total.toLocaleString("id-ID");
 
           const card = `
               <div class="col-md-6 mb-4">
@@ -1274,23 +1519,25 @@
                           <small>${formatDate(item.timeStamp)}</small>
                         </div>
                       </div>
-                    <div class="text-end">
-                      <span class="badge bg-primary">${item.periodeProgram}</span><br>
+                      <div class="text-end">
+                      <span class="badge bg-primary ">${item.periodeProgram}</span><br>
                       ${getStatusBadge(item.status)}<br>
 
                       ${
                         item.statusValidateFIC
-                          ? `<span class="badge ${
-                              item.statusValidateFIC === "Validated FIC"
-                                ? "bg-success"
-                                : item.statusValidateFIC === "Not Validated FIC"
-                                  ? "bg-warning text-dark"
-                                  : item.statusValidateFIC === "Rejected"
-                                    ? "bg-danger"
-                                    : "bg-secondary"
-                            } mt-1">
-                                      ${item.statusValidateFIC}
-                                    </span>`
+                          ? `<div class="text-center">
+                        <span class="badge ${
+                          item.statusValidateFIC === "Validated FIC"
+                            ? "bg-success"
+                            : item.statusValidateFIC === "Not Validated FIC"
+                              ? "bg-warning text-dark"
+                              : item.statusValidateFIC === "Rejected"
+                                ? "bg-danger"
+                                : "bg-secondary"
+                        } mt-1">
+                          ${item.statusValidateFIC}
+                        </span>
+                      </div>`
                           : ""
                       }
                     </div>
@@ -1462,7 +1709,7 @@
 
                             <li>
                               <a class="dropdown-item"
-                                onclick="uploadStruk('${item.id}')">
+                                onclick="openUploadStruk('${item.id}')">
                                 <i class="bi bi-file-earmark-arrow-up me-2"></i>
                                 Upload Struk Sell-Out Outlet
                               </a>
@@ -1476,7 +1723,10 @@
 
                     <!-- Show Detail -->
                     <div style="cursor:pointer"
-                        onclick="openDetailModal(JSON.parse(decodeURIComponent('${safeJson}')))">
+                        onclick="openDetailModal(
+                          JSON.parse(decodeURIComponent('${safeJson}')),
+                          '${encodeURIComponent(JSON.stringify(hasilHitung.detail))}'
+                        )">
                       <span class="text-primary fw-bold">Show Detail</span>
                     </div>
                   </div>
@@ -1490,7 +1740,17 @@
       // =========================
       // OPEN MODAL DETAIL
       // =========================
-      function openDetailModal(item) {
+      function openDetailModal(item, detailInsentifEncoded) {
+        let detailInsentif = {};
+
+        try {
+          detailInsentif = JSON.parse(
+            decodeURIComponent(detailInsentifEncoded),
+          );
+        } catch (e) {
+          console.error(e);
+        }
+
         const modal = new bootstrap.Modal(
           document.getElementById("detailModal"),
         );
@@ -1553,9 +1813,11 @@
           </div>
         `;
 
-        renderProdukTable(item.dataProduk);
+        renderProdukTable(item.dataProduk, detailInsentif);
 
         if (item.id) renderLogsById(item.id);
+
+        renderStrukList(allStruk, item.id);
 
         modal.show();
       }
@@ -1564,86 +1826,188 @@
         MICROLAXTAB: {
           nama: "MICROLAXTAB BISACODYL 5MG@10",
           satuan: "1 Blister",
+          minimal: "Blister",
+          opsiSatuan: ["Blister"],
+          konversi: {
+            Blister: 1,
+          },
           insentif: 2000,
         },
+
         ALBUSMIN: {
           nama: "ALBUSMIN 3 BLISTER @ 10 KAPSUL",
           satuan: "1 Box (3 Blister)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Blister (1/3 Box)"],
+          konversi: {
+            Box: 1,
+            "Blister (1/3 Box)": 1 / 3,
+          },
           insentif: 15000,
         },
+
         PRAXION_SUSP: {
           nama: "PRAXION SUSP 60ML RASA JERUK",
           satuan: "1 Botol",
+          minimal: "Botol",
+          opsiSatuan: ["Botol"],
+          konversi: {
+            Botol: 1,
+          },
           insentif: 3000,
         },
+
         PRORIS_KAPLET: {
           nama: "PRORIS IBUPROFEN 10 KAPLET",
           satuan: "1 Box (10 Catch Cover)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Catch Cover (1/10 Box)"],
+          konversi: {
+            Box: 1,
+            "Catch Cover (1/10 Box)": 1 / 10,
+          },
           insentif: 10000,
         },
+
         NSU_NEW_FORMULA_15S: {
           nama: "NOURISH SKIN ULTIMATE NEW 15`S",
           satuan: "1 Box",
+          minimal: "Box",
+          opsiSatuan: ["Box"],
+          konversi: {
+            Box: 1,
+          },
           insentif: 5000,
         },
+
         NSU_NEW_FORMULA_30S: {
           nama: "NOURISH SKIN ULTIMATE NEW 30`S",
           satuan: "1 Box",
+          minimal: "Box",
+          opsiSatuan: ["Box"],
+          konversi: {
+            Box: 1,
+          },
           insentif: 10000,
         },
+
         NS_GLOW_15: {
           nama: "NOURISH SKIN GLOW 15 TAB",
           satuan: "1 Box",
+          minimal: "Box",
+          opsiSatuan: ["Box"],
+          konversi: {
+            Box: 1,
+          },
           insentif: 4000,
         },
+
         NS_GLOW_30: {
           nama: "NOURISH SKIN GLOW 30 TAB",
           satuan: "1 Box",
+          minimal: "Box",
+          opsiSatuan: ["Box"],
+          konversi: {
+            Box: 1,
+          },
           insentif: 7000,
         },
+
         VIOSTIN_50: {
           nama: "VIOSTIN 50 KAPLET",
           satuan: "1 Box (5 Catch Cover)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Catch Cover (1/5 Box)"],
+          konversi: {
+            Box: 1,
+            "Catch Cover (1/5 Box)": 1 / 5,
+          },
           insentif: 15000,
         },
+
         VIOSTIN_30: {
           nama: "VIOSTIN 30 KAPLET",
           satuan: "1 Box (5 Strip)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Strip (1/6 Box)"],
+          konversi: {
+            Box: 1,
+            "Strip (1/6 Box)": 1 / 6,
+          },
           insentif: 5000,
         },
+
         ASCARDIA_: {
           nama: "ASCARDIA 80MG TAB 100`S",
           satuan: "1 Box (10 Strip)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Strip (1/10 Box)"],
+          konversi: {
+            Box: 1,
+            "Strip (1/10 Box)": 1 / 10,
+          },
           insentif: 5000,
         },
+
         TORAS_4_MG_TABLET: {
           nama: "TORAS 4MG TAB 100`S",
           satuan: "1 Box (10 Blister)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Blister (1/10 Box)"],
+          konversi: {
+            Box: 1,
+            "Blister (1/10 Box)": 1 / 10,
+          },
           insentif: 10000,
         },
+
         TORAS_8_MG_TABLET: {
           nama: "TORAS 8MG TAB 100`S",
           satuan: "1 Box (10 Blister)",
+          minimal: "Box",
+          opsiSatuan: ["Box", "Blister (1/10 Box)"],
+          konversi: {
+            Box: 1,
+            "Blister (1/10 Box)": 1 / 10,
+          },
           insentif: 20000,
         },
+
         MEDISIO_5_ML: {
           nama: "MEDISIO 36% CONCENTRATE 5ML",
           satuan: "1 Botol",
+          minimal: "Botol",
+          opsiSatuan: ["Botol"],
+          konversi: {
+            Botol: 1,
+          },
           insentif: 1000,
         },
+
         MEDISIO_10_ML: {
           nama: "MEDISIO 36% CONCENTRATE 10 ML",
           satuan: "1 Botol",
+          minimal: "Botol",
+          opsiSatuan: ["Botol"],
+          konversi: {
+            Botol: 1,
+          },
           insentif: 2000,
         },
+
         BRION_OINT_20GR: {
           nama: "BRION OINT 20GR",
           satuan: "1 Tube",
+          minimal: "Tube",
+          opsiSatuan: ["Tube"],
+          konversi: {
+            Tube: 1,
+          },
           insentif: 5000,
         },
       };
 
-      function renderProdukTable(dataProduk) {
+      function renderProdukTable(dataProduk, detailInsentif = {}) {
         const tbody = document.getElementById("produkTableBody");
         tbody.innerHTML = "";
 
@@ -1670,6 +2034,7 @@
         }
 
         let no = 1;
+        let grandTotalInsentif = 0;
 
         Object.keys(MASTER_PRODUK_SC).forEach((key) => {
           const master = MASTER_PRODUK_SC[key];
@@ -1688,6 +2053,13 @@
             satuanTarget = "Tube";
           }
 
+          const hasil = detailInsentif[key] || {};
+
+          const qty = (hasil.qty || 0).toFixed(2);
+          const totalInsentif = hasil.total || 0;
+
+          grandTotalInsentif += totalInsentif;
+
           const row = `
       <tr>
         <td class="text-center align-middle">${no++}</td>
@@ -1697,11 +2069,24 @@
         <td class="text-center align-middle">
           ${target} ${satuanTarget}
         </td>
+        <td class="text-center">${qty} ${satuanTarget}</td>
+        <td class="text-end text-success fw-bold">${formatRupiah(totalInsentif)}</td>
       </tr>
     `;
 
           tbody.insertAdjacentHTML("beforeend", row);
         });
+
+        const totalRow = `
+        <tr style="background:#f1f5ff; font-weight:bold;">
+          <td colspan="6" class="text-end">TOTAL</td>
+          <td class="text-end text-success">
+            ${formatRupiah(grandTotalInsentif)}
+          </td>
+        </tr>
+      `;
+
+        tbody.insertAdjacentHTML("beforeend", totalRow);
 
         // 🔴 Jika semua kosong
         if (no === 1) {
@@ -1730,6 +2115,281 @@
           table.style.display = "none";
           btn.innerText = "Show Detail";
         }
+      }
+
+      function hitungInsentifDariStruk(allStruk, currentId) {
+        // filter struk sesuai ID card
+        const strukById = allStruk.filter((s) => s.id === currentId);
+
+        const result = {};
+        let grandTotal = 0;
+
+        strukById.forEach((item) => {
+          const namaProduk = (item.namaProduk || "").trim();
+
+          // cari key di MASTER_PRODUK_SC
+          const key = Object.keys(MASTER_PRODUK_SC).find(
+            (k) => MASTER_PRODUK_SC[k].nama === namaProduk,
+          );
+
+          if (!key) return;
+
+          const master = MASTER_PRODUK_SC[key];
+
+          const qty = Number(item.totalQtyPenjualan || 0);
+          const konversi = Object.values(master.konversi)[0] || 1;
+
+          const qtyFinal = qty * konversi;
+          const qtyValid = Math.floor(qtyFinal);
+
+          const totalInsentif = qtyValid * master.insentif;
+
+          if (!result[key]) {
+            result[key] = {
+              nama: master.nama,
+              qty: 0,
+              qtyValid: 0,
+              insentif: master.insentif,
+              total: 0,
+            };
+          }
+
+          result[key].qty += qty;
+          result[key].qtyValid += qtyValid;
+          result[key].total += totalInsentif;
+
+          grandTotal += totalInsentif;
+        });
+
+        return {
+          detail: result,
+          total: grandTotal,
+        };
+      }
+
+      function renderStrukList(allStruk, currentId) {
+        const container = document.getElementById("strukListContainer");
+        container.innerHTML = "";
+
+        const grouped = groupStrukByNoId(allStruk, currentId);
+
+        if (!grouped.length) {
+          container.innerHTML = `
+      <div class="text-muted text-center">Belum ada struk diupload</div>
+    `;
+          return;
+        }
+
+        grouped.forEach((s, i) => {
+          const row = `
+      <div class="card mb-2 shadow-sm">
+        <div class="card-body p-2 d-flex justify-content-between align-items-center">
+
+          <div>
+            <small class="text-muted">Struk #${i + 1}</small><br>
+            <strong>ID/No Struk: ${s.noIdStruk}</strong><br>
+            <small>Link Struk: ${s.linkFileStruk ? `<a href="${s.linkFileStruk}" target="_blank">File Struk Diupload</a>` : "-"}</small><br>
+            <small>${formatDate(s.tanggal)}</small><br>
+            <small>Total Produk: ${s.items.length}</small><br>
+            <small>Total Value: ${formatRupiah(s.totalValue)}</small>
+          </div>
+
+          <div class="text-end">
+            <button class="btn btn-sm btn-success"
+              onclick='showDetailStruk(${JSON.stringify(s)})'>
+              Detail
+            </button>
+
+            <button class="btn btn-sm btn-danger"
+              onclick="deleteStruk('${currentId}','${s.noIdStruk}','${userData.nama}')"
+              title="Hapus Struk">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+          container.insertAdjacentHTML("beforeend", row);
+        });
+      }
+
+      function groupStrukByNoId(allStruk, currentId) {
+        const filtered = allStruk.filter((s) => s.id === currentId);
+
+        const grouped = {};
+
+        filtered.forEach((item) => {
+          const key = item.noIdStruk;
+
+          if (!grouped[key]) {
+            grouped[key] = {
+              noIdStruk: key,
+              linkFileStruk: item.linkFileStruk,
+              tanggal: item.tanggalPenjualan,
+              items: [],
+              totalValue: 0,
+            };
+          }
+
+          grouped[key].items.push(item);
+          grouped[key].totalValue += Number(item.totalValuePenjualan || 0);
+        });
+
+        return Object.values(grouped);
+      }
+
+      function getSatuanProdukByNama(namaProduk) {
+        let satuan = "";
+
+        Object.keys(MASTER_PRODUK_SC).forEach((key) => {
+          const master = MASTER_PRODUK_SC[key];
+
+          // cocokkan nama produk
+          if (
+            (master.nama || "").toLowerCase().trim() ===
+            (namaProduk || "").toLowerCase().trim()
+          ) {
+            satuan = master.minimal;
+          }
+        });
+
+        return satuan || "";
+      }
+
+      function deleteStruk(id, noIdStruk, namaUser) {
+        const apiURLGenerateSKP =
+          "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
+
+        Swal.fire({
+          title: "Hapus Struk?",
+          html: `
+      Semua data dengan:<br>
+      <b>ID:</b> ${id}<br>
+      <b>No Struk:</b> ${noIdStruk}<br><br>
+      akan dihapus permanen
+    `,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Hapus",
+          cancelButtonText: "Batal",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // 🔥 LOADING START
+            Swal.fire({
+              title: "Menghapus Struk...",
+              text: "Mohon tunggu ditunggu sebentar :)",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            fetch(apiURLGenerateSKP, {
+              method: "POST",
+              body: new URLSearchParams({
+                action: "deleteStruk",
+                id: id,
+                noIdStruk: noIdStruk,
+                namaUser: namaUser,
+              }),
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                if (res.result === "success") {
+                  Swal.fire({
+                    title: "Berhasil",
+                    text: res.message,
+                    icon: "success",
+                  }).then(() => {
+                    // 🔥 tutup modal detail
+                    const modalEl = document.getElementById("modalDetailStruk");
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) {
+                      modalInstance.hide();
+                    }
+                    getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+                  });
+                } else {
+                  Swal.fire("Error", res.message || "Gagal hapus", "error");
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                Swal.fire("Error", "Server error", "error");
+              });
+          }
+        });
+      }
+
+      function showDetailStruk(strukGroup) {
+        let htmlProduk = "";
+
+        strukGroup.items.forEach((p, i) => {
+          htmlProduk += `
+        <tr class="small">
+          <td class="text-center align-middle">${i + 1}</td>
+          <td>${p.namaProduk}</td>
+          <td class="text-center align-middle">
+            ${Number(p.totalQtyPenjualan || 0).toFixed(2)} ${getSatuanProdukByNama(p.namaProduk) ?? ""}
+          </td>
+          <td class="text-center align-middle">${formatRupiah(p.totalValuePenjualan)}</td>
+        </tr>
+        `;
+        });
+
+        const html = `
+    <div style="text-align:left">
+
+      <div class="mb-2">
+        <b>No Struk:</b> ${strukGroup.noIdStruk}
+      </div>
+
+      <div class="mb-2">
+        <b>Link File Struk</b> ${strukGroup.linkFileStruk ? `: <a href="${strukGroup.linkFileStruk}" target="_blank">File Struk Diupload</a>` : ": -"}
+      </div>
+
+      <div class="mb-2">
+        <b>Tanggal:</b> ${formatDate(strukGroup.tanggal)}
+      </div>
+
+      <div class="mb-3">
+        <b>Total Value:</b> ${formatRupiah(strukGroup.totalValue)}
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th style="width:5%">No</th>
+              <th style="width:20%">Produk</th>
+              <th style="width:15%">Qty</th>
+              <th style="width:20%">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${htmlProduk}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  `;
+
+        // set title
+        document.getElementById("modalDetailStrukTitle").innerText =
+          `Detail Struk (${strukGroup.noIdStruk})`;
+
+        // set body
+        document.getElementById("modalDetailStrukBody").innerHTML = html;
+
+        // show modal
+        const modal = new bootstrap.Modal(
+          document.getElementById("modalDetailStruk"),
+        );
+
+        modal.show();
       }
 
       // Buka modal
@@ -2005,15 +2665,6 @@
         };
 
         reader.readAsDataURL(file);
-      }
-
-      function uploadStruk(id) {
-        Swal.fire({
-          icon: "info",
-          title: "Upload Struk",
-          html: "Upload Struk masih dalam tahap pengembangan.<br>Mohon ditunggu updatenya 🙂<br><br>Terima Kasih.",
-          confirmButtonText: "OK",
-        });
       }
 
       // 🔥 HILANGKAN LOADER SAAT HALAMAN SELESAI LOAD
@@ -2321,6 +2972,440 @@
           (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
         );
         return `(${diffDays} days ${diffHours} hours)`;
+      }
+
+      document
+        .getElementById("strukTanggal")
+        .addEventListener("change", function () {
+          const val = this.value;
+
+          if (!val.startsWith("2026-03")) {
+            Swal.fire({
+              icon: "warning",
+              title: "Tanggal tidak valid",
+              text: "Tanggal penjualan hanya boleh bulan Maret 2026",
+            });
+
+            this.value = "";
+          }
+        });
+
+      function openUploadStruk(id) {
+        // isi hidden id pengajuan
+        document.getElementById("strukIdPengajuan").value = id;
+
+        // reset form
+        document.getElementById("strukId").value = "";
+        document.getElementById("strukTanggal").value = "";
+
+        // reset tabel produk
+        document.getElementById("produkStrukBody").innerHTML = "";
+
+        // buka modal
+        const modal = new bootstrap.Modal(
+          document.getElementById("uploadStrukModal"),
+          {
+            backdrop: "static",
+            keyboard: false,
+          },
+        );
+
+        modal.show();
+      }
+
+      function openProdukModal() {
+        if (produkSelect) {
+          produkSelect.clear();
+        }
+
+        document.getElementById("produkQty").value = "";
+        document.getElementById("produkSatuan").innerHTML = "";
+        document.getElementById("produkValue").value = "";
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("produkModal"),
+          {
+            backdrop: "static",
+            keyboard: false,
+          },
+        );
+
+        modal.show();
+      }
+
+      function closeProdukModal() {
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("produkModal"),
+        );
+
+        modal.hide();
+      }
+
+      let produkSelect;
+      let satuanSelect;
+
+      /* =========================
+      LOAD PRODUK DROPDOWN
+      ========================= */
+
+      function loadProdukDropdown() {
+        const select = document.getElementById("produkDropdown");
+
+        select.innerHTML = `<option value="">Pilih Produk</option>`;
+
+        Object.keys(MASTER_PRODUK_SC).forEach((key) => {
+          const produk = MASTER_PRODUK_SC[key];
+
+          select.innerHTML += `
+          <option value="${key}">
+            ${produk.nama}
+          </option>
+        `;
+        });
+
+        if (produkSelect) {
+          produkSelect.destroy();
+        }
+
+        produkSelect = new TomSelect("#produkDropdown", {
+          create: false,
+          sortField: {
+            field: "text",
+            direction: "asc",
+          },
+          placeholder: "Cari produk...",
+
+          onChange: function (value) {
+            if (!value) return;
+
+            document.getElementById("produkQty").value = "";
+
+            loadSatuanDropdown(value);
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", loadProdukDropdown);
+
+      /* =========================
+      LOAD SATUAN DROPDOWN
+      ========================= */
+
+      function loadSatuanDropdown(kodeProduk) {
+        const produk = MASTER_PRODUK_SC[kodeProduk];
+
+        satuanSelect.clear();
+        satuanSelect.clearOptions();
+
+        produk.opsiSatuan.forEach((s) => {
+          satuanSelect.addOption({
+            value: s,
+            text: s,
+          });
+        });
+
+        satuanSelect.refreshOptions(false);
+      }
+
+      /* =========================
+      KONVERSI KE MINIMAL
+      ========================= */
+
+      function hitungKonversi() {
+        const kode = document.getElementById("produkDropdown").value;
+        const satuan = document.getElementById("produkSatuan").value;
+        const qty = parseFloat(document.getElementById("produkQty").value) || 0;
+
+        if (!kode || !satuan) return 0;
+
+        const produk = MASTER_PRODUK_SC[kode];
+
+        const faktor = produk.konversi[satuan];
+
+        const hasil = qty * faktor;
+
+        return hasil;
+      }
+
+      /* =========================
+      TAMBAH KE TABEL
+      ========================= */
+
+      function tambahProdukKeTabel() {
+        const kode = document.getElementById("produkDropdown").value;
+        const qty = parseFloat(document.getElementById("produkQty").value);
+        const satuan = document.getElementById("produkSatuan").value;
+        const value = document
+          .getElementById("produkValue")
+          .value.replace(/\./g, "");
+
+        const valueDisplay = new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })
+          .format(value)
+          .replace(/\s/g, "");
+
+        // VALIDASI QTY TIDAK BOLEH 0 ATAU MINUS
+        if (qty <= 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Jumlah Qty Tidak Valid",
+            text: "Jumlah qty harus lebih dari 0.",
+          });
+          return;
+        }
+
+        if (!kode || !qty || !satuan || !value) {
+          Swal.fire({
+            icon: "warning",
+            title: "Data Belum Lengkap",
+            text: "Mohon lengkapi Produk, Qty, Satuan, dan Value terlebih dahulu.",
+          });
+          return;
+        }
+
+        const produk = MASTER_PRODUK_SC[kode];
+
+        const qtyBox = hitungKonversi();
+
+        const tbody = document.getElementById("produkStrukBody");
+
+        const row = `
+          <tr>
+            <td>${produk.nama}</td>
+            <td>${qty}</td>
+            <td>${satuan}</td>
+            <td>${qtyBox.toFixed(2)} ${produk.minimal}</td>
+            <td>${valueDisplay}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="hapusProduk(this)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+
+        tbody.insertAdjacentHTML("beforeend", row);
+
+        bootstrap.Modal.getInstance(
+          document.getElementById("produkModal"),
+        ).hide();
+      }
+
+      /* =========================
+HAPUS PRODUK
+========================= */
+
+      function hapusProduk(btn) {
+        btn.closest("tr").remove();
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        satuanSelect = new TomSelect("#produkSatuan", {
+          create: false,
+          sortField: {
+            field: "text",
+            direction: "asc",
+          },
+          placeholder: "Pilih satuan...",
+        });
+      });
+
+      document
+        .getElementById("produkValue")
+        .addEventListener("input", function (e) {
+          let value = this.value.replace(/\D/g, "");
+
+          if (!value) {
+            this.value = "";
+            return;
+          }
+
+          this.value = new Intl.NumberFormat("id-ID").format(value);
+        });
+
+      function submitStruk() {
+        const idPengajuan = document.getElementById("strukIdPengajuan").value;
+        const idStruk = document.getElementById("strukId").value;
+        const tanggal = document.getElementById("strukTanggal").value;
+        const fileInput = document.getElementById("strukFile");
+
+        const rows = document.querySelectorAll("#produkStrukBody tr");
+
+        /* =========================
+          VALIDASI FORM
+        ========================= */
+
+        if (!idStruk || !tanggal || fileInput.files.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Data belum lengkap",
+            text: "ID Struk, Tanggal, dan File wajib diisi",
+          });
+          return;
+        }
+
+        if (rows.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Produk belum ditambahkan",
+            text: "Silakan tambahkan minimal 1 produk",
+          });
+          return;
+        }
+
+        /* =========================
+          AMBIL DATA PRODUK
+        ========================= */
+
+        const produkList = [];
+
+        rows.forEach((row) => {
+          const cols = row.querySelectorAll("td");
+
+          // =====================
+          // PARSE QTY
+          // =====================
+          let rawQty = cols[3].innerText || "0";
+          let qtyNum = parseFloat(
+            rawQty
+              .replace(/[^\d.,]/g, "") // hapus semua selain angka, titik, koma
+              .replace(",", "."), // ubah koma jadi titik
+          );
+          qtyNum = parseFloat(qtyNum.toFixed(2)); // 2 angka belakang koma
+
+          // =====================
+          // PARSE VALUE / TOTAL
+          // =====================
+          let rawValue = cols[4].innerText || "0";
+          let valueNum = parseInt(rawValue.replace(/[^\d]/g, "")); // hapus semua kecuali angka
+
+          produkList.push({
+            namaProduk: cols[0].innerText,
+            qty: cols[1].innerText,
+            satuan: cols[2].innerText,
+            totalPenjualan: qtyNum,
+            value: valueNum,
+          });
+        });
+
+        /* =========================
+          VALIDASI FILE
+        ========================= */
+
+        let fileBase64 = "";
+        let fileName = "";
+        let mimeType = "";
+
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+
+          const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+
+          if (!allowedTypes.includes(file.type)) {
+            Swal.fire({
+              icon: "error",
+              title: "Format file tidak valid",
+              text: "File harus JPG, PNG, atau PDF",
+            });
+            return;
+          }
+
+          if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({
+              icon: "error",
+              title: "File terlalu besar",
+              text: "Maksimal 5MB",
+            });
+            return;
+          }
+
+          const reader = new FileReader();
+
+          reader.onload = async function (e) {
+            fileBase64 = e.target.result.split(",")[1];
+            fileName = file.name;
+            mimeType = file.type;
+
+            kirimStruk();
+          };
+
+          reader.readAsDataURL(file);
+        } else {
+          kirimStruk();
+        }
+
+        /* =========================
+          KIRIM KE SERVER
+        ========================= */
+
+        async function kirimStruk() {
+          Swal.fire({
+            title: "Mengirim data...",
+            text: "Mohon Ditunggu sebentar :)",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          const formData = new URLSearchParams();
+
+          formData.append("action", "submitStruk");
+          formData.append("idPengajuan", idPengajuan);
+          formData.append("idStruk", idStruk);
+          formData.append("tanggalPengajuan", tanggal);
+          formData.append("produk", JSON.stringify(produkList));
+          formData.append("username", userData?.nama || "");
+
+          if (fileBase64) {
+            formData.append("file", fileBase64);
+            formData.append("filename", fileName);
+            formData.append("mimeType", mimeType);
+          }
+
+          const apiURL =
+            "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
+
+          try {
+            const res = await fetch(apiURL, {
+              method: "POST",
+              body: formData,
+            });
+
+            const data = await res.json();
+
+            Swal.close();
+
+            if (data.success) {
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data struk berhasil disubmit",
+              }).then(() => {
+                bootstrap.Modal.getInstance(
+                  document.getElementById("uploadStrukModal"),
+                ).hide();
+
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              });
+            } else {
+              console.error("Submit Struk Error:", data);
+              Swal.fire({
+                icon: "error",
+                title: "Gagal submit",
+                text: data.message || "Terjadi kesalahan",
+              });
+            }
+          } catch (err) {
+            Swal.fire({
+              icon: "error",
+              title: "Server error",
+              text: err.message,
+            });
+          }
+        }
       }
     </script>
   </body>
