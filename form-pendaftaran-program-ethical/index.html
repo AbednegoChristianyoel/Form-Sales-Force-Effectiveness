@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
@@ -88,7 +88,9 @@
 
       /* Hover Effect Navbar */
       .navbar-nav .nav-link {
-        transition: background-color 0.3s, color 0.3s;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
         border-radius: 0.3rem;
       }
 
@@ -183,14 +185,18 @@
         font-size: 1.6rem;
         display: inline-block;
         color: #ffd54f;
-        animation: goldGlow 3s ease-in-out infinite,
+        animation:
+          goldGlow 3s ease-in-out infinite,
           floatY 4s ease-in-out infinite;
-        text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80;
+        text-shadow:
+          0 0 4px #fff8e1,
+          0 0 8px #ffcc80;
       }
 
       /* Icon Petir */
       .lightning-icon {
-        animation: yellowFlash 2.2s ease-in-out infinite,
+        animation:
+          yellowFlash 2.2s ease-in-out infinite,
           floatY 4s ease-in-out infinite;
         transform-origin: center;
         filter: drop-shadow(0 0 4px #fff8e1) drop-shadow(0 0 8px #ffcc80);
@@ -200,11 +206,15 @@
       @keyframes goldGlow {
         0%,
         100% {
-          text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80;
+          text-shadow:
+            0 0 4px #fff8e1,
+            0 0 8px #ffcc80;
           color: #ffd54f;
         }
         50% {
-          text-shadow: 0 0 6px #fff4c2, 0 0 12px #ffb74d;
+          text-shadow:
+            0 0 6px #fff4c2,
+            0 0 12px #ffb74d;
           color: #ffb300;
         }
       }
@@ -246,7 +256,9 @@
         color: #212529;
         line-height: 1.5;
         box-shadow: none;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition:
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
       }
 
       .ts-control::placeholder,
@@ -502,19 +514,13 @@
                   >
                   <select id="programEthical" class="form-select" required>
                     <option value="">Pilih Program</option>
-                    <option value="Boost Metabolic">Boost Metabolic</option>
-                    <option value="Presentasi Produk Neuro Pain Metabolic">
-                      Presentasi Produk Neuro Pain Metabolic
-                    </option>
-                    <option value="Insentif SC Modafil & Rozgra">
-                      Insentif SC Modafil & Rozgra
-                    </option>
-                    <option value="Insentif SC Metabolic">
-                      Insentif SC Metabolic
-                    </option>
                     <option value="POP">POP</option>
                     <option value="PGD">PGD</option>
-                    <option value="PK to PBF">PK to PBF</option>
+                    <option
+                      value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+                    >
+                      Presentasi Produk Nyeri Cardio Metabolik Psikiatri
+                    </option>
                   </select>
                 </div>
 
@@ -555,230 +561,6 @@
                     class="form-control"
                     disabled
                   />
-                </div>
-
-                <!-- 🔹 Field Nama Owner/Apotek untuk Insentif SC -->
-                <div id="ownerFieldsInsentif" class="col-12 d-none">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Nama Owner / Apotek</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="namaOwnerInsentif"
-                        placeholder="Masukkan Nama Owner / Apoteker"
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">No. Telp / WA</label>
-                      <input
-                        type="tel"
-                        class="form-control"
-                        id="telpOwnerInsentif"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Detail E-Wallet -->
-                <div id="ewalletFields" class="col-12 d-none mt-0">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Jenis E-Wallet</label>
-                      <select id="jenisEwallet" class="form-select">
-                        <option value="">Pilih E-Wallet</option>
-                        <option value="Dana">Dana</option>
-                        <option value="Gopay">Gopay</option>
-                        <option value="Ovo">Ovo</option>
-                        <option value="ShopeePay">ShopeePay</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">No. Akun E-Wallet</label>
-                      <input
-                        type="tel"
-                        id="noTelpEwallet"
-                        class="form-control"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-                    <div class="col-12 mb-3">
-                      <label class="form-label">Nama Akun E-Wallet</label>
-                      <input
-                        type="text"
-                        id="namaAkunEwallet"
-                        class="form-control"
-                        placeholder="Contoh: abednegoefra"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 🔹 Field Nama Owner/Apotek untuk Insentif SC Metabolic -->
-                <div id="ownerFieldsMetabolic" class="col-12 d-none">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Nama Owner / Apotek</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="namaOwnerInsentifMetabolic"
-                        placeholder="Masukkan Nama Owner / Apoteker"
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">No. Telp / WA</label>
-                      <input
-                        type="tel"
-                        class="form-control"
-                        id="telpOwnerInsentifMetabolic"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label"
-                        >Persentase Insentif ke Owner</label
-                      >
-                      <div class="input-group">
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="persenOwnerMetabolic"
-                          placeholder="Masukkan persentase untuk Owner"
-                          min="0"
-                          max="100"
-                        />
-                        <span class="input-group-text">%</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label"
-                        >Persentase Insentif ke SC</label
-                      >
-                      <div class="input-group">
-                        <input
-                          type="number"
-                          class="form-control"
-                          id="persenSCMetabolic"
-                          placeholder="Masukkan persentase untuk SC"
-                          min="0"
-                          max="100"
-                        />
-                        <span class="input-group-text">%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- ✨ PEMISAH: Judul Data E-Wallet -->
-                <div id="sectionEwalletMetabolic" class="d-none">
-                  <h6 class="fw-bold text-primary mb-3">Data E-Wallet</h6>
-                  <hr class="mt-3 mb-3" />
-                </div>
-
-                <!-- 🔹 Detail E-Wallet untuk Insentif SC Metabolic -->
-                <div
-                  id="ewalletFieldsMetabolicOwner"
-                  class="col-12 d-none mt-0"
-                >
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Jenis E-Wallet (Owner)</label>
-                      <select
-                        id="jenisEwalletMetabolicOwner"
-                        class="form-select"
-                      >
-                        <option value="">Pilih E-Wallet</option>
-                        <option value="Dana">Dana</option>
-                        <option value="Gopay">Gopay</option>
-                        <option value="Ovo">Ovo</option>
-                        <option value="ShopeePay">ShopeePay</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label"
-                        >No. Akun E-Wallet (Owner)</label
-                      >
-                      <input
-                        type="tel"
-                        id="noTelpEwalletMetabolicOwner"
-                        class="form-control"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-                    <div class="col-12 mb-3">
-                      <label class="form-label"
-                        >Nama Akun E-Wallet (Owner)</label
-                      >
-                      <input
-                        type="text"
-                        id="namaAkunEwalletMetabolicOwner"
-                        class="form-control"
-                        placeholder="Contoh: abednegoefra"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 🔸 Pemisah antara Owner dan SC -->
-                <hr class="my-2 border-top border-secondary opacity-50" />
-
-                <!-- 🔹 Detail E-Wallet untuk Insentif SC Metabolic (SC) -->
-                <div id="ewalletFieldsMetabolicSC" class="col-12 d-none mt-3">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Jenis E-Wallet (SC)</label>
-                      <select id="jenisEwalletMetabolicSC" class="form-select">
-                        <option value="">Pilih E-Wallet</option>
-                        <option value="Dana">Dana</option>
-                        <option value="Gopay">Gopay</option>
-                        <option value="Ovo">Ovo</option>
-                        <option value="ShopeePay">ShopeePay</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">No. Akun E-Wallet (SC)</label>
-                      <input
-                        type="tel"
-                        id="noTelpEwalletMetabolicSC"
-                        class="form-control"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-                    <div class="col-12 mb-3">
-                      <label class="form-label">Nama Akun E-Wallet (SC)</label>
-                      <input
-                        type="text"
-                        id="namaAkunEwalletMetabolicSC"
-                        class="form-control"
-                        placeholder="Contoh: andhikas"
-                      />
-                    </div>
-                  </div>
                 </div>
 
                 <!-- Field Produk Pediatrik untuk Program POP -->
@@ -999,7 +781,9 @@
                         min="1"
                         max="3"
                         placeholder="Maksimal 3 Orang / Outlet"
-                        oninvalid="this.setCustomValidity('Maksimal 3 Orang / Outlet')"
+                        oninvalid="
+                          this.setCustomValidity('Maksimal 3 Orang / Outlet')
+                        "
                         oninput="this.setCustomValidity('')"
                       />
                     </div>
@@ -1054,193 +838,6 @@
                         id="tempatPelaksanaan"
                         class="form-control"
                         placeholder="Masukkan Tempat Pelaksanaan PGD"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div id="boostMetabolicFields" class="col-12 d-none">
-                  <div class="row">
-                    <!-- Pilihan Produk -->
-                    <div id="produkSwitchWrapper" class="col-12 d-none">
-                      <div class="mb-2">
-                        <label class="form-label fw-bold">Pilihan Produk</label>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Profibrat200"
-                              data-label="Profibrat 200 mg"
-                            />
-                            <label
-                              class="form-check-label mb-0"
-                              for="Profibrat200"
-                              >Profibrat 200 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Stavinor10"
-                              data-label="Stavinor 10 mg"
-                            />
-                            <label
-                              class="form-check-label mb-0"
-                              for="Stavinor10"
-                              >Stavinor 10 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Stavinor20"
-                              data-label="Stavinor 20 mg"
-                            />
-                            <label
-                              class="form-check-label mb-0"
-                              for="Stavinor20"
-                              >Stavinor 20 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Stavinor40"
-                              data-label="Stavinor 40 mg"
-                            />
-                            <label
-                              class="form-check-label mb-0"
-                              for="Stavinor40"
-                              >Stavinor 40 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Vastrol10"
-                              data-label="Vastrol 10 mg"
-                            />
-                            <label class="form-check-label mb-0" for="Vastrol10"
-                              >Vastrol 10 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Vastrol20"
-                              data-label="Vastrol 20 mg"
-                            />
-                            <label class="form-check-label mb-0" for="Vastrol20"
-                              >Vastrol 20 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Rechol10"
-                              data-label="Rechol 10 mg"
-                            />
-                            <label class="form-check-label mb-0" for="Rechol10"
-                              >Rechol 10 mg</label
-                            >
-                          </div>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                          <div
-                            class="form-check d-flex align-items-center gap-2"
-                          >
-                            <input
-                              class="form-check-input produkSwitch"
-                              type="checkbox"
-                              id="Rechol20"
-                              data-label="Rechol 20 mg"
-                            />
-                            <label class="form-check-label mb-0" for="Rechol20"
-                              >Rechol 20 mg</label
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Form Apoteker -->
-                    <div class="col-md-12 mb-3 mt-1">
-                      <label for="namaApoteker" class="form-label"
-                        >Nama Owner / Apoteker</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="namaApoteker"
-                        name="namaApoteker"
-                        placeholder="Masukkan Nama Owner / Apoteker"
-                      />
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <label for="telpApoteker" class="form-label"
-                        >No. Telp / WA</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="telpApoteker"
-                        name="telpApoteker"
-                        placeholder="Contoh: 0878213512311"
-                        pattern="08[0-9]{8,13}"
-                        maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
-                        oninput="this.setCustomValidity('')"
-                      />
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <label for="emailApoteker" class="form-label"
-                        >Email</label
-                      >
-                      <input
-                        type="email"
-                        class="form-control"
-                        id="emailApoteker"
-                        name="emailApoteker"
-                        placeholder="Contoh: abed@pharos.co.id"
-                        oninvalid="this.setCustomValidity('Silakan masukkan email yang valid')"
-                        oninput="this.setCustomValidity('')"
                       />
                     </div>
                   </div>
@@ -1422,7 +1019,6 @@
         $("#confirmCheck").prop("checked", false);
         $("#ewalletFields").addClass("d-none");
         $("#popPgdFields").addClass("d-none");
-        $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
         $("#tempatPelaksanaanWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
@@ -1496,7 +1092,7 @@
             return Swal.fire(
               "Perhatian",
               "Harap isi NIP terlebih dahulu.",
-              "warning"
+              "warning",
             );
 
           Swal.fire({
@@ -1507,7 +1103,7 @@
           });
 
           fetch(
-            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`
+            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`,
           )
             .then((res) => res.json())
             .then((data) => {
@@ -1517,7 +1113,7 @@
                 return Swal.fire(
                   "Tidak Ditemukan",
                   "Data NIP tidak ditemukan.",
-                  "error"
+                  "error",
                 );
 
               document.getElementById("namaEthical").value = data.nama || "";
@@ -1534,24 +1130,11 @@
 
               // Reset program
               programSelect.innerHTML = `
-            <option value="">Pilih Program</option>
-            <option value="Boost Metabolic">Boost Metabolic</option>
-            <option value="Presentasi Produk Neuro Pain Metabolic">Presentasi Produk Neuro Pain Metabolic</option>
-            <option value="Insentif SC Metabolic">Insentif SC Metabolic</option>
-            <option value="Insentif SC Modafil & Rozgra">Insentif SC Modafil & Rozgra</option>
-            <option value="POP">POP</option>
-            <option value="PGD">PGD</option>
-          `;
-
-              if (
-                jabatan === "NSM" &&
-                (divisi === "VBR" || divisi === "MSA1")
-              ) {
-                const optionPK = document.createElement("option");
-                optionPK.value = "PK to PBF";
-                optionPK.textContent = "PK to PBF";
-                programSelect.appendChild(optionPK);
-              }
+                  <option value="">Pilih Program</option>
+                  <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
+                  <option value="POP">POP</option>
+                  <option value="PGD">PGD</option>
+                `;
 
               $("#programEthical").val(null).trigger("change");
 
@@ -1588,7 +1171,7 @@
             return Swal.fire(
               "Lengkapi Form",
               "Mohon isi semua field wajib.",
-              "warning"
+              "warning",
             );
           }
 
@@ -1597,17 +1180,17 @@
               return Swal.fire(
                 "Lengkapi Tanggal",
                 "Tanggal realisasi wajib diisi untuk program PGD.",
-                "warning"
+                "warning",
               );
             }
             const jumlahPeserta = Number(
-              document.getElementById("jumlahPesertaPgd").value
+              document.getElementById("jumlahPesertaPgd").value,
             );
             if (!jumlahPeserta || jumlahPeserta < 1 || jumlahPeserta > 3) {
               return Swal.fire(
                 "Jumlah Peserta Tidak Valid",
                 "Jumlah peserta untuk PGD harus 1-3 orang.",
-                "warning"
+                "warning",
               );
             }
             if (
@@ -1617,69 +1200,37 @@
               return Swal.fire(
                 "Lengkapi Data Sales",
                 "Total sales dan average sales wajib diisi untuk PGD.",
-                "warning"
+                "warning",
               );
             }
-          } else if (program === "Boost Metabolic") {
-            if (
-              !document.getElementById("namaApoteker").value.trim() ||
-              !document.getElementById("telpApoteker").value.trim() ||
-              !document.getElementById("emailApoteker").value.trim()
-            ) {
-              return Swal.fire(
-                "Lengkapi Data Apoteker",
-                "Nama, Telepon, dan Email apoteker wajib diisi untuk Boost Metabolic.",
-                "warning"
-              );
-            }
-            const checkedProduk = document.querySelectorAll(
-              '#produkSwitchWrapper input[type="checkbox"]:checked'
-            );
-            if (checkedProduk.length === 0) {
-              return Swal.fire(
-                "Pilih Produk",
-                "Minimal pilih satu produk untuk Boost Metabolic.",
-                "warning"
-              );
-            }
-          } else if (program === "Presentasi Produk Neuro Pain Metabolic") {
+          } else if (
+            program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+          ) {
             if (
               !document.getElementById("tanggalPresentasiNeuro").value.trim()
             ) {
               return Swal.fire(
                 "Lengkapi Tanggal",
                 "Tanggal presentasi wajib diisi untuk program ini.",
-                "warning"
+                "warning",
               );
             }
+
             if (!document.getElementById("jumlahPesertaNeuro").value.trim()) {
               return Swal.fire(
                 "Lengkapi Jumlah Peserta",
                 "Jumlah peserta wajib diisi untuk presentasi ini.",
-                "warning"
+                "warning",
               );
             }
+
             const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
-            if (produkNeuroSelected.length === 0) {
+
+            if (produkNeuroSelected.length > 5) {
               return Swal.fire(
-                "Pilih Produk",
-                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
-                "warning"
-              );
-            }
-          } else if (program === "PK to PBF") {
-            if (!document.getElementById("tanggalPK").value.trim()) {
-              return Swal.fire(
-                "Lengkapi Tanggal",
-                "Tanggal pelaksanaan wajib diisi untuk PK to PBF.",
-                "warning"
-              );
-            }
-            if (!document.getElementById("jumlahPesertaPK").value.trim()) {
-              return Swal.fire(
-                "Lengkapi Jumlah Peserta",
-                "Jumlah peserta wajib diisi untuk PK to PBF.",
-                "warning"
+                "Maksimal 5 Produk",
+                "Anda hanya boleh memilih maksimal 5 produk.",
+                "warning",
               );
             }
           } else if (program === "POP") {
@@ -1687,7 +1238,7 @@
               return Swal.fire(
                 "Lengkapi Tanggal",
                 "Tanggal realisasi wajib diisi untuk program POP.",
-                "warning"
+                "warning",
               );
             }
           }
@@ -1705,59 +1256,24 @@
             alamat,
           };
 
-          if (program === "Insentif SC Modafil & Rozgra") {
-            baseData.namaOwner =
-              document.getElementById("namaOwnerInsentif").value || "";
-            baseData.telpOwner =
-              document.getElementById("telpOwnerInsentif").value || "";
-            baseData.jenisEwallet =
-              document.getElementById("jenisEwallet").value || "";
-            baseData.noTelpEwallet =
-              document.getElementById("noTelpEwallet").value || "";
-            baseData.namaAkunEwallet =
-              document.getElementById("namaAkunEwallet").value || "";
-          } else if (program === "Insentif SC Metabolic") {
-            baseData.namaOwner =
-              document.getElementById("namaOwnerInsentifMetabolic").value || "";
-            baseData.telpOwner =
-              document.getElementById("telpOwnerInsentifMetabolic").value || "";
-            baseData.jenisEwalletOwner =
-              document.getElementById("jenisEwalletMetabolicOwner").value || "";
-            baseData.noTelpEwalletOwner =
-              document.getElementById("noTelpEwalletMetabolicOwner").value ||
-              "";
-            baseData.namaAkunEwalletOwner =
-              document.getElementById("namaAkunEwalletMetabolicOwner").value ||
-              "";
-            baseData.jenisEwalletSC =
-              document.getElementById("jenisEwalletMetabolicSC").value || "";
-            baseData.noTelpEwalletSC =
-              document.getElementById("noTelpEwalletMetabolicSC").value || "";
-            baseData.namaAkunEwalletSC =
-              document.getElementById("namaAkunEwalletMetabolicSC").value || "";
-
-            baseData.persenSC =
-              document.getElementById("persenSCMetabolic").value || "";
-            baseData.persenOwner =
-              document.getElementById("persenOwnerMetabolic").value || "";
-          } else if (program === "POP") {
+          if (program === "POP") {
             baseData.tanggalRealisasi = document.getElementById(
-              "tanggalRealisasiPop"
+              "tanggalRealisasiPop",
             ).value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPesertaPop").value;
             const pediatrikSwitches = document.querySelectorAll(
-              ".produkPediatrikSwitch"
+              ".produkPediatrikSwitch",
             );
 
             const checkedPediatrik = Array.from(pediatrikSwitches).filter(
-              (sw) => sw.checked
+              (sw) => sw.checked,
             );
             if (checkedPediatrik.length === 0) {
               return Swal.fire(
                 "Pilih Produk",
                 "Minimal pilih satu produk Pediatrik untuk program POP.",
-                "warning"
+                "warning",
               );
             }
 
@@ -1765,13 +1281,13 @@
               (sw) => ({
                 label: sw.dataset.label,
                 status: sw.checked ? "Yes" : "No",
-              })
+              }),
             );
 
             baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
           } else if (program === "PGD") {
             baseData.tanggalRealisasi = document.getElementById(
-              "tanggalRealisasiPgd"
+              "tanggalRealisasiPgd",
             ).value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPesertaPgd").value;
@@ -1784,7 +1300,7 @@
               Swal.fire(
                 "Jumlah Peserta Tidak Valid",
                 "Jumlah peserta untuk PGD harus 1-3 orang per outlet.",
-                "warning"
+                "warning",
               );
               return;
             }
@@ -1798,23 +1314,9 @@
               document
                 .getElementById("avgSalesProgram")
                 .value.replace(/\./g, "") || "";
-          } else if (program === "Boost Metabolic") {
-            baseData.namaApoteker =
-              document.getElementById("namaApoteker").value || "";
-            baseData.telpApoteker =
-              document.getElementById("telpApoteker").value || "";
-            baseData.emailApoteker =
-              document.getElementById("emailApoteker").value || "";
-
-            const switches = document.querySelectorAll(".produkSwitch");
-
-            const produkStatus = Array.from(switches).map((sw) => ({
-              label: sw.dataset.label,
-              status: sw.checked ? "Yes" : "No",
-            }));
-
-            baseData.productMetabolic = JSON.stringify(produkStatus);
-          } else if (program === "Presentasi Produk Neuro Pain Metabolic") {
+          } else if (
+            program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+          ) {
             baseData.tanggalPresentasi =
               document.getElementById("tanggalPresentasiNeuro").value || "";
             baseData.jumlahPeserta =
@@ -1824,25 +1326,31 @@
               .replace(/,/g, "");
             // Ambil produk Neuro Metabolic yang dipilih di wrapper presentasi
             const produkNeuroSelected = $("#produkNeuroSelect").val() || [];
+
+            // minimal 1
             if (produkNeuroSelected.length === 0) {
-              Swal.fire(
+              return Swal.fire(
                 "Pilih Produk",
-                "Minimal pilih satu produk untuk Presentasi Produk Neuro.",
-                "warning"
+                "Minimal pilih 1 produk untuk program ini.",
+                "warning",
               );
-              return;
             }
+
+            // minimal 5
+            if (produkNeuroSelected.length > 5) {
+              return Swal.fire(
+                "Maksimal 5 Produk",
+                "Anda hanya boleh memilih maksimal 5 produk.",
+                "warning",
+              );
+            }
+
             // Buat array objek sesuai format lama
             const produkNeuroStatus = produkNeuroList.map((label) => ({
               label,
               status: produkNeuroSelected.includes(label) ? "Yes" : "No",
             }));
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
-          } else if (program === "PK to PBF") {
-            baseData.tanggalPelaksanaan =
-              document.getElementById("tanggalPK").value || "";
-            baseData.jumlahPesertaPK =
-              document.getElementById("jumlahPesertaPK").value || "";
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -1886,16 +1394,6 @@
               $("#telpApoteker").val("");
               $("#emailApoteker").val("");
               $("#tanggalPK").val("");
-              $("#namaOwnerInsentif").val("");
-              $("#telpOwnerInsentif").val("");
-              $("#namaOwnerInsentifMetabolic").val("");
-              $("#telpOwnerInsentifMetabolic").val("");
-              $("#jenisEwalletMetabolicOwner").val("");
-              $("#noTelpEwalletMetabolicOwner").val("");
-              $("#namaAkunEwalletMetabolicOwner").val("");
-              $("#jenisEwalletMetabolicSC").val("");
-              $("#noTelpEwalletMetabolicSC").val("");
-              $("#namaAkunEwalletMetabolicSC").val("");
               $("#totalSalesProgram").val("");
               $("#avgSalesProgram").val("");
               $("#tempatPelaksanaan").val("");
@@ -1905,8 +1403,6 @@
               $("#jumlahPesertaPK").val("");
               $("#tanggalRealisasiPop").val("");
               $("#tanggalRealisasiPgd").val("");
-              $("#persenOwnerMetabolic").val("");
-              $("#persenSCMetabolic").val("");
 
               document
                 .querySelectorAll('input[type="date"]')
@@ -1929,7 +1425,6 @@
               // Sembunyikan field dinamis kembali
               $("#ewalletFields").addClass("d-none");
               $("#popPgdFields").addClass("d-none");
-              $("#boostMetabolicFields").addClass("d-none");
               $("#produkSwitchWrapper").addClass("d-none");
               $("#tempatPelaksanaanWrapper").addClass("d-none");
               $("#tanggalPelaksanaanPK").addClass("d-none");
@@ -1938,11 +1433,6 @@
               $("#produkNeuroWrapper").addClass("d-none");
               $("#tanggalRealisasiPgdWrapper").addClass("d-none");
               $("#tanggalRealisasiPopWrapper").addClass("d-none");
-              $("#ownerFieldsInsentif").addClass("d-none");
-              $("#ownerFieldsMetabolic").addClass("d-none");
-              $("#ewalletFieldsMetabolicOwner").addClass("d-none");
-              $("#ewalletFieldsMetabolicSC").addClass("d-none");
-              $("#sectionEwalletMetabolic").addClass("d-none");
 
               // Reset semua switch produk
 
@@ -1966,28 +1456,16 @@
               setFieldRequired("#jumlahPesertaNeuro", false);
               setFieldRequired("#jumlahPesertaPK", false);
               setFieldRequired("#tempatPelaksanaan", false);
-              setFieldRequired("#namaOwnerInsentif", false);
-              setFieldRequired("#telpOwnerInsentif", false);
-              setFieldRequired("#namaOwnerInsentifMetabolic", false);
-              setFieldRequired("#telpOwnerInsentifMetabolic", false);
-              setFieldRequired("#jenisEwalletMetabolicOwner", false);
-              setFieldRequired("#noTelpEwalletMetabolicOwner", false);
-              setFieldRequired("#namaAkunEwalletMetabolicOwner", false);
-              setFieldRequired("#jenisEwalletMetabolicSC", false);
-              setFieldRequired("#noTelpEwalletMetabolicSC", false);
-              setFieldRequired("#namaAkunEwalletMetabolicSC", false);
-              setFieldRequired("#persenOwnerMetabolic", false);
-              setFieldRequired("#persenSCMetabolic", false);
             } else if (result.status === "DUPLIKAT") {
               Swal.fire({
                 icon: "error",
                 title: "Kode PI sudah diisi",
                 html: `
-                  Pendaftaran program: <strong>${result.program}</strong><br>
-                  Kode PI: <strong>${result.kodePi}</strong><br>
-                  Telah diisi oleh: <strong>${result.oleh}</strong><br>
-                  Pada: <strong>${result.tanggal}</strong>.
-                `,
+                        Pendaftaran program: <strong>${result.program}</strong><br>
+                        Kode PI: <strong>${result.kodePi}</strong><br>
+                        Telah diisi oleh: <strong>${result.oleh}</strong><br>
+                        Pada: <strong>${result.tanggal}</strong>.
+                      `,
               });
             } else {
               Swal.fire({
@@ -2038,7 +1516,6 @@
         $("#boostMetabolicFields").addClass("d-none");
         $("#produkSwitchWrapper").addClass("d-none");
         $("#tanggalPelaksanaanPK").addClass("d-none");
-        $("#ownerFieldsInsentif").addClass("d-none");
         $("#produkPediatrikWrapper").addClass("d-none");
         $("#salesPGDFields").addClass("d-none");
         $("#presentasiNeuroFields").addClass("d-none");
@@ -2048,10 +1525,7 @@
         $("#pesertaPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPopWrapper").addClass("d-none");
-        $("#ewalletFieldsMetabolicOwner").addClass("d-none");
-        $("#ewalletFieldsMetabolicSC").addClass("d-none");
-        $("#ownerFieldsMetabolic").addClass("d-none");
-        $("#sectionEwalletMetabolic").addClass("d-none");
+
         // Hapus semua required dynamic
 
         setFieldRequired("#jenisEwallet", false);
@@ -2064,8 +1538,6 @@
         setFieldRequired("#namaApoteker", false);
         setFieldRequired("#telpApoteker", false);
         setFieldRequired("#emailApoteker", false);
-        setFieldRequired("#namaOwnerInsentif", false);
-        setFieldRequired("#telpOwnerInsentif", false);
         setFieldRequired("#totalSalesProgram", false);
         setFieldRequired("#avgSalesProgram", false);
         setFieldRequired("#tanggalPresentasiNeuro", false);
@@ -2073,24 +1545,8 @@
         setFieldRequired("#jumlahPesertaPK", false);
         setFieldRequired("#tanggalPK", false);
         setFieldRequired("#tempatPelaksanaan", false);
-        setFieldRequired("#jenisEwalletMetabolicOwner", false);
-        setFieldRequired("#noTelpEwalletMetabolicOwner", false);
-        setFieldRequired("#namaAkunEwalletMetabolicOwner", false);
-        setFieldRequired("#jenisEwalletMetabolicSC", false);
-        setFieldRequired("#noTelpEwalletMetabolicSC", false);
-        setFieldRequired("#namaAkunEwalletMetabolicSC", false);
-        setFieldRequired("#namaOwnerInsentifMetabolic", false);
-        setFieldRequired("#telpOwnerInsentifMetabolic", false);
 
-        if (selected === "Insentif SC Modafil & Rozgra") {
-          $("#ownerFieldsInsentif").removeClass("d-none");
-          $("#ewalletFields").removeClass("d-none");
-          setFieldRequired("#jenisEwallet", true);
-          setFieldRequired("#noTelpEwallet", true);
-          setFieldRequired("#namaAkunEwallet", true);
-          setFieldRequired("#namaOwnerInsentif", true);
-          setFieldRequired("#telpOwnerInsentif", true);
-        } else if (selected === "POP") {
+        if (selected === "POP") {
           $("#popPgdFields").removeClass("d-none");
           $("#produkPediatrikWrapper").removeClass("d-none");
           $("#tempatPelaksanaanWrapper").addClass("d-none");
@@ -2118,30 +1574,13 @@
           setFieldRequired("#tempatPelaksanaan", false);
           setFieldRequired("#totalSalesProgram", true);
           setFieldRequired("#avgSalesProgram", true);
-        } else if (selected === "Boost Metabolic") {
-          $("#boostMetabolicFields").removeClass("d-none");
-          $("#produkSwitchWrapper").removeClass("d-none");
-          setFieldRequired("#namaApoteker", true);
-          setFieldRequired("#telpApoteker", true);
-          setFieldRequired("#emailApoteker", true);
-        } else if (selected === "PK to PBF") {
-          $("#tanggalPelaksanaanPK").removeClass("d-none");
-          setFieldRequired("#tanggalPK", true);
-          setFieldRequired("#jumlahPesertaPK", true);
-        } else if (selected === "Presentasi Produk Neuro Pain Metabolic") {
+        } else if (
+          selected === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+        ) {
           setTimeout(initProdukNeuroSelect, 10);
           $("#presentasiNeuroFields").removeClass("d-none");
           setFieldRequired("#tanggalPresentasiNeuro", true);
           setFieldRequired("#jumlahPesertaNeuro", true);
-        } else if (selected === "Insentif SC Metabolic") {
-          $("#ownerFieldsMetabolic").removeClass("d-none");
-          $("#ewalletFieldsMetabolicOwner").removeClass("d-none");
-          $("#ewalletFieldsMetabolicSC").removeClass("d-none");
-          $("#sectionEwalletMetabolic").removeClass("d-none");
-          setFieldRequired("#namaOwnerInsentifMetabolic", true);
-          setFieldRequired("#telpOwnerInsentifMetabolic", true);
-          setFieldRequired("#persenOwnerMetabolic", true);
-          setFieldRequired("#persenSCMetabolic", true);
         } else {
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
@@ -2202,13 +1641,12 @@
         "APRION 150 MG CAPSULE",
         "APRION 75 MG CAPSULE",
         "LETHIRA 500 MG TABLET FC",
-        "VERONIL 250 MG/5 ML SYRUP 120 ML",
-        "DIZINE 10MG TAB 50`S",
+        "DIZINE 10 MG TABLET",
         "DARVON 6 MG TABLET",
         "AMTOCORT 4 MG TABLET",
         "TORAS 4 MG TABLET",
         "TORAS 8 MG TABLET",
-        "PLEXION 50MG TAB SC 100`S",
+        "PLEXION 50 MG TABLET SC",
         "ACLONAC 25 TABLET FC",
         "ACLONAC 50 TABLET FC",
         "ACTREL 100 MG CAPSULE",
@@ -2217,7 +1655,6 @@
         "BLASTOFEN 50 MG/2 ML INJECTION",
         "EVIDUR 120 MG FC TABLET",
         "FLEROXI 20 MG FLASH TABLET",
-        "MELOXICAM 15MG TAB 30S (OGB)",
         "MOXAM 15",
         "MOXAM 7.5 MG TABLET",
         "SCELTO 30 INJEKSI",
@@ -2225,12 +1662,11 @@
         "ZEUFOR 1000 MG/8ML INJECTION",
         "ZEUFOR 500 MG TABLET",
         "UC-FLEX 40 MG TABLET",
-        // Tambahan dari list baru yang belum ada
         "GIONIX 16 MG TABLET",
         "GIONIX 8 MG TABLET",
-        "GLICOLOCK-XR 750MG TAB 30`S",
+        "GLICOLOCK 750 MG XR CAPLET",
         "PARIDE M+ 1 MG FC CAPLET",
-        "PARIDE M-PLUS 2MG/500 TAB 30`S",
+        "PARIDE M+2 MG FC CAPLET",
         "ZIPIO M+ 15/850 MG CAPLET",
         "ARTEPID 75 MG FC TABLET",
         "ASCARDIA 80 TABLET FC",
@@ -2255,13 +1691,20 @@
         "NERIPROS 2 TABLET",
         "REMITAL 10 MG FC TABLET",
         "REMITAL 5 MG FC TABLET",
+        "REMITAL 10 MG ODT",
         "STELAZINE 5 MG FC TABLET",
-        "AMLODIPINE 10 MG TAB 30`S OGB",
-        "AMLODIPINE 5MG TAB 30`S OGB",
-        "CEFADROXIL 500MG CAP 30`S OGB",
-        "ATORVASTATIN 20MG TAB 30`S OGB",
+        "AMLODIPINE 10 MG TABLET OGB",
+        "AMLODIPINE 5 MG TABLET OGB",
+        "CEFADROXIL 500 MG CAPSULE OGB",
+        "ATORVASTATIN 20 MG FC TABLET OGB",
         "ATORVASTATIN 40 MG FC TABLET OGB",
-        "DICLOFENAC 50MG TAB 30`S OGB",
+        "DICLOFENAC 50 MG FC TABLET OGB",
+        "DICLOFENAC POTASIUM 25 MG FC TABLET OGB",
+        "MELOXICAM 15 MG TABLET OGB",
+        "RANITIDINE 150 MG FC TABLET OGB",
+        "ARESPIN 1 MG/ML INJECTION",
+        "CARDIOTONE 250 MG/5 ML INJECTION",
+        "ISORBID 10MG/10 ML INJECTION",
       ];
 
       // Inisialisasi Tom Select pada produkNeuroSelect
@@ -2290,93 +1733,6 @@
         if (window.produkNeuroTom) {
           window.produkNeuroTom.clear();
         }
-      });
-      const ownerInput = document.getElementById("persenOwnerMetabolic");
-      const scInput = document.getElementById("persenSCMetabolic");
-
-      // 🧠 Fungsi bantu: tambahkan atau hapus bintang pada label
-      function toggleAsterisk(el, isRequired) {
-        const formGroup = el.closest(".mb-3");
-        if (!formGroup) return;
-
-        const label = formGroup.querySelector("label");
-        if (!label) return;
-
-        let asterisk = label.querySelector(".required-asterisk");
-
-        if (isRequired) {
-          if (!asterisk) {
-            const span = document.createElement("span");
-            span.classList.add("required-asterisk");
-            span.textContent = "*Wajib Diisi";
-            label.appendChild(span);
-          }
-        } else {
-          if (asterisk) asterisk.remove();
-        }
-      }
-
-      function updateRequiredFields(ownerVal, scVal) {
-        // 🧠 Fungsi utama: set field required + bintang
-        function setFieldRequired(selector, isRequired) {
-          const el = document.querySelector(selector);
-          if (el) {
-            el.required = isRequired;
-            toggleAsterisk(el, isRequired);
-          }
-        }
-
-        if (ownerVal === 100 && scVal === 0) {
-          // ✅ 100% Owner
-          setFieldRequired("#jenisEwalletMetabolicSC", false);
-          setFieldRequired("#noTelpEwalletMetabolicSC", false);
-          setFieldRequired("#namaAkunEwalletMetabolicSC", false);
-          setFieldRequired("#jenisEwalletMetabolicOwner", true);
-          setFieldRequired("#noTelpEwalletMetabolicOwner", true);
-          setFieldRequired("#namaAkunEwalletMetabolicOwner", true);
-        } else if (scVal === 100 && ownerVal === 0) {
-          // ✅ 100% SC
-          setFieldRequired("#jenisEwalletMetabolicSC", true);
-          setFieldRequired("#noTelpEwalletMetabolicSC", true);
-          setFieldRequired("#namaAkunEwalletMetabolicSC", true);
-          setFieldRequired("#jenisEwalletMetabolicOwner", false);
-          setFieldRequired("#noTelpEwalletMetabolicOwner", false);
-          setFieldRequired("#namaAkunEwalletMetabolicOwner", false);
-        } else if (ownerVal > 0 && scVal > 0) {
-          // ✅ Keduanya lebih dari 0%
-          setFieldRequired("#jenisEwalletMetabolicSC", true);
-          setFieldRequired("#noTelpEwalletMetabolicSC", true);
-          setFieldRequired("#namaAkunEwalletMetabolicSC", true);
-          setFieldRequired("#jenisEwalletMetabolicOwner", true);
-          setFieldRequired("#noTelpEwalletMetabolicOwner", true);
-          setFieldRequired("#namaAkunEwalletMetabolicOwner", true);
-        } else {
-          // ✅ Kondisi default (misal kosong semua)
-          setFieldRequired("#jenisEwalletMetabolicSC", false);
-          setFieldRequired("#noTelpEwalletMetabolicSC", false);
-          setFieldRequired("#namaAkunEwalletMetabolicSC", false);
-          setFieldRequired("#jenisEwalletMetabolicOwner", false);
-          setFieldRequired("#noTelpEwalletMetabolicOwner", false);
-          setFieldRequired("#namaAkunEwalletMetabolicOwner", false);
-        }
-      }
-
-      ownerInput.addEventListener("input", function () {
-        let val = parseInt(this.value) || 0;
-        if (val < 0) val = 0;
-        if (val > 100) val = 100;
-        this.value = val;
-        scInput.value = 100 - val;
-        updateRequiredFields(val, 100 - val);
-      });
-
-      scInput.addEventListener("input", function () {
-        let val = parseInt(this.value) || 0;
-        if (val < 0) val = 0;
-        if (val > 100) val = 100;
-        this.value = val;
-        ownerInput.value = 100 - val;
-        updateRequiredFields(100 - val, val);
       });
     </script>
   </body>
