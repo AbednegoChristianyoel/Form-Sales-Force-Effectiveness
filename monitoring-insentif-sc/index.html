@@ -1665,9 +1665,9 @@
                   </div>
 
                   <div class="bg-white border-top text-center py-2">
-                    ${
-                      userData.roles !== "FIC"
-                        ? `
+       ${
+         userData.roles !== "FIC" && userData.roles !== "CCD"
+           ? `
                         <!-- Action Dropdown -->
                         <div class="dropdown mb-2 mx-3">
                           <button class="btn btn-primary custom-dropdown dropdown-toggle w-100 fs-3 fe-3"
@@ -1720,8 +1720,8 @@
                           </ul>
                         </div>
                         `
-                        : ""
-                    }
+           : ""
+       }
 
                     <!-- Show Detail -->
                     <div style="cursor:pointer"
