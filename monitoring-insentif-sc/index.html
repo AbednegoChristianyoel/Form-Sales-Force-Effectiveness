@@ -2056,11 +2056,13 @@
           }
 
           const hasil = detailInsentif[key] || {};
+          console.log(`Produk: ${hasil}`);
 
           const qty = (hasil.qty || 0).toFixed(2);
           const totalInsentif = hasil.total || 0;
 
           grandTotalInsentif += totalInsentif;
+          console.log(`Total Insentif: ${formatRupiah(totalInsentif)}`);
 
           const row = `
       <tr>
@@ -2126,6 +2128,9 @@
         const result = {};
         let grandTotal = 0;
 
+        // =========================
+        // STEP 1: AKUMULASI QTY DULU
+        // =========================
         strukById.forEach((item) => {
           const namaProduk = (item.namaProduk || "").trim();
 
@@ -2142,14 +2147,12 @@
           const konversi = Object.values(master.konversi)[0] || 1;
 
           const qtyFinal = qty * konversi;
-          const qtyValid = Math.floor(qtyFinal);
-
-          const totalInsentif = qtyValid * master.insentif;
 
           if (!result[key]) {
             result[key] = {
               nama: master.nama,
               qty: 0,
+              qtyFinal: 0, // penampung sebelum pembulatan
               qtyValid: 0,
               insentif: master.insentif,
               total: 0,
@@ -2157,12 +2160,24 @@
           }
 
           result[key].qty += qty;
-          result[key].qtyValid += qtyValid;
-          result[key].total += totalInsentif;
-
-          grandTotal += totalInsentif;
+          result[key].qtyFinal += qtyFinal;
         });
 
+        // =========================
+        // STEP 2: HITUNG VALID & INSENTIF
+        // =========================
+        Object.keys(result).forEach((key) => {
+          const item = result[key];
+
+          item.qtyValid = Math.floor(item.qtyFinal); // baru dibulatkan di sini
+          item.total = item.qtyValid * item.insentif;
+
+          grandTotal += item.total;
+        });
+
+        // =========================
+        // RETURN
+        // =========================
         return {
           detail: result,
           total: grandTotal,
