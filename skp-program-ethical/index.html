@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
@@ -55,7 +55,9 @@
 
       /* Hover Effect Navbar */
       .navbar-nav .nav-link {
-        transition: background-color 0.3s, color 0.3s;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
         border-radius: 0.3rem;
       }
 
@@ -210,14 +212,18 @@
         font-size: 1.6rem;
         display: inline-block;
         color: #ffd54f;
-        animation: goldGlow 3s ease-in-out infinite,
+        animation:
+          goldGlow 3s ease-in-out infinite,
           floatY 4s ease-in-out infinite;
-        text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80; /* Shadow awal */
+        text-shadow:
+          0 0 4px #fff8e1,
+          0 0 8px #ffcc80; /* Shadow awal */
       }
 
       /* 🔹 Ikon Petir */
       .lightning-icon {
-        animation: yellowFlash 2.2s ease-in-out infinite,
+        animation:
+          yellowFlash 2.2s ease-in-out infinite,
           floatY 4s ease-in-out infinite;
         transform-origin: center;
         filter: drop-shadow(0 0 4px #fff8e1) drop-shadow(0 0 8px #ffcc80); /* Glow sama dengan teks */
@@ -227,11 +233,15 @@
       @keyframes goldGlow {
         0%,
         100% {
-          text-shadow: 0 0 4px #fff8e1, 0 0 8px #ffcc80;
+          text-shadow:
+            0 0 4px #fff8e1,
+            0 0 8px #ffcc80;
           color: #ffd54f;
         }
         50% {
-          text-shadow: 0 0 6px #fff4c2, 0 0 12px #ffb74d;
+          text-shadow:
+            0 0 6px #fff4c2,
+            0 0 12px #ffb74d;
           color: #ffb300;
         }
       }
@@ -263,6 +273,41 @@
         opacity: 0;
         transition: opacity 0.5s ease;
         pointer-events: none;
+      }
+      /* 🔹 Saat dropdown terbuka (aria-expanded=true), putar arrow ke atas */
+      .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+      }
+      .navbar-custom {
+        background-color: #0d6efd;
+      }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      /* Hover semua link */
+      .navbar-nav .nav-link:hover {
+        background-color: #0b5ed7;
+        color: #fff !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Aktif (halaman sekarang) */
+      .navbar-nav .nav-link.active-page {
+        background-color: #fff !important;
+        color: #0d6efd !important;
+        font-weight: bold;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Hover di link aktif */
+      .navbar-nav .nav-link.active-page:hover {
+        background-color: #e9f2ff !important;
+        color: #0b5ed7 !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
       }
     </style>
   </head>
@@ -297,51 +342,81 @@
       class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
     >
       <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2 me-3" href="#">
-          <!-- 🔹 ICON PETIR -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            class="bi bi-lightning-charge-fill lightning-icon"
-            viewBox="0 0 16 16"
+        <!-- Brand Dropdown -->
+        <div class="dropdown">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2 dropdown-toggle text-decoration-none"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            <path d="M11 0L6 9h4l-1 7 5-10H9l2-6z" />
-          </svg>
+            <!-- Icon Petir -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              class="bi bi-lightning-charge-fill lightning-icon"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11 0L6 9h4l-1 7 5-10H9l2-6z" />
+            </svg>
 
-          <!-- 🔹 NAMA BRAND -->
-          <span class="text-white lumora-logo animated-logo">Pro-Ethic</span>
-        </a>
+            <!-- Nama Brand -->
+            <span class="text-white lumora-logo animated-logo">Pro-Ethic</span>
+          </a>
 
-        <!-- Hamburger di kanan -->
+          <ul class="dropdown-menu shadow custom-dropdown">
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
+                <i class="bi bi-cash-coin me-2"></i> PRO-SC
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
+                <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item fw-semibold"
+                href="../form-pendaftaran-program-ethical/"
+              >
+                <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Hamburger Toggle -->
         <button
-          class="navbar-toggler ms-auto"
+          class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Menu collapsible di kiri -->
+        <!-- Menu Navbar -->
         <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav me-auto mt-2 mt-lg-0 ms-2">
-            <li class="nav-item">
+          <!-- Menu di kiri -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+            <li class="nav-item mt-3 mt-lg-0 me-lg-2">
               <a
-                class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-pendaftaran-program-ethical"
-                >Form Ethical</a
+                class="nav-link text-white fw-bold"
+                href="../form-pendaftaran-program-ethical/"
               >
+                Form Ethical
+              </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mt-2 mt-lg-0">
               <a
-                class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/skp-program-ethical/"
-                >List Outlet Program Ethical</a
+                class="nav-link text-white active-page fw-bold"
+                href="../skp-program-ethical/"
               >
+                List Outlet Program Ethical
+              </a>
             </li>
           </ul>
         </div>
@@ -482,7 +557,7 @@
         // Filter event
         $("#filterProgram, #filterStatus, #filterOutlet, #nipInput").on(
           "input change",
-          applyFilters
+          applyFilters,
         );
       });
 
@@ -503,7 +578,7 @@
             Swal.close();
 
             const allEmpty = Object.values(data).every(
-              (arr) => arr.length === 0
+              (arr) => arr.length === 0,
             );
             if (allEmpty) {
               Swal.fire({
@@ -538,7 +613,7 @@
                 (item) => ({
                   ...item,
                   program: "Presentasi Produk Neuro Pain Metabolic",
-                })
+                }),
               ),
               ...(data["Insentif SC Metabolic"] || []).map((item) => ({
                 ...item,
@@ -590,7 +665,7 @@
 
         if (!dataArray.length) {
           skpList.append(
-            `<div class="col-12 text-center text-muted mt-3">Tidak ada data sesuai filter</div>`
+            `<div class="col-12 text-center text-muted mt-3">Tidak ada data sesuai filter</div>`,
           );
           return;
         }
@@ -616,8 +691,8 @@
           const generateBtnClass = item.generateSkp
             ? "btn-secondary"
             : isRejected
-            ? "btn-secondary"
-            : "text-white";
+              ? "btn-secondary"
+              : "text-white";
           const generateBtnStyle =
             !item.generateSkp && !isRejected
               ? "background-color: var(--bs-primary);"
@@ -688,8 +763,8 @@
                   style="background-color: #009045;" 
                   ${uploadDisabled}
                   onclick="openUploadModal('${item.program}','${
-            item.namaOutlet
-          }','${item.id}')">
+                    item.namaOutlet
+                  }','${item.id}')">
                   Upload SKP
                 </button>
               </div>
@@ -732,7 +807,7 @@
         });
 
         const url = `${apiURL}?action=generateSkp&program=${encodeURIComponent(
-          program
+          program,
         )}&id=${encodeURIComponent(id)}`;
 
         fetch(url)
@@ -756,7 +831,7 @@
 
               // 🔹 Update data di allSKPData
               const idx = allSKPData.findIndex(
-                (d) => d.id === id && d.program === program
+                (d) => d.id === id && d.program === program,
               );
               if (idx !== -1) {
                 allSKPData[idx].generateSkp = result.url;
@@ -769,7 +844,7 @@
 
               if (existingLink.length === 0) {
                 footer.prepend(
-                  `<a href="${result.url}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">Download SKP</a>`
+                  `<a href="${result.url}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">Download SKP</a>`,
                 );
               } else {
                 existingLink.attr("href", result.url);
@@ -815,7 +890,7 @@
             title: "File Terlalu Besar!",
             html: `Ukuran file maksimal <b>${MAX_SIZE_MB} MB</b>.<br>
              File yang dipilih berukuran <b>${(file.size / 1024 / 1024).toFixed(
-               2
+               2,
              )} MB</b>.`,
           });
           return;
@@ -863,7 +938,7 @@
 
                 // 🔹 Update data di allSKPData
                 const idx = allSKPData.findIndex(
-                  (d) => d.id === id && d.program === program
+                  (d) => d.id === id && d.program === program,
                 );
                 if (idx !== -1) {
                   allSKPData[idx].uploadSkp = result.url;
@@ -876,7 +951,7 @@
 
                 if (existingLink.length === 0) {
                   footer.prepend(
-                    `<a href="${result.url}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">Uploaded SKP</a>`
+                    `<a href="${result.url}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">Uploaded SKP</a>`,
                   );
                 } else {
                   existingLink.attr("href", result.url);
@@ -907,7 +982,7 @@
       function openUploadModal(program, outletName, id) {
         // 🔹 Cari data SKP berdasarkan program & id
         const data = allSKPData.find(
-          (d) => d.id === id && d.program === program
+          (d) => d.id === id && d.program === program,
         );
 
         // 🔹 Cek apakah SKP sudah di-generate
@@ -962,7 +1037,7 @@
           currentUpload.program,
           currentUpload.outlet,
           currentUpload.id,
-          file
+          file,
         );
       });
       window.addEventListener("load", () => {

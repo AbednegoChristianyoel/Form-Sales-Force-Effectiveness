@@ -344,6 +344,41 @@
         margin-left: 4px;
         font-weight: bold;
       }
+      /* 🔹 Saat dropdown terbuka (aria-expanded=true), putar arrow ke atas */
+      .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+      }
+      .navbar-custom {
+        background-color: #0d6efd;
+      }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+
+      /* Hover semua link */
+      .navbar-nav .nav-link:hover {
+        background-color: #0b5ed7;
+        color: #fff !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Aktif (halaman sekarang) */
+      .navbar-nav .nav-link.active-page {
+        background-color: #fff !important;
+        color: #0d6efd !important;
+        font-weight: bold;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
+
+      /* Hover di link aktif */
+      .navbar-nav .nav-link.active-page:hover {
+        background-color: #e9f2ff !important;
+        color: #0b5ed7 !important;
+        border-radius: 8px !important; /* ✅ radius 8px */
+      }
     </style>
   </head>
   <!-- Loader -->
@@ -372,59 +407,86 @@
   </div>
 
   <body>
+    <!-- Navbar -->
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
     >
       <div class="container">
-        <!-- Brand -->
-        <a
-          class="navbar-brand d-flex align-items-center gap-2 ms-2 me-3"
-          href="#"
-        >
-          <!-- Icon Petir -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            class="bi bi-lightning-charge-fill lightning-icon"
-            viewBox="0 0 16 16"
+        <!-- Brand Dropdown -->
+        <div class="dropdown">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2 dropdown-toggle text-decoration-none"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            <path d="M11 0L6 9h4l-1 7 5-10H9l2-6z" />
-          </svg>
+            <!-- Icon Petir -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              class="bi bi-lightning-charge-fill lightning-icon"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11 0L6 9h4l-1 7 5-10H9l2-6z" />
+            </svg>
 
-          <!-- Nama Brand -->
-          <span class="text-white lumora-logo animated-logo">Pro-Ethic</span>
-        </a>
+            <!-- Nama Brand -->
+            <span class="text-white lumora-logo animated-logo">Pro-Ethic</span>
+          </a>
+
+          <ul class="dropdown-menu shadow custom-dropdown">
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
+                <i class="bi bi-cash-coin me-2"></i> PRO-SC
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
+                <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item fw-semibold"
+                href="../form-pendaftaran-program-ethical/"
+              >
+                <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
+              </a>
+            </li>
+          </ul>
+        </div>
 
         <!-- Hamburger Toggle -->
         <button
-          class="navbar-toggler ms-auto"
+          class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Menu Navbar -->
         <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav mt-2 mt-lg-0 ms-2">
-            <li class="nav-item">
+          <!-- Menu di kiri -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+            <li class="nav-item mt-3 mt-lg-0 me-lg-2">
               <a
-                class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/form-pendaftaran-program-ethical"
-                >Form Ethical</a
+                class="nav-link text-white active-page fw-bold"
+                href="../form-pendaftaran-program-ethical/"
               >
+                Form Ethical
+              </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item mt-2 mt-lg-0">
               <a
-                class="nav-link text-white fw-bold ms-1"
-                href="https://abednegochristianyoel.github.io/Form-Sales-Force-Effectiveness/skp-program-ethical/"
-                >List Outlet Program Ethical</a
+                class="nav-link text-white fw-bold"
+                href="../skp-program-ethical/"
               >
+                List Outlet Program Ethical
+              </a>
             </li>
           </ul>
         </div>
