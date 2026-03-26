@@ -516,6 +516,9 @@
                     <option value="">Pilih Program</option>
                     <option value="POP">POP</option>
                     <option value="PGD">PGD</option>
+                    <option value="Follow Up Boost Metabolic">
+                      Follow Up Boost Metabolic
+                    </option>
                     <option
                       value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
                     >
@@ -930,6 +933,86 @@
                   </div>
                 </div>
 
+                <!-- Follow Up Boost Metabolic -->
+                <div id="boostMetabolicFields" class="col-12 d-none mt-3">
+                  <div class="row">
+                    <!-- Pilihan Aktivitas -->
+                    <div class="col-12 mb-3">
+                      <label class="form-label fw-bold">
+                        Pilih Aktivitas <span class="required-asterisk">*</span>
+                      </label>
+
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="opsiPengambilan"
+                        />
+                        <label class="form-check-label"
+                          >Pengambilan Strip Alat</label
+                        >
+                      </div>
+
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="opsiEntertain"
+                        />
+                        <label class="form-check-label">Entertain</label>
+                      </div>
+                    </div>
+
+                    <!-- Field Entertain (Conditional) -->
+                    <div id="entertainFields" class="col-12 d-none">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">
+                            Value Transaksi
+                            <span class="required-asterisk">*</span>
+                          </label>
+                          <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input
+                              type="text"
+                              id="valueTransaksi"
+                              class="form-control"
+                              placeholder="Masukkan Value Transaksi"
+                              inputmode="numeric"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">
+                            Tanggal SP <span class="required-asterisk">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="tanggalSP"
+                            class="form-control"
+                            placeholder="DD/MM/YYYY"
+                            autocomplete="off"
+                          />
+                        </div>
+
+                        <div class="col-12 mb-3">
+                          <label class="form-label">
+                            Upload Foto SP
+                            <span class="required-asterisk">*</span>
+                          </label>
+                          <input
+                            type="file"
+                            id="fotoSP"
+                            class="form-control"
+                            accept=".jpg,.jpeg,.png,.pdf"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-12 mt-1 mt-4">
                   <div class="ps-2 pt-1 border border-dark border-2 rounded">
                     <div class="form-check d-flex align-items-center">
@@ -1084,6 +1167,57 @@
         $(this).val(formatRupiah(val));
       });
 
+      flatpickr("#tanggalSP", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        locale: "id",
+      });
+
+      // Show/hide field entertain
+      $("#opsiEntertain").on("change", function () {
+        if ($(this).is(":checked")) {
+          $("#entertainFields").removeClass("d-none");
+
+          setFieldRequired("#valueTransaksi", true);
+          setFieldRequired("#tanggalSP", true);
+          setFieldRequired("#fotoSP", true);
+        } else {
+          $("#entertainFields").addClass("d-none");
+
+          setFieldRequired("#valueTransaksi", false);
+          setFieldRequired("#tanggalSP", false);
+          setFieldRequired("#fotoSP", false);
+        }
+      });
+
+      document.getElementById("fotoSP").addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire(
+            "Format Tidak Didukung",
+            "File harus berupa JPG, PNG, atau PDF.",
+            "error",
+          );
+          this.value = ""; // reset file
+        }
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (file.size > maxSize) {
+          Swal.fire(
+            "File Terlalu Besar",
+            "Ukuran maksimal file adalah 5MB.",
+            "error",
+          );
+          this.value = "";
+        }
+      });
+
       document
         .getElementById("searchEthicalBtn")
         .addEventListener("click", () => {
@@ -1131,9 +1265,10 @@
               // Reset program
               programSelect.innerHTML = `
                   <option value="">Pilih Program</option>
-                  <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
                   <option value="POP">POP</option>
                   <option value="PGD">PGD</option>
+                  <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
+                  <option value="Follow Up Boost Metabolic">Follow Up Boost Metabolic</option>
                 `;
 
               $("#programEthical").val(null).trigger("change");
@@ -1314,6 +1449,42 @@
               document
                 .getElementById("avgSalesProgram")
                 .value.replace(/\./g, "") || "";
+          } else if (program === "Follow Up Boost Metabolic") {
+            const pengambilan =
+              document.getElementById("opsiPengambilan").checked;
+            const entertain = document.getElementById("opsiEntertain").checked;
+
+            if (!pengambilan && !entertain) {
+              return Swal.fire(
+                "Pilih Aktivitas",
+                "Minimal pilih salah satu: Pengambilan Strip atau Entertain.",
+                "warning",
+              );
+            }
+
+            if (entertain) {
+              if (!document.getElementById("valueTransaksi").value.trim()) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Value transaksi wajib diisi.",
+                  "warning",
+                );
+              }
+              if (!document.getElementById("tanggalSP").value.trim()) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Tanggal SP wajib diisi.",
+                  "warning",
+                );
+              }
+              if (!document.getElementById("fotoSP").files.length) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Foto SP wajib diupload.",
+                  "warning",
+                );
+              }
+            }
           } else if (
             program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
           ) {
@@ -1525,6 +1696,10 @@
         $("#pesertaPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPgdWrapper").addClass("d-none");
         $("#tanggalRealisasiPopWrapper").addClass("d-none");
+        $("#boostMetabolicFields").addClass("d-none");
+        $("#entertainFields").addClass("d-none");
+        $("#opsiPengambilan").prop("checked", false);
+        $("#opsiEntertain").prop("checked", false);
 
         // Hapus semua required dynamic
 
@@ -1581,6 +1756,8 @@
           $("#presentasiNeuroFields").removeClass("d-none");
           setFieldRequired("#tanggalPresentasiNeuro", true);
           setFieldRequired("#jumlahPesertaNeuro", true);
+        } else if (selected === "Follow Up Boost Metabolic") {
+          $("#boostMetabolicFields").removeClass("d-none");
         } else {
           $("#tanggalPelaksanaanPK").addClass("d-none");
           setFieldRequired("#tanggalPK", false);
@@ -1711,22 +1888,35 @@
       function initProdukNeuroSelect() {
         const select = document.getElementById("produkNeuroSelect");
         select.innerHTML = ""; // Kosongkan dulu
-        produkNeuroList.forEach((produk) => {
+        const sortedProduk = [...produkNeuroList].sort((a, b) =>
+          a.localeCompare(b, "id", { sensitivity: "base" }),
+        );
+
+        sortedProduk.forEach((produk) => {
           const opt = document.createElement("option");
           opt.value = produk;
           opt.textContent = produk;
           select.appendChild(opt);
         });
-        if (window.produkNeuroTom) window.produkNeuroTom.destroy();
         window.produkNeuroTom = new TomSelect(select, {
           plugins: ["remove_button"],
-          maxItems: null,
+          maxItems: 5, // 🔥 BATAS MAKSIMAL
           create: false,
-          placeholder: "Cari & Pilih produk",
+          placeholder: "Cari & Pilih produk (Maks. 5)",
           allowEmptyOption: true,
           closeAfterSelect: false,
           persist: false,
           searchField: ["text"],
+
+          onItemAdd: function () {
+            if (this.items.length >= 5) {
+              Swal.fire(
+                "Maksimal 5 Produk",
+                "Anda hanya boleh memilih maksimal 5 produk.",
+                "warning",
+              );
+            }
+          },
         });
       }
       $(document).on("click", "#clearProdukNeuroBtn", function () {
