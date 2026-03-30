@@ -1110,7 +1110,7 @@
 
     <script>
       const scriptURL =
-        "https://script.google.com/macros/s/AKfycbyoAyGS-DDBeqF5nugKiq_EdSrAfKmvBD7UaWyf--CU_uIswGr-33Ia_f9AZ_cWB8mZuQ/exec";
+        "https://script.google.com/macros/s/AKfycbyWR4rEjBHQHlU2SNPNqjjjFJc-pH5br-s29KWAxDcwvqDViOP09ag8W713Tq_bAi04Ag/exec";
       let globalOutletData = {};
 
       // Fungsi untuk mengatur required secara dinamis
@@ -1658,6 +1658,14 @@
               baseData.fileName = file.name;
               baseData.mimeType = file.type;
             }
+            baseData.pengambilanStripAlat = document.getElementById("opsiPengambilan").checked
+              ? "Yes"
+              : "No";
+            baseData.entertain = document.getElementById("opsiEntertain").checked
+              ? "Yes"
+              : "No";
+              baseData.valueTransaksi = (document.getElementById("valueTransaksi").value || "").replace(/\./g, "").replace(/,/g, "");
+              baseData.tanggalSP = document.getElementById("tanggalSP").value || "";  
           }
 
           console.log("Data yang dikirim:", baseData);
