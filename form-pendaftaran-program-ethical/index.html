@@ -1110,7 +1110,7 @@
 
     <script>
       const scriptURL =
-        "https://script.google.com/macros/s/AKfycby8yvOjfrRMHBQVT-X6JmdJcfS2lkzyCwLvxVpkci_WIcYiCZDtp59_IM08tyGufog-bQ/exec";
+        "https://script.google.com/macros/s/AKfycbyoAyGS-DDBeqF5nugKiq_EdSrAfKmvBD7UaWyf--CU_uIswGr-33Ia_f9AZ_cWB8mZuQ/exec";
       let globalOutletData = {};
 
       // Fungsi untuk mengatur required secara dinamis
@@ -1322,12 +1322,12 @@
 
               // Reset program
               programSelect.innerHTML = `
-                  <option value="">Pilih Program</option>
-                  <option value="POP">POP</option>
-                  <option value="PGD">PGD</option>
-                  <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
-                  <option value="Follow Up Boost Metabolic">Follow Up Boost Metabolic</option>
-                `;
+                            <option value="">Pilih Program</option>
+                            <option value="POP">POP</option>
+                            <option value="PGD">PGD</option>
+                            <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
+                            <option value="Follow Up Boost Metabolic">Follow Up Boost Metabolic</option>
+                          `;
 
               $("#programEthical").val(null).trigger("change");
 
@@ -1346,6 +1346,21 @@
               });
             });
         });
+
+      function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            const base64 = e.target.result.split(",")[1];
+            resolve(base64);
+          };
+
+          reader.onerror = reject;
+
+          reader.readAsDataURL(file);
+        });
+      }
 
       document
         .getElementById("ethicalForm")
@@ -1617,28 +1632,32 @@
             }));
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
           } else if (program === "Follow Up Boost Metabolic") {
-            const pengambilan =
-              document.getElementById("opsiPengambilan").checked;
+            const fileInput = document.getElementById("fotoSP");
 
-            const entertain = document.getElementById("opsiEntertain").checked;
+            if (fileInput.files.length > 0) {
+              const file = fileInput.files[0];
 
-            baseData.pengambilanStripAlat = pengambilan ? "Yes" : "No";
-            baseData.entertain = entertain ? "Yes" : "No";
+              const allowedTypes = [
+                "application/pdf",
+                "image/jpeg",
+                "image/png",
+              ];
 
-            baseData.valueTransaksi = (
-              document.getElementById("valueTransaksi").value || ""
-            )
-              .replace(/\./g, "")
-              .replace(/,/g, "");
+              if (!allowedTypes.includes(file.type)) {
+                return Swal.fire(
+                  "Format Tidak Didukung",
+                  "File harus PDF, JPG, atau PNG",
+                  "warning",
+                );
+              }
 
-            baseData.tanggalSP =
-              document.getElementById("tanggalSP").value || "";
+              // 🔥 WAIT file selesai dibaca
+              const base64 = await readFileAsBase64(file);
 
-            // 🔥 sementara kalau belum upload ke Drive
-            baseData.uploadFotoSP =
-              document.getElementById("fotoSP").files.length > 0
-                ? document.getElementById("fotoSP").files[0].name
-                : "";
+              baseData.uploadFotoSP = base64;
+              baseData.fileName = file.name;
+              baseData.mimeType = file.type;
+            }
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -1746,11 +1765,11 @@
                 icon: "error",
                 title: "Kode PI sudah diisi",
                 html: `
-                        Pendaftaran program: <strong>${result.program}</strong><br>
-                        Kode PI: <strong>${result.kodePi}</strong><br>
-                        Telah diisi oleh: <strong>${result.oleh}</strong><br>
-                        Pada: <strong>${result.tanggal}</strong>.
-                      `,
+                                  Pendaftaran program: <strong>${result.program}</strong><br>
+                                  Kode PI: <strong>${result.kodePi}</strong><br>
+                                  Telah diisi oleh: <strong>${result.oleh}</strong><br>
+                                  Pada: <strong>${result.tanggal}</strong>.
+                                `,
               });
             } else {
               Swal.fire({
@@ -2102,8 +2121,8 @@
         data.lainnya.forEach((item) => {
           select.append(
             `<option value="${item.kode} - ${item.nama}">
-        ${item.kode} - ${item.nama} 
-      </option>`,
+                  ${item.kode} - ${item.nama}
+                </option>`,
           );
         });
       });
@@ -2132,8 +2151,8 @@
         data.lainnya.forEach((item) => {
           select.append(
             `<option value="${item.kode} - ${item.nama}">
-          ${item.kode} - ${item.nama}
-        </option>`,
+                    ${item.kode} - ${item.nama}
+                  </option>`,
           );
 
           console.log(
