@@ -1469,6 +1469,44 @@
             }
           }
 
+          if (program === "Follow Up Boost Metabolic") {
+            const pengambilan =
+              document.getElementById("opsiPengambilan").checked;
+            const entertain = document.getElementById("opsiEntertain").checked;
+
+            if (!pengambilan && !entertain) {
+              return Swal.fire(
+                "Pilih Aktivitas",
+                "Minimal pilih salah satu: Pengambilan Strip atau Entertain.",
+                "warning",
+              );
+            }
+
+            if (entertain) {
+              if (!document.getElementById("valueTransaksi").value.trim()) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Value transaksi wajib diisi.",
+                  "warning",
+                );
+              }
+              if (!document.getElementById("tanggalSP").value.trim()) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Tanggal SP wajib diisi.",
+                  "warning",
+                );
+              }
+              if (!document.getElementById("fotoSP").files.length) {
+                return Swal.fire(
+                  "Lengkapi Data",
+                  "Foto SP wajib diupload.",
+                  "warning",
+                );
+              }
+            }
+          }
+
           const baseData = {
             nip,
             nama: document.getElementById("namaEthical").value,
@@ -1541,42 +1579,6 @@
 
             baseData.baseline = baselineText;
             baseData.target = targetText;
-          } else if (program === "Follow Up Boost Metabolic") {
-            const pengambilan =
-              document.getElementById("opsiPengambilan").checked;
-            const entertain = document.getElementById("opsiEntertain").checked;
-
-            if (!pengambilan && !entertain) {
-              return Swal.fire(
-                "Pilih Aktivitas",
-                "Minimal pilih salah satu: Pengambilan Strip atau Entertain.",
-                "warning",
-              );
-            }
-
-            if (entertain) {
-              if (!document.getElementById("valueTransaksi").value.trim()) {
-                return Swal.fire(
-                  "Lengkapi Data",
-                  "Value transaksi wajib diisi.",
-                  "warning",
-                );
-              }
-              if (!document.getElementById("tanggalSP").value.trim()) {
-                return Swal.fire(
-                  "Lengkapi Data",
-                  "Tanggal SP wajib diisi.",
-                  "warning",
-                );
-              }
-              if (!document.getElementById("fotoSP").files.length) {
-                return Swal.fire(
-                  "Lengkapi Data",
-                  "Foto SP wajib diupload.",
-                  "warning",
-                );
-              }
-            }
           } else if (
             program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
           ) {
@@ -1614,6 +1616,29 @@
               status: produkNeuroSelected.includes(label) ? "Yes" : "No",
             }));
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
+          } else if (program === "Follow Up Boost Metabolic") {
+            const pengambilan =
+              document.getElementById("opsiPengambilan").checked;
+
+            const entertain = document.getElementById("opsiEntertain").checked;
+
+            baseData.pengambilanStripAlat = pengambilan ? "Yes" : "No";
+            baseData.entertain = entertain ? "Yes" : "No";
+
+            baseData.valueTransaksi = (
+              document.getElementById("valueTransaksi").value || ""
+            )
+              .replace(/\./g, "")
+              .replace(/,/g, "");
+
+            baseData.tanggalSP =
+              document.getElementById("tanggalSP").value || "";
+
+            // 🔥 sementara kalau belum upload ke Drive
+            baseData.uploadFotoSP =
+              document.getElementById("fotoSP").files.length > 0
+                ? document.getElementById("fotoSP").files[0].name
+                : "";
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -2122,6 +2147,20 @@
 
         refreshKategoriOptions();
       });
+
+      document
+        .getElementById("valueTransaksi")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, ""); // ambil angka saja
+
+          if (!value) {
+            e.target.value = "";
+            return;
+          }
+
+          // format ke ribuan pakai titik
+          e.target.value = new Intl.NumberFormat("id-ID").format(value);
+        });
 
       function refreshKategoriOptions() {
         const rows = [1, 2, 3];
