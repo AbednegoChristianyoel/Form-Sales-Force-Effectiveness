@@ -393,8 +393,31 @@
         -webkit-overflow-scrolling: touch;
       }
 
-      .table-scroll table {
-        min-width: 600px; /* 🔥 ini kunci biar bisa geser */
+      /* wrapper scroll */
+      .pgd-table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* tabel dipaksa lebar */
+      .pgd-table-scroll table {
+        table-layout: fixed;
+      }
+
+      .pgd-table-scroll table td,
+      .pgd-table-scroll table th {
+        white-space: normal !important; /* 🔥 biar bisa turun ke bawah */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        vertical-align: top;
+      }
+
+      .pgd-table-scroll table td:first-child {
+        width: 30%;
+      }
+
+      .pgd-table-scroll table td:last-child {
+        width: 70%;
       }
     </style>
   </head>
@@ -769,8 +792,9 @@
                   <div class="row">
                     <div class="col-md-6 mb-3" id="tanggalRealisasiPopWrapper">
                       <label class="form-label"
-                        >Estimasi Tanggal Realisasi</label
-                      >
+                        >Estimasi Tanggal Realisasi
+                        <span class="required-asterisk">*</span>
+                      </label>
                       <input
                         type="text"
                         id="tanggalRealisasiPop"
@@ -780,10 +804,11 @@
                       />
                     </div>
 
-                    <div class="col-md-6 mb-3 d-none" id="pesertaPopWrapper">
+                    <div class="col-md-6 d-none" id="pesertaPopWrapper">
                       <label class="form-label"
-                        >Jumlah Peserta (Pack), Include PSR</label
-                      >
+                        >Jumlah Peserta (Pack), Include PSR
+                        <span class="required-asterisk">*</span>
+                      </label>
                       <input
                         type="number"
                         id="jumlahPesertaPop"
@@ -799,8 +824,9 @@
                     <!-- Item Boost Metabolic (gunakan field produkSwitchWrapper yang sudah ada) -->
                     <div class="col-12 mb-3 mt-3">
                       <label class="form-label fw-bold"
-                        >Pilih Produk Neuro Pain Metabolic</label
-                      >
+                        >Pilih Produk Neuro Pain Metabolic
+                        <span class="required-asterisk">*</span>
+                      </label>
                       <div class="select2-clear-wrapper position-relative p-0">
                         <select id="produkNeuroSelect" multiple></select>
                         <button
@@ -815,7 +841,10 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                      <label class="form-label">Tanggal Presentasi</label>
+                      <label class="form-label"
+                        >Tanggal Presentasi
+                        <span class="required-asterisk">*</span>
+                      </label>
                       <input
                         type="text"
                         id="tanggalPresentasiNeuro"
@@ -825,7 +854,10 @@
                       />
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label class="form-label">Jumlah Peserta</label>
+                      <label class="form-label"
+                        >Jumlah Peserta
+                        <span class="required-asterisk">*</span>
+                      </label>
                       <input
                         type="number"
                         id="jumlahPesertaNeuro"
@@ -962,7 +994,42 @@
                 </div>
 
                 <!-- PGD NEW FIELD -->
-                <div id="pgdFields" class="col-12 d-none mt-3">
+                <div id="pgdSummaryTable" class="col-12 d-none mt-3">
+                  <label class="form-label fw-bold">Summary Program PGD</label>
+
+                  <div class="pgd-table-scroll">
+                    <table
+                      class="table table-bordered text-center align-middle"
+                    >
+                      <!-- 🔥 HEADER -->
+                      <thead class="table-light">
+                        <tr>
+                          <th>Keterangan</th>
+                          <th>Value</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>Baseline Program Jul-Des 2025 (6 Bulan)</td>
+                          <td id="baselinePeriod">-</td>
+                        </tr>
+                        <tr>
+                          <td>Target Growth Jan-Jun 2026 (6 Bulan) 15%</td>
+                          <td id="targetPeriod">Rp 0</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Syarat Sales Pediatric Jan-Jun 2026 (6 Bulan)*
+                          </td>
+                          <td id="syaratSales">Rp 0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div id="pgdFields" class="col-12 d-none mt-2">
                   <div class="row">
                     <!-- Nama Owner -->
                     <div class="col-md-6 mb-3">
@@ -1306,11 +1373,28 @@
             const rows = [1, 2, 3];
             let filled = 0;
 
-            rows.forEach((r) => {
+            for (let r of rows) {
               const kategori = $(`.kategoriPOP[data-row="${r}"]`).val();
-              if (kategori) filled++;
-            });
+              const lainnya = $(`.lainnyaPOP[data-row="${r}"]`).val();
 
+              // 🔥 anggap kosong kalau "" ATAU "Pilih"
+              const isKategoriValid = kategori && kategori !== "Pilih";
+
+              if (isKategoriValid) {
+                filled++;
+
+                // 🔥 VALIDASI produk lainnya WAJIB
+                if (!lainnya || lainnya === "Pilih") {
+                  return Swal.fire(
+                    "Lengkapi Data",
+                    `Produk lainnya pada baris ${r} wajib dipilih.`,
+                    "warning",
+                  );
+                }
+              }
+            }
+
+            // 🔥 minimal 2 kategori
             if (filled < 2) {
               return Swal.fire(
                 "Minimal 2 Paket",
@@ -1404,38 +1488,59 @@
             ).value;
             baseData.jumlahPeserta =
               document.getElementById("jumlahPesertaPop").value;
-            const pediatrikSwitches = document.querySelectorAll(
-              ".produkPediatrikSwitch",
-            );
 
-            const checkedPediatrik = Array.from(pediatrikSwitches).filter(
-              (sw) => sw.checked,
-            );
-            if (checkedPediatrik.length === 0) {
-              return Swal.fire(
-                "Pilih Produk",
-                "Minimal pilih satu produk Pediatrik untuk program POP.",
-                "warning",
-              );
-            }
+            const rows = [1, 2, 3];
+            const popArray = [];
 
-            const produkPediatrikStatus = Array.from(pediatrikSwitches).map(
-              (sw) => ({
-                label: sw.dataset.label,
-                status: sw.checked ? "Yes" : "No",
-              }),
-            );
+            rows.forEach((r) => {
+              const kategori = $(`.kategoriPOP[data-row="${r}"]`).val();
+              const wajib = $(`.wajibPOP[data-row="${r}"]`).val();
+              const lainnya = $(`.lainnyaPOP[data-row="${r}"]`).val();
 
-            baseData.productPediatrik = JSON.stringify(produkPediatrikStatus);
+              if (kategori && kategori !== "") {
+                // 🔥 PUSH PRODUK WAJIB
+                if (wajib) {
+                  const split = wajib.split(" - ");
+                  popArray.push({
+                    kategori: kategori,
+                    tipe: "Wajib",
+                    kode: split[0],
+                    nama: split[1],
+                  });
+                }
+
+                // 🔥 PUSH PRODUK LAINNYA
+                if (lainnya) {
+                  const split = lainnya.split(" - ");
+                  popArray.push({
+                    kategori: kategori,
+                    tipe: "Lainnya",
+                    kode: split[0],
+                    nama: split[1],
+                  });
+                }
+              }
+            });
+            console.log("POP Array:", popArray);
+            baseData.productPediatrik = JSON.stringify(popArray);
           } else if (program === "PGD") {
             baseData.sudahDaftarPOP = document.getElementById("sudahDaftarPop")
               .checked
               ? "Yes"
               : "No";
+
             baseData.namaOwner =
               document.getElementById("namaOwner").value || "";
+
             baseData.noTelpOwner =
               document.getElementById("noTelpOwner").value || "";
+
+            // 🔥 TAMBAHAN WAJIB (INI YANG KURANG)
+            const baselineText = $("#baselinePeriod").text().replace(/\D/g, "");
+            const targetText = $("#targetPeriod").text().replace(/\D/g, "");
+
+            baseData.baseline = baselineText;
+            baseData.target = targetText;
           } else if (program === "Follow Up Boost Metabolic") {
             const pengambilan =
               document.getElementById("opsiPengambilan").checked;
@@ -1561,6 +1666,7 @@
               $("#namaOwner").val("");
               $("#noTelpOwner").val("");
               $("#sudahDaftarPop").prop("checked", false);
+              $("#produkLainnya").val("").trigger("change");
 
               document
                 .querySelectorAll('input[type="date"]')
@@ -1660,6 +1766,8 @@
         $("#namaOutletEthical").val(data.nama || "");
         $("#kotaOutletEthical").val(data.kota || "");
         $("#alamatOutletEthical").val(data.alamat || "");
+
+        updatePGDTable(data);
       });
 
       $("#programEthical").on("change", function () {
@@ -1681,6 +1789,8 @@
         $("#opsiPengambilan").prop("checked", false);
         $("#opsiEntertain").prop("checked", false);
         $("#pgdFields").addClass("d-none");
+        $("#produkPOPWrapper").addClass("d-none");
+        $("#pgdFields, #pgdSummaryTable").addClass("d-none");
 
         // Hapus semua required dynamic
 
@@ -1699,6 +1809,8 @@
         setFieldRequired("#jumlahPesertaPK", false);
         setFieldRequired("#tanggalPK", false);
         setFieldRequired("#tempatPelaksanaan", false);
+        setFieldRequired("#namaOwner", false);
+        setFieldRequired("#noTelpOwner", false);
 
         if (selected === "POP") {
           $("#popPgdFields").removeClass("d-none");
@@ -1710,7 +1822,7 @@
           setFieldRequired("#jumlahPesertaPop", true);
         } else if (selected === "PGD") {
           $("#pgdFields").removeClass("d-none");
-
+          $("#pgdFields, #pgdSummaryTable").removeClass("d-none");
           setFieldRequired("#namaOwner", true);
           setFieldRequired("#noTelpOwner", true);
         } else if (
@@ -1772,35 +1884,68 @@
 
       const produkPOPMap = {
         "Paket Demam": {
-          wajib: "Praxion drops",
-          lainnya: ["Proris suppositoria"],
+          wajib: { kode: "007550", nama: "PRAXION DROPS" },
+          lainnya: [{ kode: "006064", nama: "PRORIS SUPPOSITORIA" }],
         },
+
         "Paket Batuk Pilek": {
-          wajib: "Oroxin sirup",
-          lainnya: ["Ethiros sirup", "Ozen drops"],
-        },
-        "Paket Gastro": {
-          wajib: "Narfoz syrup",
-          lainnya: ["Binomic syrup", "Taxilan syrup"],
-        },
-        "Paket Sariawan": {
-          wajib: "Candistin drops",
-          lainnya: ["-"],
-        },
-        "Paket Infeksi Kulit": {
-          wajib: "Nebacetin",
-          lainnya: ["Clinovir grup", "Iflacort cream"],
-        },
-        "Paket Lainnya": {
-          wajib: "Brion",
+          wajib: {
+            kode: "012774",
+            nama: "OROXIN SYRUP 60 ML",
+          },
           lainnya: [
-            "Fixiphar sirup",
-            "Aztrin sirup",
-            "Viridis sirup",
-            "Veronil sirup",
+            { kode: "012851", nama: "ETHIROS SYRUP 60 ML" },
+            { kode: "006119", nama: "OZEN DROPS 12 ML" },
+          ],
+        },
+
+        "Paket Gastro": {
+          wajib: { kode: "015942", nama: "NARFOZ SYRUP 30 ML" },
+          lainnya: [
+            { kode: "008870", nama: "NARFOZ SYRUP 60 ML" },
+            { kode: "016888", nama: "BINOMIC SYRUP 60 ML" },
+            { kode: "010618", nama: "TAXILAN SUSPENSI 180ML" },
+          ],
+        },
+
+        "Paket Sariawan": {
+          wajib: { kode: "002511", nama: "CANDISTIN SUSPENSI 12 ML" },
+          lainnya: [{ kode: "Tidak Ada", nama: "Produk Lainnya" }],
+        },
+
+        "Paket Infeksi Kulit": {
+          wajib: { kode: "000070", nama: "NEBACETIN OINTMENT 5 G" },
+          lainnya: [
+            { kode: "001488", nama: "CLINOVIR 400 TABLET" },
+            { kode: "001477", nama: "CLINOVIR 200 TABLET" },
+            { kode: "001466", nama: "CLINOVIR CREAM 5 G" },
+            { kode: "008220", nama: "IFLACORT CREAM 5 G" },
+            { kode: "008231", nama: "IFLACORT CREAM 10 G" },
+            { kode: "000080", nama: "NEBACETIN POWDER 5 G" },
+          ],
+        },
+
+        "Paket Lainnya": {
+          wajib: { kode: "033080", nama: "BRION OINTMENT 20 G" },
+          lainnya: [
+            { kode: "012697", nama: "FIXIPHAR SYRUP 60 ML" },
+            { kode: "005140", nama: "FIXIPHAR DS 30 ML" },
+            { kode: "013203", nama: "VIRIDIS SYRUP 60 ML" },
+            { kode: "013797", nama: "VIRIDIS 500 MG TABLET" },
+            { kode: "012610", nama: "VERONIL SYRUP 120 ML" },
+            { kode: "009342", nama: "AZTRIN DRY SUSPENSION" },
           ],
         },
       };
+
+      const kategoriList = [
+        "Paket Demam",
+        "Paket Batuk Pilek",
+        "Paket Gastro",
+        "Paket Sariawan",
+        "Paket Infeksi Kulit",
+        "Paket Lainnya",
+      ];
 
       const produkNeuroList = [
         "ACETRAM 37.5/325MG FC TABLET",
@@ -1918,20 +2063,23 @@
 
       $("#kategoriPOP").on("change", function () {
         const kategori = $(this).val();
-
         if (!kategori) return;
 
         const data = produkPOPMap[kategori];
 
-        // set produk wajib
-        $("#produkWajibPOP").val(data.wajib);
+        // ✅ tampilkan produk wajib (kode + nama)
+        $("#produkWajibPOP").val(`${data.wajib.kode} - ${data.wajib.nama}`);
 
-        // reset dropdown lainnya
+        // ✅ reset dropdown lainnya
         const select = $("#produkLainPOP");
         select.empty().append(`<option value="">Pilih Produk</option>`);
 
         data.lainnya.forEach((item) => {
-          select.append(`<option value="${item}">${item}</option>`);
+          select.append(
+            `<option value="${item.kode} - ${item.nama}">
+        ${item.kode} - ${item.nama} 
+      </option>`,
+          );
         });
       });
 
@@ -1942,7 +2090,6 @@
         const wajibInput = $(`.wajibPOP[data-row="${row}"]`);
         const select = $(`.lainnyaPOP[data-row="${row}"]`);
 
-        // 🔥 kalau balik ke "Pilih"
         if (!kategori) {
           wajibInput.val("");
           select.empty().append(`<option value="">Pilih</option>`);
@@ -1951,16 +2098,89 @@
 
         const data = produkPOPMap[kategori];
 
-        // isi produk wajib
-        wajibInput.val(data.wajib);
+        // ✅ isi produk wajib
+        wajibInput.val(`${data.wajib.kode} - ${data.wajib.nama}`);
 
-        // isi produk lainnya
+        // ✅ isi produk lainnya
         select.empty().append(`<option value="">Pilih</option>`);
 
         data.lainnya.forEach((item) => {
-          select.append(`<option value="${item}">${item}</option>`);
+          select.append(
+            `<option value="${item.kode} - ${item.nama}">
+          ${item.kode} - ${item.nama}
+        </option>`,
+          );
+
+          console.log(
+            "Kategori:",
+            kategori,
+            "Produk Lainnya:",
+            item.kode,
+            item.nama,
+          );
         });
+
+        refreshKategoriOptions();
       });
+
+      function refreshKategoriOptions() {
+        const rows = [1, 2, 3];
+
+        let selectedValues = [];
+
+        rows.forEach((r) => {
+          const val = $(`.kategoriPOP[data-row="${r}"]`).val();
+          if (val) selectedValues.push(val);
+        });
+
+        rows.forEach((r) => {
+          const select = $(`.kategoriPOP[data-row="${r}"]`);
+          const currentVal = select.val();
+
+          select.empty().append(`<option value="">Pilih</option>`);
+
+          kategoriList.forEach((item) => {
+            if (!selectedValues.includes(item) || item === currentVal) {
+              select.append(`<option value="${item}">${item}</option>`);
+            }
+          });
+
+          select.val(currentVal);
+        });
+      }
+
+      $(document).ready(function () {
+        refreshKategoriOptions();
+      });
+
+      function updatePGDTable(data) {
+        const MIN_BASELINE = 4347000 * 6;
+        const FIX_SYARAT = 15000000;
+
+        let baseline = data.baseline;
+        let target = 0;
+
+        // 🔥 RULE BASELINE & TARGET
+        if (baseline < MIN_BASELINE) {
+          baseline = MIN_BASELINE;
+          target = 5000000 * 6;
+        } else {
+          target = Math.round(baseline * 1.15);
+        }
+
+        // 🔥 SYARAT FIX
+        const syarat = target > 0 ? FIX_SYARAT : 0;
+
+        // 🔥 SET UI
+        $("#baselinePeriod").text(formatRupiah(baseline));
+        $("#targetPeriod").text(formatRupiah(target));
+        $("#syaratSales").text(formatRupiah(syarat));
+      }
+
+      function formatRupiah(angka) {
+        if (!angka || isNaN(angka)) return "-";
+        return "Rp " + Number(angka).toLocaleString("id-ID");
+      }
     </script>
   </body>
 </html>
