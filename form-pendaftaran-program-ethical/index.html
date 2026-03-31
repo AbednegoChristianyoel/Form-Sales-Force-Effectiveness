@@ -419,6 +419,24 @@
       .pgd-table-scroll table td:last-child {
         width: 70%;
       }
+      .navbar-collapse {
+        text-align: center;
+        /* teks rata tengah */
+      }
+
+      .card,
+      .container,
+      .form-wrapper {
+        overflow: visible !important;
+      }
+
+      /* Perbesar panah dropdown di navbar */
+      .navbar .dropdown-toggle::after {
+        border-top-width: 0.45em !important;
+        border-right-width: 0.45em !important;
+        border-left-width: 0.45em !important;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <!-- Loader -->
@@ -1658,14 +1676,22 @@
               baseData.fileName = file.name;
               baseData.mimeType = file.type;
             }
-            baseData.pengambilanStripAlat = document.getElementById("opsiPengambilan").checked
+            baseData.pengambilanStripAlat = document.getElementById(
+              "opsiPengambilan",
+            ).checked
               ? "Yes"
               : "No";
-            baseData.entertain = document.getElementById("opsiEntertain").checked
+            baseData.entertain = document.getElementById("opsiEntertain")
+              .checked
               ? "Yes"
               : "No";
-              baseData.valueTransaksi = (document.getElementById("valueTransaksi").value || "").replace(/\./g, "").replace(/,/g, "");
-              baseData.tanggalSP = document.getElementById("tanggalSP").value || "";  
+            baseData.valueTransaksi = (
+              document.getElementById("valueTransaksi").value || ""
+            )
+              .replace(/\./g, "")
+              .replace(/,/g, "");
+            baseData.tanggalSP =
+              document.getElementById("tanggalSP").value || "";
           }
 
           console.log("Data yang dikirim:", baseData);
@@ -1931,7 +1957,7 @@
       $("#jumlahPesertaNeuro").on("input", function () {
         const jumlah = parseInt($(this).val(), 10) || 0;
         const biaya = jumlah * 50000;
-        $("#biayaNeuro").val(biaya ? formatRupiah(biaya.toString()) : "");
+        $("#biayaNeuro").val(biaya ? formatNumber(biaya) : "");
       });
 
       const produkPOPMap = {
@@ -2246,6 +2272,15 @@
       function formatRupiah(angka) {
         if (!angka || isNaN(angka)) return "-";
         return "Rp " + Number(angka).toLocaleString("id-ID");
+      }
+
+      function formatNumber(val) {
+        if (!val) return "";
+
+        const clean = String(val).replace(/[^0-9]/g, "");
+        if (!clean) return "";
+
+        return Number(clean).toLocaleString("id-ID");
       }
     </script>
   </body>

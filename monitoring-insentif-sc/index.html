@@ -1521,9 +1521,10 @@
                           <small>${formatDate(item.timeStamp)}</small>
                         </div>
                       </div>
-                      <div class="text-end">
-                      <span class="badge bg-primary ">${item.periodeProgram}</span><br>
-                      ${getStatusBadge(item.status)}<br>
+
+                      <div class="d-flex flex-column align-items-end gap-2">
+                        <span class="badge bg-primary ">${item.periodeProgram}</span>
+                      ${getStatusBadge(item.status)}
 
                       ${
                         item.statusValidateFIC
@@ -1594,6 +1595,19 @@
                         <p class="fw-bold m-0">${item.noEwallet || "-"}</p>
                       </div>
                     </div>
+
+                    ${
+                      item.notesRejection && item.notesRejection.trim() !== ""
+                        ? `
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <small class="text-danger">Alasan Reject</small>
+                          <p class="fw-bold text-danger m-0">${item.notesRejection}</p>
+                        </div>
+                      </div>
+                      `
+                        : ""
+                    }
 
                     <div class="row mt-3">
 
@@ -1773,6 +1787,14 @@
               <strong>Kode PI:</strong> ${item.kodePI}<br>
               <strong>Kota:</strong> ${item.kota}<br>
               <strong>Alamat:</strong> ${item.alamat || "-"}
+                            ${
+                              item.notesRejection &&
+                              item.notesRejection.trim() !== ""
+                                ? `
+              <strong style="color:red;">Alasan Reject:</strong> ${item.notesRejection}
+              `
+                                : ""
+                            }
             </div>
 
             <div class="col-md-4">
@@ -1780,7 +1802,7 @@
               <strong>PIC SC:</strong> ${item.namaPicSC}<br>
               <strong>Nama Akun E-Wallet:</strong> ${item.namaPenggunaEWallet || "-"}<br>
               <strong>Nomor E-Wallet:</strong> ${item.noEwallet || "-"}<br>
-              <strong>E-Wallet:</strong> ${item.jenisEwallet}
+              <strong>E-Wallet:</strong> ${item.jenisEwallet}<br>
             </div>
           </div>
 

@@ -27,6 +27,10 @@
       type="image/png"
       href="https://connect-assets.prosple.com/cdn/ff/nDJLhKo3GxHUnuJJLt-cRdMGUAmxDY2NSAzboL84_ec/1700559379/public/styles/scale_and_crop_center_120x120/public/2023-11/Logo-Pharos-Indonesia-200x200-2023.jpg?itok=4-AmM7sn"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -309,6 +313,24 @@
         color: #0b5ed7 !important;
         border-radius: 8px !important; /* ✅ radius 8px */
       }
+      .navbar-collapse {
+        text-align: center;
+        /* teks rata tengah */
+      }
+
+      .card,
+      .container,
+      .form-wrapper {
+        overflow: visible !important;
+      }
+
+      /* Perbesar panah dropdown di navbar */
+      .navbar .dropdown-toggle::after {
+        border-top-width: 0.45em !important;
+        border-right-width: 0.45em !important;
+        border-left-width: 0.45em !important;
+        vertical-align: middle;
+      }
     </style>
   </head>
 
@@ -433,7 +455,7 @@
             type="text"
             id="nipInput"
             class="form-control"
-            placeholder="Cari NIP atau Kode PI..."
+            placeholder="Cari NIP"
           />
         </div>
         <div class="col-md-2">
@@ -442,14 +464,14 @@
         <div class="col-md-2">
           <select class="form-select" id="filterProgram">
             <option value="">Semua Program</option>
-            <option>Boost Metabolic</option>
-            <option value="Presentasi Produk Neuro Pain Metabolic">
-              Presentasi Produk Neuro Pain Metabolic
+            <option value="POP">POP</option>
+            <option value="PGD">PGD</option>
+            <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">
+              Presentasi Produk Nyeri Cardio Metabolik Psikiatri
             </option>
-            <option>Insentif Mod & Rozgra</option>
-            <option>Insentif SC Metabolic</option>
-            <option>POP</option>
-            <option>PGD</option>
+            <option value="Follow Up Boost Metabolic">
+              Follow Up Boost Metabolic
+            </option>
           </select>
         </div>
         <div class="col-md-2">
@@ -460,6 +482,7 @@
             <option>Sudah Upload SKP</option>
             <option>Sudah Generate SKP</option>
             <option>Belum Generate SKP</option>
+            <option>Belum dicek PM</option>
           </select>
         </div>
         <div class="col-md-3">
@@ -528,6 +551,25 @@
       </div>
     </div>
 
+    <!-- 🔹 Modal Detail -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Detail Program</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="detailContent">
+            <!-- isi dari JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       let allSKPData = [];
 
@@ -563,7 +605,7 @@
 
       function getDataByNIP(nip) {
         const apiURL =
-          "https://script.google.com/macros/s/AKfycby8yvOjfrRMHBQVT-X6JmdJcfS2lkzyCwLvxVpkci_WIcYiCZDtp59_IM08tyGufog-bQ/exec";
+          "https://script.google.com/macros/s/AKfycbyWR4rEjBHQHlU2SNPNqjjjFJc-pH5br-s29KWAxDcwvqDViOP09ag8W713Tq_bAi04Ag/exec";
 
         Swal.fire({
           title: "Memuat data...",
@@ -580,6 +622,7 @@
             const allEmpty = Object.values(data).every(
               (arr) => arr.length === 0,
             );
+
             if (allEmpty) {
               Swal.fire({
                 icon: "info",
@@ -591,33 +634,25 @@
 
             console.log(JSON.stringify(data, null, 2));
 
-            // Gabungkan semua array program
+            // ✅ SESUAIKAN DENGAN SHEET BARU
             allSKPData = [
-              ...(data["Boost Metabolic"] || []).map((item) => ({
-                ...item,
-                program: "Boost Metabolic",
-              })),
-              ...(data["POP"] || []).map((item) => ({
+              ...(data["POPv2"] || []).map((item) => ({
                 ...item,
                 program: "POP",
               })),
-              ...(data["PGD"] || []).map((item) => ({
+              ...(data["PGDv2"] || []).map((item) => ({
                 ...item,
                 program: "PGD",
               })),
-              ...(data["Insentif Mod & Rozgra"] || []).map((item) => ({
+              ...(
+                data["Presentasi Produk Nyeri Cardio Metabolik Psikiatri"] || []
+              ).map((item) => ({
                 ...item,
-                program: "Insentif Mod & Rozgra",
+                program: "Presentasi Produk Nyeri Cardio Metabolik Psikiatri",
               })),
-              ...(data["Presentasi Produk Neuro Pain Metabolic"] || []).map(
-                (item) => ({
-                  ...item,
-                  program: "Presentasi Produk Neuro Pain Metabolic",
-                }),
-              ),
-              ...(data["Insentif SC Metabolic"] || []).map((item) => ({
+              ...(data["Follow Up Boost Metabolic"] || []).map((item) => ({
                 ...item,
-                program: "Insentif SC Metabolic",
+                program: "Follow Up Boost Metabolic",
               })),
             ];
 
@@ -632,6 +667,23 @@
               text: "Gagal mengambil data dari server.",
             });
           });
+      }
+
+      function getStatusBadge(status) {
+        if (!status) return "-";
+
+        const s = status.toLowerCase();
+
+        let className = "bg-secondary";
+
+        if (s === "approved") className = "bg-success";
+        else if (s === "rejected") className = "bg-danger";
+        else if (s === "sudah generate skp") className = "bg-warning text-dark";
+        else if (s === "belum generate skp") className = "bg-warning text-dark";
+
+        return `<span class="badge ${className} rounded-pill px-3 py-2">
+    ${status}
+  </span>`;
       }
 
       function applyFilters() {
@@ -676,15 +728,15 @@
 
           // 🔹 Link jika ada
           const downloadLink = item.generateSkp
-            ? `<a href="${item.generateSkp}" target="_blank" class="d-block text-primary text-decoration-underline small mb-1">
-          Download SKP
-        </a>`
+            ? `<a href="${item.generateSkp}" target="_blank" class="d-block text-primary text-decoration-underline fw-bold mb-1">
+    Download SKP
+  </a>`
             : "";
 
           const uploadedLink = item.uploadSkp
-            ? `<a href="${item.uploadSkp}" target="_blank" class="d-block text-success text-decoration-underline small mb-1">
-          Uploaded SKP
-        </a>`
+            ? `<a href="${item.uploadSkp}" target="_blank" class="d-block text-success text-decoration-underline fw-bold mb-1">
+    Uploaded SKP
+  </a>`
             : "";
 
           const generateDisabled = isRejected || item.generateSkp;
@@ -700,79 +752,121 @@
 
           const uploadDisabled = isRejected ? "disabled" : "";
 
+          const isFollowUp = item.program === "Follow Up Boost Metabolic";
           const card = `
-      <div class="col-md-6 mb-4">
-        <div class="card card-modern h-100 shadow-sm border-0">
-          <div class="card-header bg-light d-flex justify-content-between align-items-center">
-            <p class="fw-semibold text-dark m-0">${item.id || "-"}</p>
-            <small class="text-muted">${formatDate(item.timeStamp)}</small>
-          </div>
+            <div class="col-md-6 mb-4">
+              <div class="card card-modern h-100 shadow-sm border-0">
 
-          <div class="card-body py-3">
-            <div class="mb-2">
-              <small class="text-secondary">Nama Outlet</small>
-              <p class="fw-bold fs-5 text-primary mb-1">${
-                item.namaOutlet || "-"
-              }</p>
-              <p class="text-muted m-0"><strong>${
-                item.kodePI || "-"
-              }</strong> | ${item.kota || "-"}</p>
-            </div>
+                <!-- 🔹 HEADER -->
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                  <p class="fw-semibold text-dark m-0">${item.id || "-"}</p>
+                  <small class="text-muted">${formatDate(item.timeStamp)}</small>
+                </div>
 
-            <div class="row">
-              <div class="col-6">
-                <small class="text-secondary">Status</small>
-                <p class="fw-bold m-0">${item.statusSKP || "-"}</p>
-              </div>
-              <div class="col-6 ps-0">
-                <small class="text-secondary">Tipe Program</small>
-                <p class="fw-bold m-0">${item.program || "-"}</p>
-              </div>
-            </div>
+                <!-- 🔹 BODY -->
+                <div class="card-body py-3">
+                  <div class="mb-2">
+                    <small class="text-secondary">Nama Outlet</small>
+                    <p class="fw-bold fs-5 text-primary mb-1">
+                      ${item.namaOutlet || "-"}
+                    </p>
+                    <p class="text-muted m-0">
+                      <strong>${item.kodePI || "-"}</strong> | ${item.kota || "-"}
+                    </p>
+                  </div>
 
-            <div class="row mt-2">
-              <div class="col-6">
-                <small class="text-secondary">Diajukan oleh</small>
-                <p class="fw-bold m-0">${item.namaPengaju || "-"}</p>
-              </div>
-              <div class="col-6 ps-0">
-                <small class="text-secondary">NIP</small>
-                <p class="fw-bold m-0">${item.nip || "-"}</p>
-              </div>
-            </div>
-          </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <small class="text-secondary">Status</small>
+                      <p class="m-0">${getStatusBadge(item.statusSKP)}</p>
+                    </div>
+                    <div class="col-6 ps-0">
+                      <small class="text-secondary">Tipe Program</small>
+                      <p class="fw-bold m-0">${item.program || "-"}</p>
+                    </div>
+                  </div>
 
-          <div class="card-footer bg-white border-0 pt-0">
-            <div class="d-flex justify-content-between mt-2 gap-2">
-              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
-                ${downloadLink}
-                <button 
-                  type="button" 
-                  class="btn w-100 ${generateBtnClass} mt-1"
-                  style="${generateBtnStyle}" 
-                  ${generateDisabled ? "disabled" : ""}
-                  onclick="generateSkp('${item.program}','${item.id}')">
-                  Generate SKP
-                </button>
-              </div>
-              <div class="w-50 d-flex flex-column justify-content-end" style="min-height:65px;">
-                ${uploadedLink}
-                <button 
-                  type="button" 
-                  class="btn w-100 text-white mt-1"
-                  style="background-color: #009045;" 
-                  ${uploadDisabled}
-                  onclick="openUploadModal('${item.program}','${
-                    item.namaOutlet
-                  }','${item.id}')">
-                  Upload SKP
-                </button>
+                  <div class="row mt-2">
+                    <div class="col-6">
+                      <small class="text-secondary">Diajukan oleh</small>
+                      <p class="fw-bold m-0">${item.namaPengaju || "-"}</p>
+                    </div>
+                    <div class="col-6 ps-0">
+                      <small class="text-secondary">NIP</small>
+                      <p class="fw-bold m-0">${item.nip || "-"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 🔹 LINK FILE -->
+                <div class="px-3">
+                  <div class="row g-0">
+                    <div class="col-6 text-start">
+                      ${downloadLink}
+                    </div>
+
+                    <div class="col-6 ms-0 text-start">
+                      ${uploadedLink}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 🔹 ACTION MENU (HANYA GENERATE & UPLOAD) -->
+                ${
+                  isFollowUp
+                    ? ""
+                    : `
+                <div class="px-3 mt-2">
+                  <div class="accordion" id="actionAccordion${item.id}">
+                    <div class="accordion-item border-0">
+
+                      <h2 class="accordion-header">
+                        <button class="btn btn-primary w-100"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse${item.id}">
+                          Action Menu
+                        </button>
+                      </h2>
+
+                      <div id="collapse${item.id}" 
+                          class="accordion-collapse collapse"
+                          data-bs-parent="#actionAccordion${item.id}">
+                        
+                        <div class="accordion-body p-0 mt-2 border rounded">
+
+                          <!-- ⚡ GENERATE -->
+                          <button class="btn w-100 text-start border-bottom ${generateDisabled ? "disabled" : ""}"
+                            onclick="generateSkp('${item.program}','${item.id}')">
+                            <i class="bi bi-file-earmark-text me-2"></i> Generate SKP
+                          </button>
+
+                          <!-- 📤 UPLOAD -->
+                          <button class="btn w-100 text-start ${uploadDisabled}"
+                            onclick="openUploadModal('${item.program}','${item.namaOutlet}','${item.id}')">
+                            <i class="bi bi-upload me-2"></i> Upload SKP
+                          </button>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                `
+                }
+
+                <!-- 🔹 SHOW DETAIL (SENDIRI DI PALING BAWAH) -->
+                <div class="px-3 pb-3 mt-2">
+                  <button class="btn btn-outline-primary w-100"
+                    onclick="showDetail('${item.program}','${item.id}')">
+                   Show Detail
+                  </button>
+                </div>
+
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    `;
+          `;
 
           skpList.append(card);
         });
@@ -1047,6 +1141,185 @@
           setTimeout(() => loader.remove(), 500); // Hapus loader setelah animasi selesai
         }
       });
+
+      function showDetail(program, id) {
+        const data = allSKPData.find(
+          (d) => d.id === id && d.program === program,
+        );
+
+        if (!data) return;
+
+        let html = "";
+
+        // 🔹 DEFAULT
+        html += `
+    <div class="mb-4">
+      <h6 class="text-primary">Informasi Umum</h6>
+      <hr/>
+      <p><b>Outlet:</b> ${data.namaOutlet || "-"}</p>
+      <p><b>Kode PI:</b> ${data.kodePI || "-"}</p>
+      <p><b>Kota:</b> ${data.kota || "-"}</p>
+      <p><b>Alamat:</b> ${data.alamat || "-"}</p>
+      <p><b>Status:</b> ${data.statusSKP || "-"}</p>
+      <p><b>Program:</b> ${data.program || "-"}</p>
+      <p><b>Diajukan oleh:</b> ${data.namaPengaju || "-"}</p>
+      <p><b>NIP:</b> ${data.nip || "-"}</p>
+    </div>
+  `;
+
+        // =========================
+        // POP
+        // =========================
+        if (program === "POP") {
+          html += `
+      <div class="mb-3 mt-3">
+        <h6 class="text-success">Detail POP</h6>
+        <hr/>
+        <p><b>Produk Pediatric:</b> ${getProdukPediatricTable(data.produkPediatric)}</p>
+        <p><b>Estimasi Tanggal Realisasi:</b> ${formatTanggal(data.estimasiTanggalRealisasi)}</p>
+        <p><b>Jumlah Pack:</b> ${data.jumlahPackIncludePsr || "-"}</p>
+        <p><b>Biaya:</b> ${formatRupiah(data.biaya)}</p>
+      </div>
+    `;
+        }
+
+        // =========================
+        // PGD
+        // =========================
+        else if (program === "PGD") {
+          html += `
+      <div class="mb-3 mt-3">
+        <h6 class="text-success">Detail PGD</h6>
+        <hr/>
+        <p><b>Nama Owner:</b> ${data.namaOwner || "-"}</p>
+        <p><b>No. Telp Owner:</b> ${data.noTelpOwner || "-"}</p>
+        <p><b>Baseline:</b> ${formatRupiah(data.baseline)}</p>
+        <p><b>Target Growth Jan-Jun 2026 (6 Bulan):</b> ${formatRupiah(data.target)}</p>
+        <p><b>Syarat Sales Pediatric Jan-Jun 2026 (6 Bulan):</b> Rp15.000.000</p>
+        <p><b>Sudah Ikut POP:</b> ${data.sudahIkutPOP || "-"}</p>
+      </div>
+    `;
+        }
+
+        // =========================
+        // PRESENTASI
+        // =========================
+        else if (
+          program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+        ) {
+          html += `
+      <div class="mb-3 mt-3">
+        <h6 class="text-success">Detail Presentasi</h6>
+        <hr/>
+        <p><b>Estimasi Tanggal Presentasi:</b> ${formatTanggal(data.tanggalPresentasi)}</p>
+        <p><b>Jumlah Peserta:</b> ${data.jumlahPeserta || "-"}</p>
+        <p><b>Biaya:</b> ${formatRupiah(data.biaya)}</p>
+        <p><b>Produk:</b> ${getProdukYes(data.productPainMetabolic)}</p>
+      </div>
+    `;
+        }
+
+        // =========================
+        // FOLLOW UP
+        // =========================
+        else if (program === "Follow Up Boost Metabolic") {
+          html += `
+      <div class="mb-3 mt-3">
+        <h6 class="text-warning">Detail Follow Up</h6>
+        <hr/>
+        <p><b>Pengambilan Strip/Alat:</b> ${data.pengambilanStripAlat || "-"}</p>
+        <p><b>Entertain:</b> ${data.entertain || "-"}</p>
+        <p><b>Value Transaksi:</b> ${formatRupiah(data.valueTransaksi || "-")}</p>
+        <p><b>Tanggal SP:</b> ${formatTanggal(data.tanggalSP)}</p>
+        <p><b>Foto SP:</b> ${
+          data.uploadFotoSP
+            ? `<a href="${data.uploadFotoSP}" target="_blank">Lihat File</a>`
+            : "-"
+        }</p>
+      </div>
+    `;
+        }
+
+        $("#detailContent").html(html);
+        $("#detailModal").modal("show");
+      }
+      function formatRupiah(val) {
+        if (!val) return "-";
+        return "Rp" + Number(val).toLocaleString("id-ID");
+      }
+
+      function formatTanggal(tgl) {
+        if (!tgl) return "-";
+
+        const date = new Date(tgl);
+
+        if (isNaN(date)) return tgl; // fallback kalau format aneh
+
+        return date.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short", // "long" kalau mau: Maret
+          year: "numeric",
+        });
+      }
+      function getProdukPediatricTable(produk) {
+        if (!produk) return "-";
+
+        try {
+          const parsed =
+            typeof produk === "string" ? JSON.parse(produk) : produk;
+
+          if (!parsed.length) return "-";
+
+          let html = `
+      <table class="table table-bordered table-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Kategori</th>
+            <th>Tipe</th>
+            <th>Kode Item</th>
+            <th>Nama Produk</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+          parsed.forEach((item) => {
+            html += `
+        <tr>
+          <td>${item.kategori || "-"}</td>
+          <td>${item.tipe || "-"}</td>
+          <td>${item.kode || "-"}</td>
+          <td>${item.nama || "-"}</td>
+        </tr>
+      `;
+          });
+
+          html += `
+        </tbody>
+      </table>
+    `;
+
+          return html;
+        } catch (e) {
+          return "-";
+        }
+      }
+      function getProdukYes(produk) {
+        if (!produk) return "-";
+
+        try {
+          const parsed =
+            typeof produk === "string" ? JSON.parse(produk) : produk;
+
+          const filtered = parsed
+            .filter((item) => item.status === "Yes")
+            .map((item) => item.label);
+
+          return filtered.length ? filtered.join(", ") : "-";
+        } catch (e) {
+          return "-";
+        }
+      }
     </script>
   </body>
 </html>
