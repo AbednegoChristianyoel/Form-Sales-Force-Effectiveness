@@ -1,413 +1,443 @@
 <!doctype html>
 <html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FORM PENDAFTARAN INSENTIF SC 2026</title>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FORM PENDAFTARAN INSENTIF SC 2026</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyCwxPY-M6lwt7JLZEeexUrhKVgVZj_enHE",
+        authDomain: "data-outlet-pharos.firebaseapp.com",
+        projectId: "data-outlet-pharos",
+        storageBucket: "data-outlet-pharos.appspot.com",
+        messagingSenderId: "651086534605",
+        appId: "1:651086534605:web:228339d21beb359a709684",
+        measurementId: "G-7FQQZ2K3T0",
+      };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCwxPY-M6lwt7JLZEeexUrhKVgVZj_enHE",
-      authDomain: "data-outlet-pharos.firebaseapp.com",
-      projectId: "data-outlet-pharos",
-      storageBucket: "data-outlet-pharos.appspot.com",
-      messagingSenderId: "651086534605",
-      appId: "1:651086534605:web:228339d21beb359a709684",
-      measurementId: "G-7FQQZ2K3T0",
-    };
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://connect-assets.prosple.com/cdn/ff/nDJLhKo3GxHUnuJJLt-cRdMGUAmxDY2NSAzboL84_ec/1700559379/public/styles/scale_and_crop_center_120x120/public/2023-11/Logo-Pharos-Indonesia-200x200-2023.jpg?itok=4-AmM7sn"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+      }
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png"
-    href="https://connect-assets.prosple.com/cdn/ff/nDJLhKo3GxHUnuJJLt-cRdMGUAmxDY2NSAzboL84_ec/1700559379/public/styles/scale_and_crop_center_120x120/public/2023-11/Logo-Pharos-Indonesia-200x200-2023.jpg?itok=4-AmM7sn" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css"
-    rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <style>
-    body {
-      font-family:
-        "Inter",
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
-      font-size: 14px;
-      line-height: 1.4;
-    }
+      h1 {
+        font-size: 22px;
+      }
 
-    h1 {
-      font-size: 22px;
-    }
+      h2 {
+        font-size: 20px;
+      }
 
-    h2 {
-      font-size: 20px;
-    }
+      h3 {
+        font-size: 18px;
+      }
 
-    h3 {
-      font-size: 18px;
-    }
+      h4 {
+        font-size: 16px;
+      }
 
-    h4 {
-      font-size: 16px;
-    }
+      h5 {
+        font-size: 15px;
+      }
 
-    h5 {
-      font-size: 15px;
-    }
+      h6 {
+        font-size: 14px;
+      }
 
-    h6 {
-      font-size: 14px;
-    }
+      /* Kecilkan teks button */
+      .btn {
+        font-size: 13px !important;
+      }
 
-    /* Kecilkan teks button */
-    .btn {
-      font-size: 13px !important;
-    }
+      /* Dropdown item juga kecil */
+      .dropdown-menu .dropdown-item {
+        font-size: 13px !important;
+      }
 
-    /* Dropdown item juga kecil */
-    .dropdown-menu .dropdown-item {
-      font-size: 13px !important;
-    }
+      /* 🔹 Jaga agar icon dropdown (arrow) tidak ikut kecil */
+      .dropdown-toggle::after {
+        font-size: 14px !important;
+        /* ukuran arrow */
+        vertical-align: middle;
+      }
 
-    /* 🔹 Jaga agar icon dropdown (arrow) tidak ikut kecil */
-    .dropdown-toggle::after {
-      font-size: 14px !important;
-      /* ukuran arrow */
-      vertical-align: middle;
-    }
+      .navbar-custom {
+        background-color: #0d6efd;
+      }
 
-    .navbar-custom {
-      background-color: #0d6efd;
-    }
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
 
-    .navbar-brand {
-      display: flex;
-      align-items: center;
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
+      /* Hover semua link */
+      .navbar-nav .nav-link:hover {
+        background-color: #0b5ed7;
+        color: #fff !important;
+        border-radius: 8px !important;
+        /* ✅ radius 8px */
+      }
 
-    /* Hover semua link */
-    .navbar-nav .nav-link:hover {
-      background-color: #0b5ed7;
-      color: #fff !important;
-      border-radius: 8px !important;
-      /* ✅ radius 8px */
-    }
+      /* Aktif (halaman sekarang) */
+      .navbar-nav .nav-link.active-page {
+        background-color: #fff !important;
+        color: #0d6efd !important;
+        font-weight: bold;
+        border-radius: 8px !important;
+        /* ✅ radius 8px */
+      }
 
-    /* Aktif (halaman sekarang) */
-    .navbar-nav .nav-link.active-page {
-      background-color: #fff !important;
-      color: #0d6efd !important;
-      font-weight: bold;
-      border-radius: 8px !important;
-      /* ✅ radius 8px */
-    }
+      /* Hover di link aktif */
+      .navbar-nav .nav-link.active-page:hover {
+        background-color: #e9f2ff !important;
+        color: #0b5ed7 !important;
+        border-radius: 8px !important;
+        /* ✅ radius 8px */
+      }
 
-    /* Hover di link aktif */
-    .navbar-nav .nav-link.active-page:hover {
-      background-color: #e9f2ff !important;
-      color: #0b5ed7 !important;
-      border-radius: 8px !important;
-      /* ✅ radius 8px */
-    }
+      .card {
+        border-radius: 8px;
+        box-shadow: 0 0 30px rgba(13, 110, 253, 0.15);
+        background-color: #ffffff;
+        padding: 1.5rem 1.75rem;
+      }
 
-    .card {
-      border-radius: 8px;
-      box-shadow: 0 0 30px rgba(13, 110, 253, 0.15);
-      background-color: #ffffff;
-      padding: 1.5rem 1.75rem;
-    }
+      h2 {
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #0d6efd;
+      }
 
-    h2 {
-      font-weight: bold;
-      margin-bottom: 1rem;
-      color: #0d6efd;
-    }
+      .form-control,
+      .form-select {
+        border-radius: 8px;
+        padding: 0.55rem 0.9rem;
+      }
 
-    .form-control,
-    .form-select {
-      border-radius: 8px;
-      padding: 0.55rem 0.9rem;
-    }
+      .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+        padding: 0.65rem;
+        font-weight: 500;
+        border-radius: 8px;
+      }
 
-    .btn-primary {
-      background-color: #0d6efd;
-      border: none;
-      padding: 0.65rem;
-      font-weight: 500;
-      border-radius: 8px;
-    }
+      .ts-wrapper {
+        width: 100%;
+      }
 
-    .ts-wrapper {
-      width: 100%;
-    }
+      .ts-control {
+        padding: 0.375rem 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.275rem;
+        /* sama dengan .form-control */
+        min-height: calc(1.5em + 0.75rem + 2px);
+        font-size: 1rem;
+        background-color: #fff;
+        color: #212529;
+        line-height: 1.5;
+        box-shadow: none;
+        transition:
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+      }
 
-    .ts-control {
-      padding: 0.375rem 0.75rem;
-      border: 1px solid #ced4da;
-      border-radius: 0.275rem;
-      /* sama dengan .form-control */
-      min-height: calc(1.5em + 0.75rem + 2px);
-      font-size: 1rem;
-      background-color: #fff;
-      color: #212529;
-      line-height: 1.5;
-      box-shadow: none;
-      transition:
-        border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
-    }
+      .ts-control::placeholder,
+      .ts-control input::placeholder,
+      .ts-control.single .item {
+        color: #6c757d !important;
+        opacity: 1 !important;
+      }
 
-    .ts-control::placeholder,
-    .ts-control input::placeholder,
-    .ts-control.single .item {
-      color: #6c757d !important;
-      opacity: 1 !important;
-    }
+      .ts-control input {
+        font-size: 1rem;
+        color: #212529;
+        line-height: 1.5;
+      }
 
-    .ts-control input {
-      font-size: 1rem;
-      color: #212529;
-      line-height: 1.5;
-    }
+      .ts-control:focus,
+      .ts-control:hover {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
 
-    .ts-control:focus,
-    .ts-control:hover {
-      border-color: #86b7fe;
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
+      .ts-wrapper.single .ts-control {
+        display: flex;
+        align-items: center;
+      }
 
-    .ts-wrapper.single .ts-control {
-      display: flex;
-      align-items: center;
-    }
+      .ts-dropdown {
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        z-index: 1000;
+      }
 
-    .ts-dropdown {
-      font-size: 1rem;
-      border: 1px solid #ced4da;
-      border-radius: 0.375rem;
-      z-index: 1000;
-    }
+      .ts-dropdown .active {
+        background-color: #f8f9fa;
+      }
 
-    .ts-dropdown .active {
-      background-color: #f8f9fa;
-    }
+      .ts-control .item {
+        background: none;
+        border: none;
+        padding-left: 0;
+        color: #212529;
+      }
 
-    .ts-control .item {
-      background: none;
-      border: none;
-      padding-left: 0;
-      color: #212529;
-    }
+      .ts-control .clear-button {
+        color: #6c757d;
+        margin-left: auto;
+      }
 
-    .ts-control .clear-button {
-      color: #6c757d;
-      margin-left: auto;
-    }
+      /* Gaya untuk checkbox agar outline hitam */
+      .form-check-input[type="checkbox"] {
+        border-color: #000;
+        /* Outline hitam */
+      }
 
-    /* Gaya untuk checkbox agar outline hitam */
-    .form-check-input[type="checkbox"] {
-      border-color: #000;
-      /* Outline hitam */
-    }
+      /* Saat dicentang */
+      .form-check-input[type="checkbox"]:checked {
+        background-color: #0b5ed7;
+        /* Kotak hitam */
+        border-color: #000;
+        /* Outline hitam */
+      }
 
-    /* Saat dicentang */
-    .form-check-input[type="checkbox"]:checked {
-      background-color: #0b5ed7;
-      /* Kotak hitam */
-      border-color: #000;
-      /* Outline hitam */
-    }
+      /* Hover agar terlihat interaktif */
+      .form-check-input[type="checkbox"]:hover {
+        border-color: #0b5ed7;
+      }
 
-    /* Hover agar terlihat interaktif */
-    .form-check-input[type="checkbox"]:hover {
-      border-color: #0b5ed7;
-    }
+      /* Fokus agar tetap outline hitam */
+      .form-check-input[type="checkbox"]:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+      }
 
-    /* Fokus agar tetap outline hitam */
-    .form-check-input[type="checkbox"]:focus {
-      border-color: #000;
-      box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
-    }
+      .form-check {
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-    .form-check {
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+      .form-check-input {
+        width: 1rem;
+        height: 1rem;
+        margin: 0;
+        margin-right: 0.3rem;
+        flex-shrink: 0;
+        vertical-align: middle;
+      }
 
-    .form-check-input {
-      width: 1rem;
-      height: 1rem;
-      margin: 0;
-      margin-right: 0.3rem;
-      flex-shrink: 0;
-      vertical-align: middle;
-    }
+      .form-check-input[type="radio"] {
+        margin-top: 0;
+        /* hilangkan margin default */
+        vertical-align: middle;
+        /* sejajarkan dengan teks */
+      }
 
-    .form-check-input[type="radio"] {
-      margin-top: 0;
-      /* hilangkan margin default */
-      vertical-align: middle;
-      /* sejajarkan dengan teks */
-    }
+      .form-check-label {
+        vertical-align: middle;
+        /* teks ikut sejajar */
+      }
 
-    .form-check-label {
-      vertical-align: middle;
-      /* teks ikut sejajar */
-    }
+      ::placeholder {
+        color: #bbb !important;
+        opacity: 1;
+      }
 
-    ::placeholder {
-      color: #bbb !important;
-      opacity: 1;
-    }
+      .readonly-field {
+        background-color: #e9ecef !important;
+        /* abu-abu Bootstrap */
+        pointer-events: none;
+        /* mencegah klik / ketik */
+      }
 
-    .readonly-field {
-      background-color: #e9ecef !important;
-      /* abu-abu Bootstrap */
-      pointer-events: none;
-      /* mencegah klik / ketik */
-    }
+      table thead th {
+        text-align: center;
+        vertical-align: middle;
+      }
 
-    table thead th {
-      text-align: center;
-      vertical-align: middle;
-    }
+      /* Header gradien */
+      .table-gradient {
+        background: linear-gradient(90deg, #0d6efd, #4dabf7);
+      }
 
-    /* Header gradien */
-    .table-gradient {
-      background: linear-gradient(90deg, #0d6efd, #4dabf7);
-    }
+      /* Rounded corner pada table */
+      #produkTable {
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-    /* Rounded corner pada table */
-    #produkTable {
-      border-radius: 8px;
-      overflow: hidden;
-    }
+      /* Hover effect row */
+      #produkTable tbody tr:hover {
+        background-color: #f1f7ff;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+      }
 
-    /* Hover effect row */
-    #produkTable tbody tr:hover {
-      background-color: #f1f7ff;
-      cursor: pointer;
-      transition: 0.2s ease-in-out;
-    }
+      /* Striping lebih soft */
+      #produkTable tbody tr:nth-child(odd) {
+        background-color: #fafafa;
+      }
 
-    /* Striping lebih soft */
-    #produkTable tbody tr:nth-child(odd) {
-      background-color: #fafafa;
-    }
+      /* Action button lebih modern */
+      .btn-action {
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        transition: 0.2s;
+      }
 
-    /* Action button lebih modern */
-    .btn-action {
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-size: 0.85rem;
-      transition: 0.2s;
-    }
+      .btn-action:hover {
+        transform: scale(1.05);
+      }
 
-    .btn-action:hover {
-      transform: scale(1.05);
-    }
+      .btn-success-dark {
+        background-color: #006838 !important;
+        /* hijau tua Bootstrap */
+        color: #fff !important;
+        /* teks putih */
+        border: none;
+        padding: 0.65rem;
+        font-weight: 500;
+        border-radius: 8px;
+      }
 
-    .btn-success-dark {
-      background-color: #006838 !important;
-      /* hijau tua Bootstrap */
-      color: #fff !important;
-      /* teks putih */
-      border: none;
-      padding: 0.65rem;
-      font-weight: 500;
-      border-radius: 8px;
-    }
+      .btn-success-dark:hover {
+        background-color: #006838 !important;
+        /* versi lebih gelap saat hover */
+        color: #fff !important;
+        /* tetap putih saat hover */
+      }
 
-    .btn-success-dark:hover {
-      background-color: #006838 !important;
-      /* versi lebih gelap saat hover */
-      color: #fff !important;
-      /* tetap putih saat hover */
-    }
+      /* Add validation styles */
+      .is-invalid {
+        border-color: #dc3545 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      }
 
-    /* Add validation styles */
-    .is-invalid {
-      border-color: #dc3545 !important;
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right calc(0.375em + 0.1875rem) center;
-      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
+      .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+      }
 
-    .invalid-feedback {
-      display: none;
-      width: 100%;
-      margin-top: 0.25rem;
-      font-size: 0.875em;
-      color: #dc3545;
-    }
+      .was-validated .form-control:invalid ~ .invalid-feedback,
+      .was-validated .form-control:invalid ~ .invalid-tooltip,
+      .form-control.is-invalid ~ .invalid-feedback,
+      .form-control.is-invalid ~ .invalid-tooltip {
+        display: block;
+      }
 
-    .was-validated .form-control:invalid~.invalid-feedback,
-    .was-validated .form-control:invalid~.invalid-tooltip,
-    .form-control.is-invalid~.invalid-feedback,
-    .form-control.is-invalid~.invalid-tooltip {
-      display: block;
-    }
+      .btn-logout {
+        background: #fff;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+      }
 
-    .btn-logout {
-      background: #fff;
-      color: #0d6efd;
-      border: 1px solid #0d6efd;
-    }
+      .btn-logout:hover {
+        background: #d6e7ff;
+        /* putih kebiruan */
+        color: #0b5ed7;
+        border-color: #0b5ed7;
+      }
 
-    .btn-logout:hover {
-      background: #d6e7ff;
-      /* putih kebiruan */
-      color: #0b5ed7;
-      border-color: #0b5ed7;
-    }
+      .navbar-collapse {
+        text-align: center;
+        /* teks rata tengah */
+      }
 
-    .navbar-collapse {
-      text-align: center;
-      /* teks rata tengah */
-    }
+      .card,
+      .container,
+      .form-wrapper {
+        overflow: visible !important;
+      }
 
-    .card,
-    .container,
-    .form-wrapper {
-      overflow: visible !important;
-    }
+      /* Perbesar panah dropdown di navbar */
+      .navbar .dropdown-toggle::after {
+        border-top-width: 0.45em !important;
+        border-right-width: 0.45em !important;
+        border-left-width: 0.45em !important;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
 
-    /* Perbesar panah dropdown di navbar */
-    .navbar .dropdown-toggle::after {
-      border-top-width: 0.45em !important;
-      border-right-width: 0.45em !important;
-      border-left-width: 0.45em !important;
-      vertical-align: middle;
-    }
-  </style>
-</head>
-
-<!-- Loader -->
-<div id="loader-wrapper" style="
+  <!-- Loader -->
+  <div
+    id="loader-wrapper"
+    style="
       position: fixed;
       top: 0;
       left: 0;
@@ -418,539 +448,672 @@
       display: flex;
       justify-content: center;
       align-items: center;
-    ">
-  <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem">
-    <span class="visually-hidden">Loading...</span>
+    "
+  >
+    <div
+      class="spinner-border text-primary"
+      role="status"
+      style="width: 4rem; height: 4rem"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
-</div>
 
-<body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
-    <div class="container">
-      <!-- Brand Dropdown -->
-      <div class="dropdown">
-        <a class="navbar-brand d-flex align-items-center gap-2 dropdown-toggle text-decoration-none" href="#"
-          role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-cash-coin text-white fs-3"></i>
-          <span class="text-white fw-bold" style="font-size: 1.4rem">
-            PRO-SC
-          </span>
-        </a>
+  <body>
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
+    >
+      <div class="container">
+        <!-- Brand Dropdown -->
+        <div class="dropdown">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2 dropdown-toggle text-decoration-none"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-cash-coin text-white fs-3"></i>
+            <span class="text-white fw-bold" style="font-size: 1.4rem">
+              PRO-SC
+            </span>
+          </a>
 
-        <ul class="dropdown-menu shadow custom-dropdown">
-          <li>
-            <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
-              <i class="bi bi-cash-coin me-2"></i> PRO-SC
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
-              <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item fw-semibold" href="../form-pendaftaran-program-ethical/">
-              <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider" />
-          </li>
-          <li>
-            <a class="dropdown-item text-danger fw-semibold" href="#" onclick="logout()">
-              <i class="bi bi-box-arrow-right me-2"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </div>
+          <ul class="dropdown-menu shadow custom-dropdown">
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-insentif-sc/">
+                <i class="bi bi-cash-coin me-2"></i> PRO-SC
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item fw-semibold" href="../form-listing-mti/">
+                <i class="bi bi-clipboard-check me-2"></i> PRO-LISTING
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item fw-semibold"
+                href="../form-pendaftaran-program-ethical/"
+              >
+                <i class="bi bi-lightning-fill me-2"></i> PRO-ETHIC
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
+              <a
+                class="dropdown-item text-danger fw-semibold"
+                href="#"
+                onclick="logout()"
+              >
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <!-- Hamburger Toggle -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <!-- Hamburger Toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <!-- Menu Navbar -->
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <!-- Menu di kiri -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
-          <li class="nav-item mt-3 mt-lg-0 me-lg-2">
-            <a class="nav-link text-white active-page fw-bold" href="../form-insentif-sc/">
-              FORM PENDAFTARAN INSENTIF SC 2026
-            </a>
-          </li>
-          <li class="nav-item mt-2 mt-lg-0">
-            <a class="nav-link text-white fw-bold" href="../monitoring-insentif-sc/">
-              MONITORING INSENTIF SC 2026
-            </a>
-          </li>
-        </ul>
+        <!-- Menu Navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <!-- Menu di kiri -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
+            <li class="nav-item mt-3 mt-lg-0 me-lg-2">
+              <a
+                class="nav-link text-white active-page fw-bold"
+                href="../form-insentif-sc/"
+              >
+                FORM PENDAFTARAN INSENTIF SC 2026
+              </a>
+            </li>
+            <li class="nav-item mt-2 mt-lg-0">
+              <a
+                class="nav-link text-white fw-bold"
+                href="../monitoring-insentif-sc/"
+              >
+                MONITORING INSENTIF SC 2026
+              </a>
+            </li>
+          </ul>
 
-        <!-- Logout di kanan -->
-        <div class="d-flex">
-          <button class="btn btn-logout w-100 fw-bold" onclick="logout()">
-            Logout
-          </button>
+          <!-- Logout di kanan -->
+          <div class="d-flex">
+            <button class="btn btn-logout w-100 fw-bold" onclick="logout()">
+              Logout
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <div class="container-fluid mt-5 mb-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="card">
-          <h2 class="text-center mb-4 mt-2">
-            FORM PENDAFTARAN INSENTIF SC MAR 2026
-          </h2>
-          <h5 class="fw-bold text-primary mt-1 mb-0 pb-0">DATA DIRI SALES</h5>
-          <hr class="mx-auto mt-3 mb-3" style="border-top: 3px dashed #5f5f5f; width: 100%" />
-          <form id="scForm">
-            <!-- Bagian NIP -->
-            <div class="row g-3 align-items-end">
-              <div class="col-md-6">
-                <label for="nipSC" class="form-label fw-bold">NIP</label>
-                <input type="text" id="nipSC" class="form-control" required disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Nama</label>
-                <input type="text" id="namaSC" class="form-control" disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Jabatan</label>
-                <input type="text" id="jabatanSC" class="form-control" disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Divisi</label>
-                <input type="text" id="divisiSC" class="form-control" disabled />
-              </div>
+    <div class="container-fluid mt-5 mb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card">
+            <h2 class="text-center mb-4 mt-2">
+              FORM PENDAFTARAN INSENTIF SC MAR 2026
+            </h2>
+            <h5 class="fw-bold text-primary mt-1 mb-0 pb-0">DATA DIRI SALES</h5>
+            <hr
+              class="mx-auto mt-3 mb-3"
+              style="border-top: 3px dashed #5f5f5f; width: 100%"
+            />
+            <form id="scForm">
+              <!-- Bagian NIP -->
+              <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                  <label for="nipSC" class="form-label fw-bold">NIP</label>
+                  <input
+                    type="text"
+                    id="nipSC"
+                    class="form-control"
+                    required
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nama</label>
+                  <input
+                    type="text"
+                    id="namaSC"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Jabatan</label>
+                  <input
+                    type="text"
+                    id="jabatanSC"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Divisi</label>
+                  <input
+                    type="text"
+                    id="divisiSC"
+                    class="form-control"
+                    disabled
+                  />
+                </div>
 
-              <!-- Bagian Outlet -->
-              <div class="col-12 mt-4">
-                <h5 class="fw-bold text-primary mt-1 mb-3">
-                  DETAIL DATA OUTLET
-                </h5>
-                <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
-              </div>
+                <!-- Bagian Outlet -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    DETAIL DATA OUTLET
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
 
-              <div class="col-md-12 mt-2" id="dropdownOutlet">
-                <label for="outletSC" class="form-label fw-bold">Kode Outlet</label>
-                <select id="outletSC" class="required-field">
-                  <option value="">Pilih Outlet</option>
-                </select>
-              </div>
+                <div class="col-md-12 mt-2" id="dropdownOutlet">
+                  <label for="outletSC" class="form-label fw-bold"
+                    >Kode Outlet</label
+                  >
+                  <select id="outletSC" class="required-field">
+                    <option value="">Pilih Outlet</option>
+                  </select>
+                </div>
 
-              <div class="col-md-6">
-                <label class="form-label fw-bold" id="labelKodePi">Kode PI</label>
-                <input type="text" id="kodePi" class="form-control" readonly disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Nama Outlet</label>
-                <input type="text" id="namaOutlet" class="form-control" readonly disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Kota</label>
-                <input type="text" id="kotaOutlet" class="form-control" readonly disabled />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Alamat Outlet</label>
-                <input type="text" id="alamatOutlet" class="form-control" readonly disabled />
-              </div>
-              <!-- Nama Owner Outlet -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Nama Owner Outlet</label>
-                <input type="text" class="form-control required-field" id="namaOwnerOutlet"
-                  placeholder="Masukkan Nama Owner Outlet" required />
-              </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold" id="labelKodePi"
+                    >Kode PI</label
+                  >
+                  <input
+                    type="text"
+                    id="kodePi"
+                    class="form-control"
+                    readonly
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nama Outlet</label>
+                  <input
+                    type="text"
+                    id="namaOutlet"
+                    class="form-control"
+                    readonly
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Kota</label>
+                  <input
+                    type="text"
+                    id="kotaOutlet"
+                    class="form-control"
+                    readonly
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Alamat Outlet</label>
+                  <input
+                    type="text"
+                    id="alamatOutlet"
+                    class="form-control"
+                    readonly
+                    disabled
+                  />
+                </div>
+                <!-- Nama Owner Outlet -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nama Owner Outlet</label>
+                  <input
+                    type="text"
+                    class="form-control required-field"
+                    id="namaOwnerOutlet"
+                    placeholder="Masukkan Nama Owner Outlet"
+                    required
+                  />
+                </div>
 
-              <!-- Nama PIC SC Outlet -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Nama PIC SC Outlet</label>
-                <input type="text" class="form-control required-field" id="namaPicSC"
-                  placeholder="Masukkan Nama PIC SC Outlet" required />
-              </div>
+                <!-- Nama PIC SC Outlet -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nama PIC SC Outlet</label>
+                  <input
+                    type="text"
+                    class="form-control required-field"
+                    id="namaPicSC"
+                    placeholder="Masukkan Nama PIC SC Outlet"
+                    required
+                  />
+                </div>
 
-              <!-- No. HP E-Wallet PIC SC -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">No. HP E-Wallet PIC SC</label>
-                <input type="tel" id="noEwallet" class="form-control required-field" placeholder="Contoh: 0878213512311"
-                  pattern="08[0-9]{8,13}" maxlength="15" required oninvalid="
+                <!-- No. HP E-Wallet PIC SC -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >No. HP E-Wallet PIC SC</label
+                  >
+                  <input
+                    type="tel"
+                    id="noEwallet"
+                    class="form-control required-field"
+                    placeholder="Contoh: 0878213512311"
+                    pattern="08[0-9]{8,13}"
+                    maxlength="15"
+                    required
+                    oninvalid="
                       this.setCustomValidity(
                         'Nomor harus diawali 08 dan terdiri dari 10–15 digit angka',
                       )
-                    " oninput="this.setCustomValidity('')" />
-              </div>
-
-              <!-- Nama Pengguna E-Wallet PIC SC -->
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Nama Pengguna E-Wallet PIC SC</label>
-                <input type="text" id="namaPenggunaEWallet" class="form-control required-field"
-                  placeholder="Contoh: abednegoefra" required />
-              </div>
-
-              <!-- Jenis E-Wallet PIC SC -->
-              <div class="col-md-12">
-                <label for="jenisEwallet" class="form-label fw-bold">
-                  Jenis E-Wallet PIC SC
-                </label>
-                <select id="jenisEwallet" class="form-select required-field" required>
-                  <option value="">Pilih E-Wallet</option>
-                  <option value="DANA">DANA</option>
-                  <option value="GOPAY">GOPAY</option>
-                  <option value="OVO">OVO</option>
-                  <option value="SHOPEEPAY">SHOPEEPAY</option>
-                </select>
-              </div>
-
-              <!-- ======================== -->
-              <!-- SECTION PRODUK INSENTIF -->
-              <!-- ======================== -->
-              <div class="col-12 mt-4">
-                <h5 class="fw-bold text-primary mt-1 mb-3">
-                  DETAIL TARGET & INSENTIF PRODUK
-                </h5>
-                <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
-              </div>
-
-              <div class="col-12">
-                <div class="table-responsive">
-                  <table class="table table-bordered align-middle text-center" id="produkTable">
-                    <thead>
-                      <tr>
-                        <th class="bg-primary text-white" style="width: 5%">
-                          No
-                        </th>
-                        <th class="bg-primary text-white" style="width: 30%">
-                          SKU
-                        </th>
-                        <th class="bg-primary text-white">
-                          Minimal Satuan Penjualan (Sell-out)
-                        </th>
-                        <th class="bg-primary text-white">Nilai Insentif</th>
-                        <th class="bg-primary text-white">
-                          Target Pembelian (Sell-in)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody id="produkTableBody">
-                      <!-- Diisi via JS -->
-                    </tbody>
-                  </table>
+                    "
+                    oninput="this.setCustomValidity('')"
+                  />
                 </div>
-              </div>
 
-              <!-- Section Informasi Tambahan -->
-              <div class="col-12 mt-2">
-                <h5 class="fw-bold text-primary mt-1 mb-3">
-                  INFORMASI TAMBAHAN
-                </h5>
-                <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
-
-                <div class="col-12 mb-3 mt-3">
-                  <label class="form-label fw-medium">Catatan
-                    <small class="text-muted">(opsional)</small></label>
-                  <textarea id="catatan" class="form-control" placeholder="Tuliskan catatan tambahan di sini..."
-                    rows="2"></textarea>
+                <!-- Nama Pengguna E-Wallet PIC SC -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Nama Pengguna E-Wallet PIC SC</label
+                  >
+                  <input
+                    type="text"
+                    id="namaPenggunaEWallet"
+                    class="form-control required-field"
+                    placeholder="Contoh: abednegoefra"
+                    required
+                  />
                 </div>
-              </div>
 
-              <!-- Konfirmasi -->
-              <div class="col-12 mt-4">
-                <div class="ps-2 pt-1 border border-dark border-2 rounded">
-                  <div class="form-check d-flex align-items-center">
-                    <input class="form-check-input" type="checkbox" id="confirmCheck" required />
-                    <label class="form-check-label fw-medium" for="confirmCheck">
-                      <strong>SAYA MENYATAKAN DATA YANG DIINPUT SUDAH BENAR</strong>
-                    </label>
+                <!-- Jenis E-Wallet PIC SC -->
+                <div class="col-md-12">
+                  <label for="jenisEwallet" class="form-label fw-bold">
+                    Jenis E-Wallet PIC SC
+                  </label>
+                  <select
+                    id="jenisEwallet"
+                    class="form-select required-field"
+                    required
+                  >
+                    <option value="">Pilih E-Wallet</option>
+                    <option value="DANA">DANA</option>
+                    <option value="GOPAY">GOPAY</option>
+                    <option value="OVO">OVO</option>
+                    <option value="SHOPEEPAY">SHOPEEPAY</option>
+                  </select>
+                </div>
+
+                <!-- ======================== -->
+                <!-- SECTION PRODUK INSENTIF -->
+                <!-- ======================== -->
+                <div class="col-12 mt-4">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    DETAIL TARGET & INSENTIF PRODUK
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+                </div>
+
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table
+                      class="table table-bordered align-middle text-center"
+                      id="produkTable"
+                    >
+                      <thead>
+                        <tr>
+                          <th class="bg-primary text-white" style="width: 5%">
+                            No
+                          </th>
+                          <th class="bg-primary text-white" style="width: 30%">
+                            SKU
+                          </th>
+                          <th class="bg-primary text-white">
+                            Minimal Satuan Penjualan (Sell-out)
+                          </th>
+                          <th class="bg-primary text-white">Nilai Insentif</th>
+                          <th class="bg-primary text-white">
+                            Target Pembelian (Sell-in)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="produkTableBody">
+                        <!-- Diisi via JS -->
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              </div>
 
-              <div class="col-12 mt-4">
-                <button type="submit" class="btn btn-primary w-100">
-                  Submit Data
-                </button>
+                <!-- Section Informasi Tambahan -->
+                <div class="col-12 mt-2">
+                  <h5 class="fw-bold text-primary mt-1 mb-3">
+                    INFORMASI TAMBAHAN
+                  </h5>
+                  <hr class="my-2" style="border-top: 3px dashed #5f5f5f" />
+
+                  <div class="col-12 mb-3 mt-3">
+                    <label class="form-label fw-medium"
+                      >Catatan
+                      <small class="text-muted">(opsional)</small></label
+                    >
+                    <textarea
+                      id="catatan"
+                      class="form-control"
+                      placeholder="Tuliskan catatan tambahan di sini..."
+                      rows="2"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <!-- Konfirmasi -->
+                <div class="col-12 mt-4">
+                  <div class="ps-2 pt-1 border border-dark border-2 rounded">
+                    <div class="form-check d-flex align-items-center">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="confirmCheck"
+                        required
+                      />
+                      <label
+                        class="form-check-label fw-medium"
+                        for="confirmCheck"
+                      >
+                        <strong
+                          >SAYA MENYATAKAN DATA YANG DIINPUT SUDAH BENAR</strong
+                        >
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-primary w-100">
+                    Submit Data
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    let userData = null;
-    let globalOutletData = {};
-    let tomOutletSelect;
+    <script>
+      let userData = null;
+      let globalOutletData = {};
+      let tomOutletSelect;
 
-    // 🔹 Fungsi ambil data NIP dan isi form + TomSelect
-    async function getDataByNIP(nip) {
-      if (!nip) return;
+      // 🔹 Fungsi ambil data NIP dan isi form + TomSelect
+      async function getDataByNIP(nip) {
+        if (!nip) return;
 
-      try {
-        Swal.fire({
-          title: "Mencari data...",
-          text: "Tunggu sebentar, data sedang diproses :)",
-          allowOutsideClick: false,
-          didOpen: () => Swal.showLoading(),
-        });
+        try {
+          Swal.fire({
+            title: "Mencari data...",
+            text: "Tunggu sebentar, data sedang diproses :)",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
+          });
 
-        const res = await fetch(
-          `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`,
-        );
-        const data = await res.json();
-        Swal.close();
-
-        if (!data || !data.nama) {
-          return Swal.fire(
-            "Data Tidak Ditemukan",
-            `Data NIP: ${nip} tidak ditemukan.`,
-            "error",
+          const res = await fetch(
+            `https://data-outlet-pharos-default-rtdb.firebaseio.com/${nip}.json`,
           );
-        }
+          const data = await res.json();
+          Swal.close();
 
-        // isi data karyawan
-        document.getElementById("nipSC").value = nip;
-        document.getElementById("namaSC").value = data.nama || "";
-        document.getElementById("jabatanSC").value = data.jabatan || "";
-        document.getElementById("divisiSC").value = data.divisi || "";
-
-        // reset dan isi ulang opsi outlet ke TomSelect
-        globalOutletData = {};
-        tomOutletSelect.clearOptions();
-        tomOutletSelect.addOption({ value: "", text: "Pilih Outlet" });
-
-        (data.outlets || []).forEach((outlet) => {
-          // 🔴 SKIP jika blacklist Yes
-          if (
-            outlet.blacklist &&
-            outlet.blacklist.toString().toLowerCase() === "yes"
-          ) {
-            return;
+          if (!data || !data.nama) {
+            return Swal.fire(
+              "Data Tidak Ditemukan",
+              `Data NIP: ${nip} tidak ditemukan.`,
+              "error",
+            );
           }
 
-          globalOutletData[outlet.kode] = outlet;
+          // isi data karyawan
+          document.getElementById("nipSC").value = nip;
+          document.getElementById("namaSC").value = data.nama || "";
+          document.getElementById("jabatanSC").value = data.jabatan || "";
+          document.getElementById("divisiSC").value = data.divisi || "";
 
-          tomOutletSelect.addOption({
-            value: outlet.kode,
-            text: outlet.kode,
+          // reset dan isi ulang opsi outlet ke TomSelect
+          globalOutletData = {};
+          tomOutletSelect.clearOptions();
+          tomOutletSelect.addOption({ value: "", text: "Pilih Outlet" });
+
+          (data.outlets || []).forEach((outlet) => {
+            // 🔴 SKIP jika blacklist Yes
+            if (
+              outlet.blacklist &&
+              outlet.blacklist.toString().toLowerCase() === "yes"
+            ) {
+              return;
+            }
+
+            globalOutletData[outlet.kode] = outlet;
+
+            tomOutletSelect.addOption({
+              value: outlet.kode,
+              text: outlet.kode,
+            });
           });
-        });
 
-        tomOutletSelect.refreshOptions(false);
-      } catch (err) {
-        Swal.close();
-        Swal.fire({
-          icon: "error",
-          title: "Gagal Mengambil Data",
-          text: err.message || err,
-        });
+          tomOutletSelect.refreshOptions(false);
+        } catch (err) {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "Gagal Mengambil Data",
+            text: err.message || err,
+          });
+        }
       }
-    }
 
-    // 🔹 Cek login saat load halaman
-    const storedUser = localStorage.getItem("userData");
-    if (!storedUser) {
-      window.location.href = "../login.html";
-    } else {
-      userData = JSON.parse(storedUser);
-      console.log("User sudah login:", userData);
-
-      if (userData.nip) {
-        // otomatis panggil fetch data sesuai NIP
-        getDataByNIP(userData.nip);
+      // 🔹 Cek login saat load halaman
+      const storedUser = localStorage.getItem("userData");
+      if (!storedUser) {
+        window.location.href = "../login.html";
       } else {
+        userData = JSON.parse(storedUser);
+        console.log("User sudah login:", userData);
+
+        if (userData.nip) {
+          // otomatis panggil fetch data sesuai NIP
+          getDataByNIP(userData.nip);
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Data Tidak Ditemukan",
+            text: "Silakan login ulang.",
+          });
+        }
+      }
+
+      // 🔹 Inisialisasi TomSelect
+      document.addEventListener("DOMContentLoaded", () => {
+        tomOutletSelect = new TomSelect("#outletSC", {
+          placeholder: "Pilih Outlet",
+          plugins: ["clear_button"],
+          closeAfterSelect: true,
+          maxOptions: 1000,
+        });
+        renderProductTable({});
+      });
+
+      // 🔹 Logout
+      // Tambahkan tombol logout jika mau
+      function logout() {
         Swal.fire({
+          title: "Konfirmasi Keluar",
+          text: "Apakah Anda yakin ingin keluar?",
           icon: "warning",
-          title: "Data Tidak Ditemukan",
-          text: "Silakan login ulang.",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Keluar",
+          cancelButtonText: "Batal",
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("userData");
+            window.location.href = "../login.html";
+          }
         });
       }
-    }
 
-    // 🔹 Inisialisasi TomSelect
-    document.addEventListener("DOMContentLoaded", () => {
-      tomOutletSelect = new TomSelect("#outletSC", {
-        placeholder: "Pilih Outlet",
-        plugins: ["clear_button"],
-        closeAfterSelect: true,
-        maxOptions: 1000,
-      });
-      renderProductTable({});
-    });
-
-    // 🔹 Logout
-    // Tambahkan tombol logout jika mau
-    function logout() {
-      Swal.fire({
-        title: "Konfirmasi Keluar",
-        text: "Apakah Anda yakin ingin keluar?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Keluar",
-        cancelButtonText: "Batal",
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.removeItem("userData");
-          window.location.href = "../login.html";
+      // 🔹 Loader fade-out
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader-wrapper");
+        if (loader) {
+          loader.classList.add("fade-out");
+          setTimeout(() => loader.remove(), 500);
         }
       });
-    }
 
-    // 🔹 Loader fade-out
-    window.addEventListener("load", () => {
-      const loader = document.getElementById("loader-wrapper");
-      if (loader) {
-        loader.classList.add("fade-out");
-        setTimeout(() => loader.remove(), 500);
-      }
-    });
+      const labelKodePi = document.getElementById("labelKodePi");
 
-    const labelKodePi = document.getElementById("labelKodePi");
+      // event ketika pilih outlet
+      document.getElementById("outletSC").addEventListener("change", (e) => {
+        const kode = e.target.value;
+        if (globalOutletData[kode]) {
+          const o = globalOutletData[kode];
+          console.log("Outlet dipilih:", o);
+          document.getElementById("kodePi").value = o.kodePi || "";
+          document.getElementById("namaOutlet").value = o.nama || "";
+          document.getElementById("kotaOutlet").value = o.kota || "";
+          document.getElementById("alamatOutlet").value = o.alamat || "";
 
-    // event ketika pilih outlet
-    document.getElementById("outletSC").addEventListener("change", (e) => {
-      const kode = e.target.value;
-      if (globalOutletData[kode]) {
-        const o = globalOutletData[kode];
-        console.log("Outlet dipilih:", o);
-        document.getElementById("kodePi").value = o.kodePi || "";
-        document.getElementById("namaOutlet").value = o.nama || "";
-        document.getElementById("kotaOutlet").value = o.kota || "";
-        document.getElementById("alamatOutlet").value = o.alamat || "";
+          renderProductTable(o.produkSC || {});
+          console.log("Produk SC:", o.produkSC);
+        } else {
+          document.getElementById("kodePi").value = "";
+          document.getElementById("namaOutlet").value = "";
+          document.getElementById("kotaOutlet").value = "";
+          document.getElementById("alamatOutlet").value = "";
 
-        renderProductTable(o.produkSC || {});
-        console.log("Produk SC:", o.produkSC);
-      } else {
-        document.getElementById("kodePi").value = "";
-        document.getElementById("namaOutlet").value = "";
-        document.getElementById("kotaOutlet").value = "";
-        document.getElementById("alamatOutlet").value = "";
+          renderProductTable([]);
+        }
+      });
 
-        renderProductTable([]);
-      }
-    });
+      const MASTER_PRODUK_SC = {
+        MICROLAXTAB: {
+          nama: "MICROLAXTAB BISACODYL 5MG@10",
+          satuan: "1 Blister",
+          insentif: 2000,
+        },
+        ALBUSMIN: {
+          nama: "ALBUSMIN 3 BLISTER @ 10 KAPSUL",
+          satuan: "1 Box (3 Blister)",
+          insentif: 15000,
+        },
+        PRAXION_SUSP: {
+          nama: "PRAXION SUSP 60ML RASA JERUK",
+          satuan: "1 Botol",
+          insentif: 3000,
+        },
+        PRORIS_KAPLET: {
+          nama: "PRORIS IBUPROFEN 10 KAPLET",
+          satuan: "1 Box (10 Catch Cover)",
+          insentif: 10000,
+        },
+        NSU_NEW_FORMULA_15S: {
+          nama: "NOURISH SKIN ULTIMATE NEW 15`S",
+          satuan: "1 Box",
+          insentif: 5000,
+        },
+        NSU_NEW_FORMULA_30S: {
+          nama: "NOURISH SKIN ULTIMATE NEW 30`S",
+          satuan: "1 Box",
+          insentif: 10000,
+        },
+        NS_GLOW_15: {
+          nama: "NOURISH SKIN GLOW 15 TAB",
+          satuan: "1 Box",
+          insentif: 4000,
+        },
+        NS_GLOW_30: {
+          nama: "NOURISH SKIN GLOW 30 TAB",
+          satuan: "1 Box",
+          insentif: 7000,
+        },
+        VIOSTIN_50: {
+          nama: "VIOSTIN 50 KAPLET",
+          satuan: "1 Box (5 Catch Cover)",
+          insentif: 15000,
+        },
+        VIOSTIN_30: {
+          nama: "VIOSTIN 30 KAPLET",
+          satuan: "1 Box (5 Strip)",
+          insentif: 5000,
+        },
+        ASCARDIA_: {
+          nama: "ASCARDIA 80MG TAB 100`S",
+          satuan: "1 Box (10 Strip)",
+          insentif: 5000,
+        },
+        TORAS_4_MG_TABLET: {
+          nama: "TORAS 4MG TAB 100`S",
+          satuan: "1 Box (10 Blister)",
+          insentif: 10000,
+        },
+        TORAS_8_MG_TABLET: {
+          nama: "TORAS 8MG TAB 100`S",
+          satuan: "1 Box (10 Blister)",
+          insentif: 20000,
+        },
+        MEDISIO_5_ML: {
+          nama: "MEDISIO 36% CONCENTRATE 5ML",
+          satuan: "1 Botol",
+          insentif: 1000,
+        },
+        MEDISIO_10_ML: {
+          nama: "MEDISIO 36% CONCENTRATE 10 ML",
+          satuan: "1 Botol",
+          insentif: 2000,
+        },
+        BRION_OINT_20GR: {
+          nama: "BRION OINT 20GR",
+          satuan: "1 Tube",
+          insentif: 5000,
+        },
+      };
 
-    const MASTER_PRODUK_SC = {
-      MICROLAXTAB: {
-        nama: "MICROLAXTAB BISACODYL 5MG@10",
-        satuan: "1 Blister",
-        insentif: 2000,
-      },
-      ALBUSMIN: {
-        nama: "ALBUSMIN 3 BLISTER @ 10 KAPSUL",
-        satuan: "1 Box (3 Blister)",
-        insentif: 15000,
-      },
-      PRAXION_SUSP: {
-        nama: "PRAXION SUSP 60ML RASA JERUK",
-        satuan: "1 Botol",
-        insentif: 3000,
-      },
-      PRORIS_KAPLET: {
-        nama: "PRORIS IBUPROFEN 10 KAPLET",
-        satuan: "1 Box (10 Catch Cover)",
-        insentif: 10000,
-      },
-      NSU_NEW_FORMULA_15S: {
-        nama: "NOURISH SKIN ULTIMATE NEW 15`S",
-        satuan: "1 Box",
-        insentif: 5000,
-      },
-      NSU_NEW_FORMULA_30S: {
-        nama: "NOURISH SKIN ULTIMATE NEW 30`S",
-        satuan: "1 Box",
-        insentif: 10000,
-      },
-      NS_GLOW_15: {
-        nama: "NOURISH SKIN GLOW 15 TAB",
-        satuan: "1 Box",
-        insentif: 4000,
-      },
-      NS_GLOW_30: {
-        nama: "NOURISH SKIN GLOW 30 TAB",
-        satuan: "1 Box",
-        insentif: 7000,
-      },
-      VIOSTIN_50: {
-        nama: "VIOSTIN 50 KAPLET",
-        satuan: "1 Box (5 Catch Cover)",
-        insentif: 15000,
-      },
-      VIOSTIN_30: {
-        nama: "VIOSTIN 30 KAPLET",
-        satuan: "1 Box (5 Strip)",
-        insentif: 5000,
-      },
-      ASCARDIA_: {
-        nama: "ASCARDIA 80MG TAB 100`S",
-        satuan: "1 Box (10 Strip)",
-        insentif: 5000,
-      },
-      TORAS_4_MG_TABLET: {
-        nama: "TORAS 4MG TAB 100`S",
-        satuan: "1 Box (10 Blister)",
-        insentif: 10000,
-      },
-      TORAS_8_MG_TABLET: {
-        nama: "TORAS 8MG TAB 100`S",
-        satuan: "1 Box (10 Blister)",
-        insentif: 20000,
-      },
-      MEDISIO_5_ML: {
-        nama: "MEDISIO 36% CONCENTRATE 5ML",
-        satuan: "1 Botol",
-        insentif: 1000,
-      },
-      MEDISIO_10_ML: {
-        nama: "MEDISIO 36% CONCENTRATE 10 ML",
-        satuan: "1 Botol",
-        insentif: 2000,
-      },
-      BRION_OINT_20GR: {
-        nama: "BRION OINT 20GR",
-        satuan: "1 Tube",
-        insentif: 5000,
-      },
-    };
-
-    function formatRupiah(angka) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      }).format(angka || 0);
-    }
-
-    function renderProductTable(produkSC) {
-      const tbody = document.getElementById("produkTableBody");
-      tbody.innerHTML = "";
-
-      // 🔴 Kalau belum pilih outlet / belum ada data
-      if (!produkSC || Object.keys(produkSC).length === 0) {
-        showEmptyMessage();
-        return;
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka || 0);
       }
 
-      let no = 1;
+      function renderProductTable(produkSC) {
+        const tbody = document.getElementById("produkTableBody");
+        tbody.innerHTML = "";
 
-      Object.keys(MASTER_PRODUK_SC).forEach((key) => {
-        const master = MASTER_PRODUK_SC[key];
-        const target = Number(produkSC[key] || 0);
-
-        // 🔥 Tentukan satuan target
-        let satuanTarget = "UB";
-
-        if (key === "PRAXION_SUSP") {
-          satuanTarget = "Botol";
-        } else if (key === "MEDISIO_5_ML" || key === "MEDISIO_10_ML") {
-          satuanTarget = "Botol";
-        } else if (key === "BRION_OINT_20GR") {
-          satuanTarget = "Tube";
+        // 🔴 Kalau belum pilih outlet / belum ada data
+        if (!produkSC || Object.keys(produkSC).length === 0) {
+          showEmptyMessage();
+          return;
         }
 
-        const row = `
+        let no = 1;
+
+        Object.keys(MASTER_PRODUK_SC).forEach((key) => {
+          const master = MASTER_PRODUK_SC[key];
+          const target = Number(produkSC[key] || 0);
+
+          // 🔥 Tentukan satuan target
+          let satuanTarget = "UB";
+
+          if (key === "PRAXION_SUSP") {
+            satuanTarget = "Botol";
+          } else if (key === "MEDISIO_5_ML" || key === "MEDISIO_10_ML") {
+            satuanTarget = "Botol";
+          } else if (key === "BRION_OINT_20GR") {
+            satuanTarget = "Tube";
+          }
+
+          const row = `
       <tr>
         <td class="text-center align-middle">${no++}</td>
         <td class="text-start align-middle">${master.nama}</td>
@@ -960,145 +1123,152 @@
       </tr>
     `;
 
-        tbody.insertAdjacentHTML("beforeend", row);
-      });
-    }
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+      }
 
-    // 🔹 Function khusus untuk tampilkan pesan kosong
-    function showEmptyMessage() {
-      const tbody = document.getElementById("produkTableBody");
-      tbody.innerHTML = `
+      // 🔹 Function khusus untuk tampilkan pesan kosong
+      function showEmptyMessage() {
+        const tbody = document.getElementById("produkTableBody");
+        tbody.innerHTML = `
           <tr>
             <td colspan="6" class="text-center text-muted fw-semibold py-4">
               Outlet Tidak ada Sell-In 3 Bulan Terakhir untuk Produk Insentif SC Maret 2026
             </td>
           </tr>
         `;
-    }
+      }
 
-    function resetOutletSection() {
-      tomOutletSelect.clear();
+      function resetOutletSection() {
+        tomOutletSelect.clear();
 
-      [
-        "kodePi",
-        "namaOutlet",
-        "kotaOutlet",
-        "alamatOutlet",
-        "namaOwnerOutlet",
-        "namaPicSC",
-        "noEwallet",
-        "namaPenggunaEWallet",
-        "jenisEwallet",
-        "catatan",
-      ].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-
-      document.getElementById("confirmCheck").checked = false;
-
-      renderProductTable({});
-    }
-
-    // 🚀 Event submit SC Form
-    document
-      .getElementById("scForm")
-      .addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        if (!document.getElementById("confirmCheck").checked) {
-          Swal.fire({
-            icon: "warning",
-            title: "Validasi",
-            text: "Silakan centang konfirmasi terlebih dahulu.",
-          });
-          return;
-        }
-
-        // 🚀 Loading
-        Swal.fire({
-          title: "Mengirim data...",
-          text: "Mohon tunggu sebentar :)",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          didOpen: () => Swal.showLoading(),
+        [
+          "kodePi",
+          "namaOutlet",
+          "kotaOutlet",
+          "alamatOutlet",
+          "namaOwnerOutlet",
+          "namaPicSC",
+          "noEwallet",
+          "namaPenggunaEWallet",
+          "jenisEwallet",
+          "catatan",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
         });
 
-        try {
-          // 🔹 Ambil produk
-          let produkData = {};
-          const selectedOutlet = document.getElementById("outletSC").value;
+        document.getElementById("confirmCheck").checked = false;
 
-          if (selectedOutlet && globalOutletData[selectedOutlet]) {
-            produkData = globalOutletData[selectedOutlet].produkSC || {};
-          }
+        renderProductTable({});
+      }
 
-          if (Object.keys(produkData).length === 0) {
-            Swal.close();
-            return Swal.fire({
-              icon: "error",
-              title: "Produk kosong",
-              text: "Outlet belum memiliki produk insentif.",
-            });
-          }
+      // 🚀 Event submit SC Form
+      document
+        .getElementById("scForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-          const payload = {
-            nipPengaju: document.getElementById("nipSC").value,
-            namaPengaju: document.getElementById("namaSC").value,
-            kodePI: document.getElementById("kodePi").value,
-            namaOutlet: document.getElementById("namaOutlet").value,
-            kota: document.getElementById("kotaOutlet").value,
-            alamat: document.getElementById("alamatOutlet").value,
-            namaOwnerOutlet: document.getElementById("namaOwnerOutlet").value,
-            namaPicSC: document.getElementById("namaPicSC").value,
-            noEwallet: document.getElementById("noEwallet").value,
-            namaPenggunaEWallet: document.getElementById(
-              "namaPenggunaEWallet",
-            ).value,
-            jenisEwallet: document.getElementById("jenisEwallet").value,
-            dataProduk: produkData,
-            informasiTambahan: document.getElementById("catatan").value,
-          };
-
-          console.log("🚀 Payload SC:", payload);
-
-          const response = await fetch(
-            "https://script.google.com/macros/s/AKfycbwKLYOdiQaYnOWPlQWrJ-N_p5vXZXplGorCfR4Yp69E2mJaC9x6ErVr5yHJMB3LQb_q/exec",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "text/plain;charset=utf-8", // 🔥 penting anti CORS
-              },
-              body: JSON.stringify(payload),
-            },
-          );
-
-          const result = await response.json();
-
-          Swal.close(); // 🔥 pastikan selalu ditutup sebelum proses lanjut
-
-          if (result.status === "Success") {
-            Swal.fire({
-              icon: "success",
-              title: "Berhasil!",
-              text: "Data berhasil disimpan.",
-            });
-
-            resetOutletSection();
-          } else {
-            throw new Error(result.message || "Gagal menyimpan data.");
-          }
-        } catch (error) {
-          Swal.close();
-
+          // 🚫 BLOCK SUBMIT
           Swal.fire({
-            icon: "error",
-            title: "Terjadi Kesalahan",
-            html: error.message || "Server tidak merespon.", // 🔥 GANTI text → html
+            icon: "info",
+            title: "Pendaftaran telah Ditutup",
+            text: "Mohon Maaf, pendaftaran program ini sudah ditutup. Terima Kasih",
           });
-        }
-      });
-  </script>
-</body>
+          return;
 
+          if (!document.getElementById("confirmCheck").checked) {
+            Swal.fire({
+              icon: "warning",
+              title: "Validasi",
+              text: "Silakan centang konfirmasi terlebih dahulu.",
+            });
+            return;
+          }
+
+          // 🚀 Loading
+          Swal.fire({
+            title: "Mengirim data...",
+            text: "Mohon tunggu sebentar :)",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => Swal.showLoading(),
+          });
+
+          try {
+            // 🔹 Ambil produk
+            let produkData = {};
+            const selectedOutlet = document.getElementById("outletSC").value;
+
+            if (selectedOutlet && globalOutletData[selectedOutlet]) {
+              produkData = globalOutletData[selectedOutlet].produkSC || {};
+            }
+
+            if (Object.keys(produkData).length === 0) {
+              Swal.close();
+              return Swal.fire({
+                icon: "error",
+                title: "Produk kosong",
+                text: "Outlet belum memiliki produk insentif.",
+              });
+            }
+
+            const payload = {
+              nipPengaju: document.getElementById("nipSC").value,
+              namaPengaju: document.getElementById("namaSC").value,
+              kodePI: document.getElementById("kodePi").value,
+              namaOutlet: document.getElementById("namaOutlet").value,
+              kota: document.getElementById("kotaOutlet").value,
+              alamat: document.getElementById("alamatOutlet").value,
+              namaOwnerOutlet: document.getElementById("namaOwnerOutlet").value,
+              namaPicSC: document.getElementById("namaPicSC").value,
+              noEwallet: document.getElementById("noEwallet").value,
+              namaPenggunaEWallet: document.getElementById(
+                "namaPenggunaEWallet",
+              ).value,
+              jenisEwallet: document.getElementById("jenisEwallet").value,
+              dataProduk: produkData,
+              informasiTambahan: document.getElementById("catatan").value,
+            };
+
+            console.log("🚀 Payload SC:", payload);
+
+            const response = await fetch(
+              "https://script.google.com/macros/s/AKfycbwKLYOdiQaYnOWPlQWrJ-N_p5vXZXplGorCfR4Yp69E2mJaC9x6ErVr5yHJMB3LQb_q/exec",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "text/plain;charset=utf-8", // 🔥 penting anti CORS
+                },
+                body: JSON.stringify(payload),
+              },
+            );
+
+            const result = await response.json();
+
+            Swal.close(); // 🔥 pastikan selalu ditutup sebelum proses lanjut
+
+            if (result.status === "Success") {
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data berhasil disimpan.",
+              });
+
+              resetOutletSection();
+            } else {
+              throw new Error(result.message || "Gagal menyimpan data.");
+            }
+          } catch (error) {
+            Swal.close();
+
+            Swal.fire({
+              icon: "error",
+              title: "Terjadi Kesalahan",
+              html: error.message || "Server tidak merespon.", // 🔥 GANTI text → html
+            });
+          }
+        });
+    </script>
+  </body>
 </html>
