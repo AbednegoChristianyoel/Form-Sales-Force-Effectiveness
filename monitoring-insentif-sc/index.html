@@ -1180,6 +1180,50 @@
       </div>
     </div>
 
+    <!-- MODAL DELETE STRUK -->
+    <div class="modal fade" id="modalDeleteStruk" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Hapus Struk</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p>
+              Semua data dengan:<br />
+              <b>ID:</b> <span id="del_id"></span><br />
+              <b>No Struk:</b> <span id="del_noStruk"></span>
+            </p>
+
+            <div class="mt-3">
+              <label class="fw-bold">Alasan Delete</label>
+              <textarea
+                id="del_alasan"
+                class="form-control"
+                rows="3"
+                placeholder="Wajib isi alasan delete..."
+              ></textarea>
+              <div id="error_alasan" class="text-danger small mt-1"></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Batal
+            </button>
+            <button class="btn btn-danger" onclick="confirmDeleteStruk()">
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const apiURL =
         "https://script.google.com/macros/s/AKfycbwKLYOdiQaYnOWPlQWrJ-N_p5vXZXplGorCfR4Yp69E2mJaC9x6ErVr5yHJMB3LQb_q/exec";
@@ -2298,70 +2342,89 @@
 
         return satuan || "";
       }
+      let deleteData = {};
 
       function deleteStruk(id, noIdStruk, namaUser) {
-        const apiURLGenerateSKP =
+        deleteData = { id, noIdStruk, namaUser };
+
+        // isi data ke modal
+        document.getElementById("del_id").innerText = id;
+        document.getElementById("del_noStruk").innerText = noIdStruk;
+        document.getElementById("del_alasan").value = "";
+        document.getElementById("error_alasan").innerText = "";
+
+        // buka modal
+        const modal = new bootstrap.Modal(
+          document.getElementById("modalDeleteStruk"),
+        );
+        modal.show();
+
+        // fokus ke textarea
+        setTimeout(() => {
+          document.getElementById("del_alasan").focus();
+        }, 300);
+      }
+
+      function confirmDeleteStruk() {
+        const alasan = document.getElementById("del_alasan").value.trim();
+        const errorEl = document.getElementById("error_alasan");
+
+        if (!alasan) {
+          errorEl.innerText = "Alasan delete wajib diisi";
+          return;
+        }
+
+        errorEl.innerText = "";
+
+        const apiURL =
           "https://script.google.com/macros/s/AKfycbz5sYnaz1DL8QIJNT0Pv0kMwSknBnmmYFEQ8_BFjAvdz6OGHFia2UdunIYmBexJBa-rUQ/exec";
 
-        Swal.fire({
-          title: "Hapus Struk?",
-          html: `
-      Semua data dengan:<br>
-      <b>ID:</b> ${id}<br>
-      <b>No Struk:</b> ${noIdStruk}<br><br>
-      akan dihapus permanen
-    `,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Ya, Hapus",
-          cancelButtonText: "Batal",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // 🔥 LOADING START
-            Swal.fire({
-              title: "Menghapus Struk...",
-              text: "Mohon tunggu ditunggu sebentar :)",
-              allowOutsideClick: false,
-              didOpen: () => {
-                Swal.showLoading();
-              },
-            });
+        // 🔥 TUTUP MODAL DULU (biar gak numpuk UI)
+        const modalEl = document.getElementById("modalDeleteStruk");
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) modalInstance.hide();
 
-            fetch(apiURLGenerateSKP, {
-              method: "POST",
-              body: new URLSearchParams({
-                action: "deleteStruk",
-                id: id,
-                noIdStruk: noIdStruk,
-                namaUser: namaUser,
-              }),
-            })
-              .then((res) => res.json())
-              .then((res) => {
-                if (res.result === "success") {
-                  Swal.fire({
-                    title: "Berhasil",
-                    text: res.message,
-                    icon: "success",
-                  }).then(() => {
-                    // 🔥 tutup modal detail
-                    const modalEl = document.getElementById("modalDetailStruk");
-                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-                    if (modalInstance) {
-                      modalInstance.hide();
-                    }
-                    getDataByNIP(userData.nip, userData.jabatan, userData.nama);
-                  });
-                } else {
-                  Swal.fire("Error", res.message || "Gagal hapus", "error");
-                }
-              })
-              .catch((err) => {
-                console.error(err);
-                Swal.fire("Error", "Server error", "error");
-              });
-          }
+        // 🔥 LOADING SWAL (KONSISTEN)
+        Swal.fire({
+          title: "Menghapus Struk...",
+          text: "Mohon tunggu sebentar :)",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
         });
+
+        fetch(apiURL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "deleteStruk",
+            id: deleteData.id,
+            noIdStruk: deleteData.noIdStruk,
+            namaUser: deleteData.namaUser,
+            alasanDelete: alasan,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            Swal.close();
+
+            if (res.result === "success") {
+              Swal.fire({
+                title: "Berhasil",
+                text: res.message,
+                icon: "success",
+              }).then(() => {
+                // refresh data
+                getDataByNIP(userData.nip, userData.jabatan, userData.nama);
+              });
+            } else {
+              Swal.fire("Error", res.message || "Gagal hapus", "error");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            Swal.fire("Error", "Server error", "error");
+          });
       }
 
       function showDetailStruk(strukGroup) {
