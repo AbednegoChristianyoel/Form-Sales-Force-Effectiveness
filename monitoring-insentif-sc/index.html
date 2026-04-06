@@ -2588,6 +2588,20 @@
       }
 
       function openUploadModal(id) {
+        // 🚫 BLOKIR UPLOAD (PERIODE SUDAH SELESAI)
+        Swal.fire({
+          icon: "info",
+          title: "Periode Pendaftaran Telah Berakhir!",
+          text: "Maaf, periode upload SKP sudah berakhir.",
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+          buttonsStyling: false,
+        });
+
+        return; // ⛔ stop semua proses di bawah
+
         document.getElementById("uploadId").value = id;
         document.getElementById("fileSKP").value = "";
 
