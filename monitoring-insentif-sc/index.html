@@ -665,6 +665,17 @@
                 <option value="all">Semua Pengaju</option>
               </select>
             </div>
+
+            <div class="mb-3">
+              <label for="pengajuSelect" class="form-label fw-bold"
+                >Outlet Dapat Insentif</label
+              >
+              <select id="filterInsentif" class="form-select">
+                <option value="">Semua</option>
+                <option value="dapat">Dapat Insentif</option>
+                <option value="tidak">Tidak Dapat</option>
+              </select>
+            </div>
           </div>
 
           <div class="modal-footer">
@@ -1407,7 +1418,9 @@
         const ficFilter = $("#modalStatusFICSelect").val()?.toLowerCase();
         const statusFilter = $("#modalStatusSelect").val()?.toLowerCase();
         const pengajuFilter = $("#pengajuSelect").val()?.toLowerCase();
-        const sortType = $("#sortSelect").val(); // ambil pilihan sort
+        const sortType = $("#sortSelect").val();
+
+        const insentifFilter = $("#filterInsentif").val(); // 🔥 TAMBAHAN
 
         const outletFilter = $("input[placeholder='Filter Nama Outlet...']")
           .val()
@@ -1423,6 +1436,10 @@
           const outletValue = (item.namaOutlet || "").toLowerCase();
           const ficValue = (item.statusValidateFIC || "").toLowerCase();
 
+          // 🔥 HITUNG INSENTIF
+          const hasilHitung = hitungInsentifDariStruk(allStruk, item.id);
+          const totalInsentif = hasilHitung.total || 0;
+
           const statusMatch = !statusFilter || statusValue === statusFilter;
           const ficMatch = !ficFilter || ficValue === ficFilter;
 
@@ -1434,7 +1451,19 @@
           const outletMatch =
             !outletFilter || outletValue.includes(outletFilter);
 
-          return statusMatch && pengajuMatch && outletMatch && ficMatch;
+          // 🔥 FILTER INSENTIF
+          const insentifMatch =
+            !insentifFilter ||
+            (insentifFilter === "dapat" && totalInsentif > 0) ||
+            (insentifFilter === "tidak" && totalInsentif === 0);
+
+          return (
+            statusMatch &&
+            pengajuMatch &&
+            outletMatch &&
+            ficMatch &&
+            insentifMatch // 🔥 MASUKIN KE SINI
+          );
         });
 
         // 🔽 SORT DATA
@@ -1446,7 +1475,6 @@
             return timeA - timeB;
           }
 
-          // default terbaru
           return timeB - timeA;
         });
 
@@ -1546,6 +1574,9 @@
 
           // ✅ FORMAT RUPIAH
           const hasilHitung = hitungInsentifDariStruk(allStruk, item.id);
+
+          item.insentif = hasilHitung.total;
+
           const estimasiInsentif = hasilHitung.total.toLocaleString("id-ID");
 
           const card = `
