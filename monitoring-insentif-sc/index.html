@@ -3109,6 +3109,20 @@
         });
 
       function openUploadStruk(id) {
+        // 🚫 BLOKIR UPLOAD (PERIODE SUDAH SELESAI)
+        Swal.fire({
+          icon: "info",
+          title: "Periode Upload Struk Berakhir!",
+          text: "Maaf, periode upload Struk sudah berakhir.",
+          confirmButtonText: "OK",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+          buttonsStyling: false,
+        });
+
+        return; // ⛔ stop semua proses di bawah
+
         // isi hidden id pengajuan
         document.getElementById("strukIdPengajuan").value = id;
 
