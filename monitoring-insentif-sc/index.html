@@ -2269,7 +2269,7 @@
         Object.keys(result).forEach((key) => {
           const item = result[key];
 
-          item.qtyValid = Math.floor(item.qtyFinal); // baru dibulatkan di sini
+          item.qtyValid = Math.floor(Math.round(item.qty * 100) / 100);
           item.total = item.qtyValid * item.insentif;
 
           grandTotal += item.total;
