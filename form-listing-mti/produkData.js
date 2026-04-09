@@ -48,6 +48,24 @@ const produkData = [
     costCenter: "PRIMAXCEL INOVASI",
   },
   {
+    procode: "0515063",
+    itname: "ELATION FACE CARE GEL 50ML",
+    hna: 78600,
+    costCenter: "PRIMAXCEL INOVASI",
+  },
+  {
+    procode: "0513331",
+    itname: "ELATION LIQUID F&B WASH 190ML",
+    hna: 100200,
+    costCenter: "PRIMAXCEL INOVASI",
+  },
+  {
+    procode: "0513329",
+    itname: "ELATION MOIST CREAM 50G",
+    hna: 114600,
+    costCenter: "PRIMAXCEL INOVASI",
+  },
+  {
     procode: "0202801",
     itname: "VERMORAN MEBENDAZOLE 500MG 12S",
     hna: 78600,
