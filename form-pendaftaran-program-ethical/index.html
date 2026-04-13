@@ -1651,6 +1651,17 @@
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
           } else if (program === "Follow Up Boost Metabolic") {
             const fileInput = document.getElementById("fotoSP");
+            const isEntertain =
+              document.getElementById("opsiEntertain").checked;
+
+            // 🚨 VALIDASI WAJIB FILE kalau entertain dicentang
+            if (isEntertain && fileInput.files.length === 0) {
+              return Swal.fire(
+                "File Wajib",
+                "Karena Entertain dipilih, file SP harus diupload",
+                "warning",
+              );
+            }
 
             if (fileInput.files.length > 0) {
               const file = fileInput.files[0];
@@ -1676,24 +1687,24 @@
               baseData.fileName = file.name;
               baseData.mimeType = file.type;
             }
+
             baseData.pengambilanStripAlat = document.getElementById(
               "opsiPengambilan",
             ).checked
               ? "Yes"
               : "No";
-            baseData.entertain = document.getElementById("opsiEntertain")
-              .checked
-              ? "Yes"
-              : "No";
+
+            baseData.entertain = isEntertain ? "Yes" : "No";
+
             baseData.valueTransaksi = (
               document.getElementById("valueTransaksi").value || ""
             )
               .replace(/\./g, "")
               .replace(/,/g, "");
+
             baseData.tanggalSP =
               document.getElementById("tanggalSP").value || "";
           }
-
           console.log("Data yang dikirim:", baseData);
 
           Swal.fire({
