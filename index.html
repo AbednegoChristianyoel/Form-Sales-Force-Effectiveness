@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
@@ -205,9 +205,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-8">
           <div class="card">
-            <h2 class="text-center mb-3 mt-2">
-              Form Hadiah Loyalty & Power-Up Q4
-            </h2>
+            <h2 class="text-center mb-3 mt-2">Form Hadiah Blast-In Q1 2026</h2>
             <h5 class="fw-bold text-primary mb-0 pb-0">Input Data</h5>
             <hr
               class="mx-auto mt-3 mb-3"
@@ -313,7 +311,11 @@
                         id="telpVoucher"
                         placeholder="Masukkan No. Telp Penerima"
                         pattern="[0-9]{10,15}"
-                        oninvalid="this.setCustomValidity('Nomor telepon harus 10–15 digit angka')"
+                        oninvalid="
+                          this.setCustomValidity(
+                            'Nomor telepon harus 10–15 digit angka',
+                          )
+                        "
                         oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
@@ -361,7 +363,11 @@
                         pattern="08[0-9]{8,13}"
                         inputmode="numeric"
                         maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
+                        oninvalid="
+                          this.setCustomValidity(
+                            'Nomor harus diawali 08 dan terdiri dari 10–15 digit angka',
+                          )
+                        "
                         oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
@@ -402,7 +408,11 @@
                         pattern="08[0-9]{8,13}"
                         inputmode="numeric"
                         maxlength="15"
-                        oninvalid="this.setCustomValidity('Nomor harus diawali 08 dan terdiri dari 10–15 digit angka')"
+                        oninvalid="
+                          this.setCustomValidity(
+                            'Nomor harus diawali 08 dan terdiri dari 10–15 digit angka',
+                          )
+                        "
                         oninput="this.setCustomValidity('')"
                       />
                       <div class="invalid-feedback">
@@ -487,7 +497,7 @@
           return Swal.fire(
             "Perhatian!",
             "Silakan isi NIP terlebih dahulu.",
-            "warning"
+            "warning",
           );
 
         Swal.fire({
@@ -533,7 +543,7 @@
               return Swal.fire(
                 "Data tidak ditemukan",
                 "Pastikan NIP valid",
-                "error"
+                "error",
               );
             const kodePiSelect = document.getElementById("kodePi");
             kodePiSelect.innerHTML = `<option value="">Pilih Kode PI</option>`;
@@ -563,7 +573,7 @@
         if (data) {
           document.getElementById("namaOutlet").value = data.namaOutlet || "";
           document.getElementById("jumlahHadiah").value = formatRupiah(
-            data.jumlahHadiah || 0
+            data.jumlahHadiah || 0,
           );
           document.getElementById("jenisProgram").value =
             data.jenisProgram || "";
@@ -575,19 +585,19 @@
           // --- Filter Jenis Hadiah jika POWER-UP Q2 ---
           const jenisHadiahSelect = document.getElementById("jenisHadiah");
           const opsiBarang = [...jenisHadiahSelect.options].find(
-            (opt) => opt.value === "Barang"
+            (opt) => opt.value === "Barang",
           );
 
           if ((data.jenisProgram || "").toUpperCase() === "POWER-UP Q2") {
             console.log(
-              "Jenis Program POWER-UP Q2 terdeteksi. Menyembunyikan opsi 'Barang'."
+              "Jenis Program POWER-UP Q2 terdeteksi. Menyembunyikan opsi 'Barang'.",
             );
 
             // Hapus opsi Barang jika ada
             [...jenisHadiahSelect.options].forEach((opt) => {
               if (opt.value === "Barang") {
                 console.log(
-                  "Menghapus opsi 'Barang' dari dropdown jenisHadiah."
+                  "Menghapus opsi 'Barang' dari dropdown jenisHadiah.",
                 );
                 opt.remove();
               }
@@ -602,11 +612,11 @@
             document.getElementById("barangFields").classList.add("d-none");
           } else {
             console.log(
-              "Jenis Program bukan POWER-UP Q2. Memastikan opsi 'Barang' tersedia."
+              "Jenis Program bukan POWER-UP Q2. Memastikan opsi 'Barang' tersedia.",
             );
 
             const barangSudahAda = [...jenisHadiahSelect.options].some(
-              (opt) => opt.value === "Barang"
+              (opt) => opt.value === "Barang",
             );
             if (!barangSudahAda) {
               console.log("Menambahkan kembali opsi 'Barang'.");
@@ -675,12 +685,12 @@
             return Swal.fire(
               "Peringatan",
               "Harap isi semua field utama sebelum submit.",
-              "warning"
+              "warning",
             );
           }
 
           const checkRes = await fetch(
-            `${scriptURL}?checkKodePi=${encodeURIComponent(kodePi)}`
+            `${scriptURL}?checkKodePi=${encodeURIComponent(kodePi)}`,
           );
           const checkData = await checkRes.json();
           if (checkData.found) {
@@ -714,7 +724,7 @@
             return Swal.fire(
               "Peringatan",
               "Mohon lengkapi semua kolom yang diperlukan dengan benar.",
-              "warning"
+              "warning",
             );
           }
 
@@ -733,7 +743,7 @@
           if (jenis.includes("Voucher")) {
             formData.telp = "'" + document.getElementById("telpVoucher").value;
             formData.namaPenerima = document.getElementById(
-              "namaPenerimaVoucher"
+              "namaPenerimaVoucher",
             ).value;
             formData.alamat = document.getElementById("alamatVoucher").value;
           } else if (jenis === "E-Wallet") {
@@ -803,7 +813,7 @@
             Swal.fire(
               "Gagal",
               "Terjadi kesalahan saat mengirim data.",
-              "error"
+              "error",
             );
           }
         });
@@ -867,7 +877,7 @@
           } else {
             // Tambahkan kembali opsi 'Barang' jika belum ada
             const barangSudahAda = [...jenisHadiahSelect.options].some(
-              (opt) => opt.value === "Barang"
+              (opt) => opt.value === "Barang",
             );
             if (!barangSudahAda) {
               console.log("Menambahkan kembali opsi 'Barang'.");
