@@ -243,6 +243,24 @@
                   </div>
                 </div>
 
+                <!-- LINK MONITORING -->
+                <div class="col-12 mt-2">
+                  <div class="form-text text-start">
+                    <a
+                      href="https://docs.google.com/spreadsheets/d/1nLbeBKFWrAH3TPUG7Zj6SbqhVihPAOTIKF9QehyGiZM/edit?usp=sharing"
+                      target="_blank"
+                      style="text-decoration: none"
+                    >
+                      <span style="text-decoration: none">🔗</span>
+                      <span
+                        style="text-decoration: underline; font-weight: bold"
+                      >
+                        Check Pendataan Hadiah Blast-In Q1 2026
+                      </span>
+                    </a>
+                  </div>
+                </div>
+
                 <div class="col-12">
                   <label for="asm" class="form-label">Nama ASM</label>
                   <input type="text" class="form-control" id="asm" disabled />
@@ -299,6 +317,14 @@
                     <option value="E-Wallet">E-Wallet</option>
                     <option value="Barang">Elektronik</option>
                   </select>
+                  <!-- NOTE -->
+                  <div class="form-text mt-1" style="font-size: 0.85rem">
+                    <span style="font-style: italic">
+                      *Untuk hadiah di bawah Rp50.000 tidak dapat memilih
+                      Voucher. Khusus Hadiah Berupa Voucher, nominal hadiah
+                      mengikuti kelipatan Rp50.000 dan akan dibulatkan ke bawah.
+                    </span>
+                  </div>
                 </div>
 
                 <div class="col-12">
@@ -858,6 +884,31 @@
           jenisProgramEl.value = data.jenisProgram || "";
 
           const jenisProgram = (data.jenisProgram || "").toUpperCase();
+
+          const nominal = parseInt(data.JumlahHadiah || 0);
+
+          // Reset dulu semua opsi voucher
+          [...jenisHadiahSelect.options].forEach((opt) => {
+            if (opt.value.includes("Voucher")) {
+              opt.disabled = false;
+            }
+          });
+
+          // Jika nominal 50.000 → disable semua voucher
+          if (nominal < 50000) {
+            console.log("Nominal 50rb terdeteksi. Menonaktifkan opsi Voucher.");
+
+            [...jenisHadiahSelect.options].forEach((opt) => {
+              if (opt.value.includes("Voucher")) {
+                opt.disabled = true;
+              }
+            });
+
+            // Kalau sebelumnya user sudah pilih voucher → reset
+            if (jenisHadiahSelect.value.includes("Voucher")) {
+              jenisHadiahSelect.value = "";
+            }
+          }
 
           if (jenisProgram === "POWER-UP Q2") {
             // Hapus opsi 'Barang' jika ada
