@@ -644,6 +644,9 @@
                     >
                       Presentasi Produk Nyeri Cardio Metabolik Psikiatri
                     </option>
+                    <option value="Presentasi Modafil & Rozgra Group">
+                      Presentasi Modafil & Rozgra Group
+                    </option>
                   </select>
                 </div>
 
@@ -840,8 +843,8 @@
                 <div id="presentasiNeuroFields" class="col-12 d-none mt-0">
                   <div class="row">
                     <!-- Item Boost Metabolic (gunakan field produkSwitchWrapper yang sudah ada) -->
-                    <div class="col-12 mb-3 mt-3">
-                      <label class="form-label fw-bold"
+                    <div id="produkNeuroWrapper" class="col-12 mt-3">
+                        <label class="form-label fw-bold"
                         >Pilih Produk Neuro Pain Metabolic
                         <span class="required-asterisk">*</span>
                       </label>
@@ -858,7 +861,7 @@
                       </div>
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-12 mt-3 mb-3">
                       <label class="form-label"
                         >Tanggal Presentasi
                         <span class="required-asterisk">*</span>
@@ -1345,6 +1348,7 @@
                             <option value="PGD">PGD</option>
                             <option value="Presentasi Produk Nyeri Cardio Metabolik Psikiatri">Presentasi Produk Nyeri Cardio Metabolik Psikiatri</option>
                             <option value="Follow Up Boost Metabolic">Follow Up Boost Metabolic</option>
+                            <option value="Presentasi Modafil & Rozgra Group">Presentasi Modafil & Rozgra Group</option>
                           `;
 
               $("#programEthical").val(null).trigger("change");
@@ -1438,7 +1442,8 @@
           }
 
           if (
-            program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+            program === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri" ||
+            program === "Presentasi Modafil & Rozgra Group"
           ) {
             if (
               !document.getElementById("tanggalPresentasiNeuro").value.trim()
@@ -1649,6 +1654,26 @@
               status: produkNeuroSelected.includes(label) ? "Yes" : "No",
             }));
             baseData.productMetabolic = JSON.stringify(produkNeuroStatus);
+          } else if (
+            program === "Presentasi Modafil & Rozgra Group"
+          ) {
+
+            baseData.tanggalPresentasi =
+              document.getElementById("tanggalPresentasiNeuro").value || "";
+
+            baseData.jumlahPeserta =
+              document.getElementById("jumlahPesertaNeuro").value || "";
+
+            baseData.biaya =
+              (document.getElementById("biayaNeuro").value || "")
+                .replace(/\./g, "")
+                .replace(/,/g, "");
+
+            baseData.namaOwner =
+              document.getElementById("namaOwner").value || "";
+
+            baseData.noTelpOwner =
+              document.getElementById("noTelpOwner").value || "";
           } else if (program === "Follow Up Boost Metabolic") {
             const fileInput = document.getElementById("fotoSP");
             const isEntertain =
@@ -1915,10 +1940,23 @@
           setFieldRequired("#namaOwner", true);
           setFieldRequired("#noTelpOwner", true);
         } else if (
-          selected === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri"
+          selected === "Presentasi Produk Nyeri Cardio Metabolik Psikiatri" ||
+          selected === "Presentasi Modafil & Rozgra Group"
         ) {
-          setTimeout(initProdukNeuroSelect, 10);
+
           $("#presentasiNeuroFields").removeClass("d-none");
+
+          if (selected === "Presentasi Modafil & Rozgra Group") {
+
+            $("#produkNeuroWrapper").addClass("d-none");
+
+          } else {
+
+            $("#produkNeuroWrapper").removeClass("d-none");
+            setTimeout(initProdukNeuroSelect, 10);
+
+          }
+
           setFieldRequired("#tanggalPresentasiNeuro", true);
           setFieldRequired("#jumlahPesertaNeuro", true);
         } else if (selected === "Follow Up Boost Metabolic") {

@@ -472,6 +472,10 @@
             <option value="Follow Up Boost Metabolic">
               Follow Up Boost Metabolic
             </option>
+            <option value="Presentasi Modafil & Rozgra Group">
+                Presentasi Modafil & Rozgra Group
+            </option>
+
           </select>
         </div>
         <div class="col-md-2">
@@ -653,6 +657,12 @@
               ...(data["Follow Up Boost Metabolic"] || []).map((item) => ({
                 ...item,
                 program: "Follow Up Boost Metabolic",
+              })),
+              ...(
+                data["Presentasi Modafil & Rozgra Group"] || []
+              ).map((item) => ({
+                ...item,
+                program: "Presentasi Modafil & Rozgra Group",
               })),
             ];
 
