@@ -205,7 +205,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-8">
           <div class="card">
-            <h2 class="text-center mb-3 mt-2">Form Hadiah Blast-In Q1 2026</h2>
+            <h2 class="text-center mb-3 mt-2">Form Hadiah Blast-In Q2 2026</h2>
             <h5 class="fw-bold text-primary mb-0 pb-0">Input Data</h5>
             <hr
               class="mx-auto mt-3 mb-3"
@@ -255,14 +255,14 @@
                       <span
                         style="text-decoration: underline; font-weight: bold"
                       >
-                        Check Pendataan Hadiah Blast-In Q1 2026
+                        Check Pendataan Hadiah Blast-In Q2 2026
                       </span>
                     </a>
                   </div>
                 </div>
 
                 <div class="col-12">
-                  <label for="asm" class="form-label">Nama ASM</label>
+                  <label for="asm" class="form-label">Nama Lengkap</label>
                   <input type="text" class="form-control" id="asm" disabled />
                 </div>
 
@@ -593,71 +593,6 @@
           });
       });
 
-      document.getElementById("kodePi").addEventListener("change", () => {
-        const kode = document.getElementById("kodePi").value;
-        const data = window.kodePiMap[kode];
-        if (data) {
-          document.getElementById("namaOutlet").value = data.namaOutlet || "";
-          document.getElementById("jumlahHadiah").value = formatRupiah(
-            data.jumlahHadiah || 0,
-          );
-          document.getElementById("jenisProgram").value =
-            data.jenisProgram || "";
-
-          if ((data.jenisProgram || "").toUpperCase() === "POWER-UP Q2") {
-            console.log("Jenis Program POWER-UP Q2 terdeteksi dari Select2.");
-          }
-
-          // --- Filter Jenis Hadiah jika POWER-UP Q2 ---
-          const jenisHadiahSelect = document.getElementById("jenisHadiah");
-          const opsiBarang = [...jenisHadiahSelect.options].find(
-            (opt) => opt.value === "Barang",
-          );
-
-          if ((data.jenisProgram || "").toUpperCase() === "POWER-UP Q2") {
-            console.log(
-              "Jenis Program POWER-UP Q2 terdeteksi. Menyembunyikan opsi 'Barang'.",
-            );
-
-            // Hapus opsi Barang jika ada
-            [...jenisHadiahSelect.options].forEach((opt) => {
-              if (opt.value === "Barang") {
-                console.log(
-                  "Menghapus opsi 'Barang' dari dropdown jenisHadiah.",
-                );
-                opt.remove();
-              }
-            });
-
-            // Reset jika sebelumnya pilih Barang
-            if (jenisHadiahSelect.value === "Barang") {
-              console.log("Reset pilihan karena sebelumnya memilih 'Barang'");
-              jenisHadiahSelect.value = "";
-            }
-
-            document.getElementById("barangFields").classList.add("d-none");
-          } else {
-            console.log(
-              "Jenis Program bukan POWER-UP Q2. Memastikan opsi 'Barang' tersedia.",
-            );
-
-            const barangSudahAda = [...jenisHadiahSelect.options].some(
-              (opt) => opt.value === "Barang",
-            );
-            if (!barangSudahAda) {
-              console.log("Menambahkan kembali opsi 'Barang'.");
-              const opt = document.createElement("option");
-              opt.value = "Barang";
-              opt.textContent = "Barang";
-              jenisHadiahSelect.appendChild(opt);
-            }
-          }
-
-          // Trigger ulang Select2 agar update tampilan
-          $("#jenisHadiah").trigger("change.select2");
-        }
-      });
-
       document.getElementById("jenisHadiah").addEventListener("change", () => {
         const jenis = document.getElementById("jenisHadiah").value;
 
@@ -883,9 +818,31 @@
           jumlahHadiahEl.value = formatRupiah(data.jumlahHadiah || 0);
           jenisProgramEl.value = data.jenisProgram || "";
 
+          // =======================
+          // PREFILLED
+          // =======================
+
+          if (data.jenisHadiah) {
+              jenisHadiahSelect.value = data.jenisHadiah;
+              jenisHadiahSelect.dispatchEvent(new Event("change"));
+          }
+
+          document.getElementById("telpVoucher").value = data.telp || "";
+          document.getElementById("namaPenerimaVoucher").value = data.namaPenerima || "";
+          document.getElementById("alamatVoucher").value = data.alamat || "";
+
+          document.getElementById("jenisEwallet").value = data.jenisEwallet || "";
+          document.getElementById("noEwallet").value = data.noEwallet || "";
+          document.getElementById("namaEwallet").value = data.namaEwallet || "";
+
+          document.getElementById("namaBarang").value = data.namaBarang || "";
+          document.getElementById("telpBarang").value = data.telp || "";
+          document.getElementById("namaPenerimaBarang").value = data.namaPenerima || "";
+          document.getElementById("alamatBarang").value = data.alamat || "";
+
           const jenisProgram = (data.jenisProgram || "").toUpperCase();
 
-          const nominal = parseInt(data.JumlahHadiah || 0);
+          const nominal = parseInt(data.jumlahHadiah || 0);
 
           // Reset dulu semua opsi voucher
           [...jenisHadiahSelect.options].forEach((opt) => {
