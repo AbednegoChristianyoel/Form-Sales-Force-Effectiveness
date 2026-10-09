@@ -205,7 +205,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-8">
           <div class="card">
-            <h2 class="text-center mb-3 mt-2">Form Hadiah Blast-In Q2 2026</h2>
+            <h2 class="text-center mb-3 mt-2">Form Hadiah Blast-In Q3 2026</h2>
             <h5 class="fw-bold text-primary mb-0 pb-0">Input Data</h5>
             <hr
               class="mx-auto mt-3 mb-3"
@@ -237,8 +237,8 @@
                   <div class="form-text text-start">
                     <span
                       style="font-style: italic; font-weight: bold; color: #000"
-                      >* Untuk ASM Vacant, Masukkan NIP SM. (Khusus VBR Masukkan
-                      NIP NSM)</span
+                      >* Untuk ASM Vacant Masukkan NIP SM, Untuk Dormant
+                      Masukkan NIP NSM. (Khusus VBR Masukkan NIP NSM)</span
                     >
                   </div>
                 </div>
@@ -255,7 +255,7 @@
                       <span
                         style="text-decoration: underline; font-weight: bold"
                       >
-                        Check Pendataan Hadiah Blast-In Q2 2026
+                        Check Pendataan Hadiah Blast-In Q3 2026
                       </span>
                     </a>
                   </div>
@@ -315,7 +315,6 @@
                     <option value="Voucher Indomaret">Voucher Indomaret</option>
                     <option value="Voucher MAP">Voucher MAP</option>
                     <option value="E-Wallet">E-Wallet</option>
-                    <option value="Barang">Elektronik</option>
                   </select>
                   <!-- NOTE -->
                   <div class="form-text mt-1" style="font-size: 0.85rem">
@@ -559,7 +558,6 @@
   <option value="Voucher Indomaret">Voucher Indomaret</option>
   <option value="Voucher MAP">Voucher MAP</option>
   <option value="E-Wallet">E-Wallet</option>
-  <option value="Barang">Elektronik</option>
 `;
             $("#jenisHadiah").trigger("change.select2");
 
@@ -823,21 +821,24 @@
           // =======================
 
           if (data.jenisHadiah) {
-              jenisHadiahSelect.value = data.jenisHadiah;
-              jenisHadiahSelect.dispatchEvent(new Event("change"));
+            jenisHadiahSelect.value = data.jenisHadiah;
+            jenisHadiahSelect.dispatchEvent(new Event("change"));
           }
 
           document.getElementById("telpVoucher").value = data.telp || "";
-          document.getElementById("namaPenerimaVoucher").value = data.namaPenerima || "";
+          document.getElementById("namaPenerimaVoucher").value =
+            data.namaPenerima || "";
           document.getElementById("alamatVoucher").value = data.alamat || "";
 
-          document.getElementById("jenisEwallet").value = data.jenisEwallet || "";
+          document.getElementById("jenisEwallet").value =
+            data.jenisEwallet || "";
           document.getElementById("noEwallet").value = data.noEwallet || "";
           document.getElementById("namaEwallet").value = data.namaEwallet || "";
 
           document.getElementById("namaBarang").value = data.namaBarang || "";
           document.getElementById("telpBarang").value = data.telp || "";
-          document.getElementById("namaPenerimaBarang").value = data.namaPenerima || "";
+          document.getElementById("namaPenerimaBarang").value =
+            data.namaPenerima || "";
           document.getElementById("alamatBarang").value = data.alamat || "";
 
           const jenisProgram = (data.jenisProgram || "").toUpperCase();
